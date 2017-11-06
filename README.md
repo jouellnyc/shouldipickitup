@@ -1,5 +1,4 @@
-# Finance
-Financial Scripts
+# Financial Scripts
 
 == What's Here ==
 1. Rule #1 Financial Scraping - Crash Course.ipynb - Part #1
