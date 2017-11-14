@@ -9,7 +9,6 @@ from bokeh.io import output_file,show
 from bokeh.layouts import gridplot
 from bokeh.plotting import figure
 
-
 if len(sys.argv) > 1:
     stock = sys.argv[1]
 else:
@@ -26,7 +25,7 @@ url_roic="http://www.marketwatch.com/investing/stock/"+stock+"/profile"
 url_fcf="http://www.marketwatch.com/investing/stock/"+stock+"/financials/cash-flow/"
 url_bvps="https://www.gurufocus.com/term/Book+Value+Per+Share/"+stock+"/Book-Value-per-Share"
 
-"""         Functions           """  
+""" Functions """  
 def err_web(url):
     """ Catch the Errors from the Web Connections             """
     """ All or nothing here: If not 200 OK - exit the program """
@@ -50,7 +49,7 @@ def err_web(url):
         return r
             
 def get_web_data():
-    """ Get Data """
+    """ Get Web Data """
     print ("Retrieving HTML for ",stock)
     r_sales_ninc_eps = err_web(url_sales_ninc_eps)
     r_roic = err_web(url_roic)
@@ -59,7 +58,7 @@ def get_web_data():
     return r_sales_ninc_eps,r_roic,r_url_fcf,r_bvps 
 
 def make_soup(r_sales_ninc_eps,r_url_fcf,r_bvps,r_roic):
-    """         Soup Setup        """
+    """  Soup Setup """
     print ("Parsing HTML")
     #if you make it here, soup objects will be assigned ok
     soup_sales_ninc_eps  = bsoup(r_sales_ninc_eps.content,"lxml")
@@ -70,14 +69,19 @@ def make_soup(r_sales_ninc_eps,r_url_fcf,r_bvps,r_roic):
     print ("")
     return soup_sales_ninc_eps,soup_fcf,soup_bvps,soup_roic
 
-def nreny():
-    """ Save some typing on a deeply nested if """
-    print("No rev/eps/netinc years")
-
 def calc_growth(last,first,period):
     """ Simple cagr calculation """
     return ((last/first)**(1/period)-1)
 
+def calc_cagr(years,data):
+    """ Calcuate CAGR and make data frame """
+    df = pd.DataFrame( { 'years_strings' : years, 'years': [ int(x) for x in years], 'data' : data } )
+    #Use variable to help from going cross eyed 
+    last_data_value=df['data'][len(df['data'])-1]
+    last_year_value=df['years'].max()
+    growth = ((last_data_value/df['data']) ** (1/(last_year_value-df['years']))-1)  
+    return growth.apply(prettify_num) 
+  
 def prettify_num(num):
     """ Pretty print Growth Rate """
     return '%.2f'%(num*100)+"%"
@@ -113,11 +117,29 @@ def check_data(data):
                 else:
                     return -float(num),denom_val
             else:
-                #print ("else",float(num))
                 return float(num),denom_val
         else:
             return mynanstring,mynanstring
 
+def check_denom_vals(denom_master,data_master):
+    if all( x==denom_master[0] for x in denom_master):
+        denom=denom_master[0]+"illions"
+    elif ( 'B' or 'b' ) in denom_master and ( 'M' or 'm' )  in data_master:
+        for i,(x,y) in enumerate(zip(denom_master,data_master)):
+            if 'b' in x or 'B' in x:
+                data_master[i]=data_master[i]*1000
+        denom="Millions"
+    else:
+        denom="Dollars"
+    return denom
+                
+        
+def get_links():
+    """         Links                                     """
+    links={ url_sales_ninc_eps:"Sales,NetInc,EPS", url_roic : "Roic", url_fcf : "Fcf", url_bvps:"Bvps" }
+    for link,text in links.items():
+        print(link+" =",text)
+    print("")
 
 def get_years_rev_ninc_eps(soup_sales_ninc_eps):
     """ Years (Revenue,Net Inc and EPS - including USD and EUR """
@@ -149,9 +171,9 @@ def get_years_rev_ninc_eps(soup_sales_ninc_eps):
         return years_rev_ninc_eps
                                      
 def get_rev(soup_sales_ninc_eps,years_rev_ninc_eps):    
-    """                      Revenue                       """
+    """ Revenue """
     revenue_master=[]
-    revenue_inc_denom=''
+    revenue_denom=''
     revenue_denom_master=[]
         
     a_href_sales = soup_sales_ninc_eps.find('a',attrs={'data-ref':'ratio_SalesNet1YrGrowth'})
@@ -167,33 +189,19 @@ def get_rev(soup_sales_ninc_eps,years_rev_ninc_eps):
         print("No Sales data web patterns found")
         print("")    
         revenue=False
-        return revenue,revenue_master,revenue_inc_denom
+        return revenue,revenue_master,revenue_denom
     else:
         if sales_data_links is not None:
             for link in sales_data_links:
                      rev_val=link.string
-                     safe,denom_val = check_data(rev_val)
-                     revenue_master.append(safe)
+                     rev,denom_val = check_data(rev_val)
+                     revenue_master.append(rev)
                      revenue_denom_master.append(denom_val)
-        
-        #Kludgily find the denominations we are looking for
-        if all( x==revenue_denom_master[0] for x in revenue_denom_master):
-            revenue_inc_denom=revenue_denom_master[0]+"illions"
-        elif ( 'B' or 'b' ) in revenue_denom_master and ( 'M' or 'm' )  in revenue_denom_master:
-            for i,(x,y) in enumerate(zip(revenue_denom_master,revenue_master)):
-                if 'b' in x or 'B' in x:
-                    revenue_master[i]=revenue_master[i]*1000
-            revenue_inc_denom="Millions"
-        else:
-            revenue_inc_denom="Dollars"
-           
-        """ Extra checks to avoid script blow up         """
-        """ And create our dataframe to calculating CAGR """
+        revenue_denom=check_denom_vals(revenue_denom_master,revenue_master)
+             
         if all(isinstance(item, float) for item in revenue_master)  and mynanstring not in years_rev_ninc_eps and \
         len(revenue_master) == len (years_rev_ninc_eps):
-            revincdf = pd.DataFrame( { 'years' : years_rev_ninc_eps, 'years_strings': [ int(x) for x in years_rev_ninc_eps ], 'data' : revenue_master } )
-            revenue_growth_master = ((revincdf['data'].max()/revincdf['data']) ** (1/(revincdf['years_strings'].max()-revincdf['years_strings']))-1)
-            revenue_growth_master = revenue_growth_master.apply(prettify_num)
+            revenue_growth_master=calc_cagr(years_rev_ninc_eps,revenue_master)
             revenue=True
         else:
             revenue=False
@@ -201,13 +209,13 @@ def get_rev(soup_sales_ninc_eps,years_rev_ninc_eps):
             
         zipped_years=zip(years_rev_ninc_eps,revenue_master,revenue_growth_master)
         for year,rev,gr in zipped_years:
-            print (stock,"had",rev,"Revenue in",year," Rate = ",gr)
+            print (stock,"had",rev,revenue_denom,"Revenue in",year," Rate = ",gr)
         print("")
-        return revenue,revenue_master,revenue_inc_denom
+        return revenue,revenue_master,revenue_denom
     
         
 def get_ninc(soup_sales_ninc_eps,years_rev_ninc_eps):
-    """                    Net Income                      """
+    """ Net Income """
     net_inc_denom=''
     net_inc_master=[]
     net_inc_denom_master=[]
@@ -227,35 +235,24 @@ def get_ninc(soup_sales_ninc_eps,years_rev_ninc_eps):
             safe,denom_val = check_data(net_income_val)
             net_inc_master.append(safe)
             net_inc_denom_master.append(denom_val)
-                                   
-        if all( x==net_inc_denom_master[0] for x in net_inc_denom_master):
-            net_inc_denom=net_inc_denom_master[0]+"illions"
-        elif ( 'B' or 'b' ) in net_inc_denom_master and ( 'M' or 'm') in net_inc_denom_master:
-            for i,(x,y) in enumerate(zip(net_inc_denom_master,net_inc_master)):
-                if 'b' in x or 'B' in x:
-                    net_inc_master[i]=net_inc_master[i]*1000
-            net_inc_denom="Millions"
-        else:
-            net_inc_denom="Dollars"
-      
+        net_inc_denom=check_denom_vals(net_inc_denom_master,net_inc_master)
+     
         if all(isinstance(item, float) for item in net_inc_master) and mynanstring not in years_rev_ninc_eps\
         and len(net_inc_master) == len (years_rev_ninc_eps):
-            netincdf = pd.DataFrame( { 'years' : years_rev_ninc_eps, 'years_strings': [ int(x) for x in years_rev_ninc_eps ], 'data' : net_inc_master } )
-            net_inc_growth_master = ((netincdf['data'].max()/netincdf['data']) ** (1/(netincdf['years_strings'].max()-netincdf['years_strings']))-1)
-            net_inc_growth_master = net_inc_growth_master.apply(prettify_num)
+            net_inc_growth_master = calc_cagr(years_rev_ninc_eps,net_inc_master)
         else:
-             net_inc_growth_master= ['NA', 'NA', 'NA', 'NA', 'NA']
+            net_inc_growth_master= ['NA', 'NA', 'NA', 'NA', 'NA']
         
         """ Net Income Summary """ 
         zipped_ninc=zip(years_rev_ninc_eps,net_inc_master,net_inc_growth_master)
         for year,ninc,gr in zipped_ninc:
-            print (stock,"had",ninc,"Net Income in",year," Rate = "+gr)
+            print (stock,"had",ninc,net_inc_denom,"Net Income in",year," Rate = "+gr)
         print("")
         net_inc=True
         return net_inc,net_inc_master,net_inc_denom
 
 def get_eps(soup_sales_ninc_eps,years_rev_ninc_eps):
-    """              EPS                       """
+    """ EPS """
     eps_master=[]
     eps_denom_master=[]
     eps_growth_master=[]
@@ -284,9 +281,7 @@ def get_eps(soup_sales_ninc_eps,years_rev_ninc_eps):
                     
             if all(isinstance(item, float) for item in eps_master) and mynanstring not in years_rev_ninc_eps and \
             len(eps_master) == len (years_rev_ninc_eps):
-                epsdf = pd.DataFrame( { 'years' : years_rev_ninc_eps, 'years_strings': [ int(x) for x in years_rev_ninc_eps ], 'data' : eps_master } )
-                eps_growth_master = ((epsdf['data'].max()/epsdf['data']) ** (1/(epsdf['years_strings'].max()-epsdf['years_strings']))-1)
-                eps_growth_master = eps_growth_master.apply(prettify_num)
+               eps_growth_master=calc_cagr(years_rev_ninc_eps,eps_master)    
             else:
                 eps_growth_master= ['NA', 'NA', 'NA', 'NA', 'NA']
           
@@ -297,10 +292,9 @@ def get_eps(soup_sales_ninc_eps,years_rev_ninc_eps):
             print("")
             eps=True
             return eps,eps_master
-     
-    
+
 def get_fcf(soup_fcf):
-    """                                      Free Cash Flow                 """
+    """ Free Cash Flow """
     fcf_denom=''
     years_fcf=[]
     fcf_master=[]
@@ -322,17 +316,9 @@ def get_fcf(soup_fcf):
                 safe,denom_val = check_data(fcf_val)
                 fcf_master.append(safe)
                 fcf_denom_master.append(denom_val)     
-        
-        if all( x==fcf_denom_master[0] for x in fcf_denom_master):
-            fcf_denom=fcf_denom_master[0]+"illions"
-        elif ( 'B' or 'b' ) in fcf_denom_master and ( 'M' or 'm' )  in fcf_denom_master:
-            for i,(x,y) in enumerate(zip(fcf_denom_master,fcf_master)):
-                if 'b' in x or 'B' in x:
-                    fcf_master[i]=fcf_master[i]*1000
-                    fcf_denom="Millions"
-        else:
-            fcf_denom="Dollars"
-        
+     
+        fcf_denom=check_denom_vals(fcf_denom_master,fcf_master)
+       
         """Fcf Years"""  
         fcf_years_text_h2 = soup_fcf.find('h2',text="Financing Activities")
         try:
@@ -351,22 +337,20 @@ def get_fcf(soup_fcf):
           
             if all(isinstance(item, float) for item in fcf_master) and mynanstring not in years_fcf and \
             len(fcf_master) == len (years_fcf) and all( item > 0 for item in fcf_master):
-                fcfdf = pd.DataFrame( { 'years' : years_fcf, 'years_strings': [ int(x) for x in years_fcf ], 'data' : fcf_master } )
-                fcf_growth_master = ((fcfdf['data'].max()/fcfdf['data']) ** (1/(fcfdf['years_strings'].max()-fcfdf['years_strings']))-1)
-                fcf_growth_master = fcf_growth_master.apply(prettify_num)        
+                fcf_growth_master=calc_cagr(years_fcf,fcf_master)    
             else:
                 fcf_growth_master= ['NA', 'NA', 'NA', 'NA', 'NA']
                  
             """Summary"""       
             zipped_fcf=zip(years_fcf,fcf_master,fcf_growth_master)
             for year,fcfl,gr in zipped_fcf:
-                print (stock,"had",fcfl,"Free Cash Flow in",year," Rate = "+gr)
+                print (stock,"had",fcfl,fcf_denom,"Free Cash Flow in",year," Rate = "+gr)
             print("")
             fcf=True
             return fcf,fcf_master,fcf_denom,years_fcf
 
 def get_bvps(soup_bvps):
-    """                                        BVPS                """
+    """ BVPS """
     years_bvps=[]
     bvps_master=[]
     bvps_denom_master=[]
@@ -396,7 +380,7 @@ def get_bvps(soup_bvps):
             print("No BVPS data found")
             return bvps,bvps_master,years_bvps                
         
-        """Years"""
+        """Bvps Years"""
         bvps_years_pat=re.compile('[0-9]{2}')
         if bvps_years_data is not None and len(bvps_years_data) > 0:
             for year in bvps_years_data[-5:]:
@@ -419,14 +403,12 @@ def get_bvps(soup_bvps):
     
         if all(isinstance(item, float) for item in bvps_master) and mynanstring not in years_bvps and \
         len(bvps_master) == len(years_bvps) and len(bvps_master) > 0 and all( item > 0 for item in bvps_master):
-            bvdf = pd.DataFrame( { 'years' : years_bvps , 'years_strings': [ int(x) for x in years_bvps ], 'data' : bvps_master } )
-            bvps_growth_master = ((bvdf['data'].max()/bvdf['data']) ** (1/(bvdf['years_strings'].max()-bvdf['years_strings']))-1)
-            bvps_growth_master = bvps_growth_master.apply(prettify_num)
+            bvps_growth_master=calc_cagr(years_bvps,bvps_master)
             bvps=True
         else:
             bvps_growth_master= ['NA', 'NA', 'NA', 'NA', 'NA']                              
             
-        """Summary"""
+        """ Summary """
         bvps=True
         zipped_bvps=zip(years_bvps,bvps_master,bvps_growth_master)
         for year,bv,gr in zipped_bvps:
@@ -435,7 +417,7 @@ def get_bvps(soup_bvps):
         return bvps,bvps_master,years_bvps
     
 def get_roic(soup_roic):
-    """               ROIC                     """
+    """ ROIC """
     pattern= re.compile("Return on Invested Capital")
     roic_p_tag=soup_roic.find('p',attrs={'class':'column'},text=pattern)
     try:
@@ -451,6 +433,7 @@ def get_roic(soup_roic):
         print (stock,"had",roic,"ROIC")
         print("")
         return roic
+
 
 """ Data Checks """
 def check_years(years_bvps,years_rev_ninc_eps,years_fcf):
@@ -468,21 +451,14 @@ def check_data_blocks(eps_master,revenue_master,fcf_master,bvps_master,net_inc_m
     else:
         print("Check data - some data missing")
 
-def get_links():
-    """         Links                                     """
-    links={ url_sales_ninc_eps:"Sales,NetInc,EPS", url_roic : "Roic", url_fcf : "Fcf", url_bvps:"Bvps" }
-    for link,text in links.items():
-        print(link+" =",text)
-    print("")
-
 
 def data_is_filled(years_bvps,years_rev_ninc_eps,years_fcf,eps_master,revenue_master,fcf_master,bvps_master,net_inc_master):
     if check_years(years_bvps,years_rev_ninc_eps,years_fcf) and check_data_blocks(eps_master,revenue_master,fcf_master,bvps_master,net_inc_master):
             print ("GREAT: Data for "+stock+" is filled for all years and big 5 numbers")
 
+""" Plotting  """
 def plot_or_not(stock,roic,revenue,years_rev_ninc_eps,revenue_master,revenue_inc_denom,net_inc,net_inc_master,net_inc_denom,eps,eps_master,bvps,years_bvps,bvps_master,fcf,years_fcf,fcf_master,fcf_denom):
     """ Bokeh is ***awesome**** """
-    ###print (roic,revenue,net_inc,bvps,eps,fcf)
     if plot:
         if (not roic) and (not revenue) and (not net_inc) and (not bvps) and (not eps) and (not fcf):
             print ("No data - plot will not be generated")
@@ -519,7 +495,6 @@ def plot_or_not(stock,roic,revenue,years_rev_ninc_eps,revenue_master,revenue_inc
             plot_roic = figure(plot_width=400, plot_height=400,title=stock+" Roic")
             plot_roic.line([1,2,3,4,5],[1,2,3,4,5],legend=roic)
             
-            # put all the plots in a grid layout
             p = gridplot( [[plot_rev,plot_net_inc,plot_eps],[plot_bvps,plot_fcf,plot_roic]] )
             show(p)
 
