@@ -3,6 +3,7 @@
 import re
 import os
 import sys
+import argparse
 import requests
 import numpy as np
 import pandas as pd
@@ -11,26 +12,64 @@ from bokeh.io import output_file, show, save
 from bokeh.layouts import gridplot
 from bokeh.plotting import figure
 
-if len(sys.argv) > 1:
-    stock = sys.argv[1]
+
+""" Setup stock and mode via cmd line """
+""" Default stock=GOOG and mode=web   """
+parser = argparse.ArgumentParser()
+parser.description = "Get Stock Data and Return Growth Rates"
+parser.epilog =  "Example: " +  sys.argv[0] + " -s AAPL -m local"
+parser.add_argument('-s', '--stock')
+parser.add_argument('-m', '--mode',  help="(web or local)",choices=['local','web'] )
+parser.add_argument('-k', '--keep',  help="Keep data locally",action='store_true')
+parser.add_argument('-d', '--debug', help="debug",action='store_true')
+parser.add_argument('-p', '--plot',  help="Save Plot Data",action='store_true')
+namespace = parser.parse_args(sys.argv[1:])
+
+if namespace.stock:
+    stock=namespace.stock
 else:
-    stock = 'goog'
+    stock='GOOG'
+ustock = stock.upper()
+
+if namespace.keep:
+    save_data_locally = True
+else:
+    save_data_locally  = False
+    
+if namespace.debug:
+    debugon = True
+else:
+    debugon = False
+
+if namespace.plot:
+    plot  = True
+else:
+    plot = False
+
+if namespace.mode:
+    if namespace.mode == 'local':
+        web_mode=False
+    elif namespace.mode == 'web':
+        web_mode=True
+else:
+        web_mode=True
 
 """ Globals """
-plot  = True
+lo_pe=4
+hi_pe=25
 mynan = np.nan
-debugon = False
 plot_dir = "data"
 prefillna = "-9999"
-popup_browser_plot = False
+popup_browser_plot = True
+
 
 """ URLS """
-#http://www.python.org/dev/peps/pep-0008/#a-foolish-consistency-is-the-hobgoblin-of-little-minds
-#Mostly everything else up to PEP8;s 79 chars. 
 url_sales_ninc_eps = "http://www.marketwatch.com/investing/stock/"+stock+"/financials/"
 url_roic = "http://www.marketwatch.com/investing/stock/"+stock+"/profile"
 url_fcf = "http://www.marketwatch.com/investing/stock/"+stock+"/financials/cash-flow/"
 url_bvps = "https://www.gurufocus.com/term/Book+Value+Per+Share/"+stock+"/Book-Value-per-Share"
+url_ni_ttm = "https://ycharts.com/companies/" + ustock + "/net_income_ttm"
+url_pe_ttm = "https://www.gurufocus.com/stock/"+ ustock
 
 
 """ Functions """
@@ -45,7 +84,7 @@ def err_web(url):
         }
         r = requests.get(url, timeout=10,
                          allow_redirects=True, headers=headers)
-        # raise_for_status() never execs if connect/timeout occurs
+        #raise_for_status() never execs if request.get above has connect error/timeouts
         r.raise_for_status()
     except requests.exceptions.HTTPError as errh:
         print("HTTP Error:", errh)
@@ -68,12 +107,48 @@ def get_web_data():
     print("Retrieving HTML for ", stock)
     r_sales_ninc_eps = err_web(url_sales_ninc_eps)
     r_roic = err_web(url_roic)
-    r_url_fcf = requests.get(url_fcf)
-    r_bvps = requests.get(url_bvps)
-    return r_sales_ninc_eps, r_roic, r_url_fcf, r_bvps
+    r_url_fcf = err_web(url_fcf)
+    r_bvps = err_web(url_bvps)
+    r_ni_ttm = err_web(url_ni_ttm)
+    r_pe_ttm = err_web(url_pe_ttm)
+    content_dict = {
+            
+    'sales' : r_sales_ninc_eps,
+    'fcf'   : r_url_fcf, 
+    'bvps'  : r_bvps, 
+    'roic'  : r_roic,
+    'ninc'  : r_ni_ttm,
+    'pe'    : r_pe_ttm
+            
+    }
+    return (r_sales_ninc_eps, r_roic, r_url_fcf,
+            r_bvps, r_ni_ttm, r_pe_ttm, content_dict)
+    
+def write_content(content_dict):    
+        for name,request in content_dict.items():
+            file=plot_dir + '/'+ ustock + '-' + name + '-' + 'data.html'
+            try:
+                with open(file,'w') as fh:
+                    fh.write(request.text)
+            except FileNotFoundError:
+                print ("File not found:",file)
+               
+def read_content():
+    content_list = ['sales','fcf','bvps','roic','ninc','pe']
+    soup_list = []
+    for name in content_list:
+        file=plot_dir + '/'+ ustock + '-' + name + '-' + 'data.html'
+        try:
+            with open(file) as fh:
+                soup = bsoup(fh,"lxml")
+                soup_list.append(soup)
+        except FileNotFoundError:
+            print ("File not found:",file)
+            print ("Run with -m web first!\nExiting") 
+            sys.exit(1)
+    return soup_list       
 
-
-def make_soup(r_sales_ninc_eps, r_url_fcf, r_bvps, r_roic):
+def make_soup(r_sales_ninc_eps, r_url_fcf, r_bvps, r_roic, r_ni_ttm, r_pe_ttm):
     """ Soup Setup """
     print("Parsing HTML")
     # Note: if you make it here, soup objects will be assigned ok
@@ -81,9 +156,12 @@ def make_soup(r_sales_ninc_eps, r_url_fcf, r_bvps, r_roic):
     soup_fcf = bsoup(r_url_fcf.content, "lxml")
     soup_bvps = bsoup(r_bvps.content, "lxml")
     soup_roic = bsoup(r_roic.content, "lxml")
+    soup_ni_ttm = bsoup(r_ni_ttm.content, "lxml")
+    soup_pe_ttm = bsoup(r_pe_ttm.content, "lxml")
     print("Pulling Data out of HTML")
     print("")
-    return soup_sales_ninc_eps, soup_fcf, soup_bvps, soup_roic
+    return soup_sales_ninc_eps, soup_fcf, soup_bvps, \
+           soup_roic, soup_ni_ttm, soup_pe_ttm
 
 
 def calc_growth(last, first, period):
@@ -95,7 +173,7 @@ def calc_cagr(years, data):
     """ Calcuate CAGR and make data frame """
     df = pd.DataFrame({'years_strings': years, 'years': [
                       int(x) for x in years], 'data': data})
-    # Use variables to help from going cross eyed
+    #Use variables to help from going cross eyed
     last_data_value = df['data'][len(df['data']) - 1]
     last_year_value = df['years'].max()
     growth = ((last_data_value / df['data']) **
@@ -105,12 +183,12 @@ def calc_cagr(years, data):
 
 def check_data(data):
     """ Return a Number and a Denomination Value (typically M or B) """
-    """ Ensure each list is filled by returning NaN if no match    """
+    """ Ensure each list is filled by returning NaN if no match     """
 
     if data is None:
         return None, None
     else:
-        data_pat = re.compile("([-(]?[-(]?[0-9,]+\.?[0-9]{,2})([mMbB]?)")
+        data_pat = re.compile("([-(]?[-(]?[0-9,]+\.?[0-9]{,3})([mMbB]?)")
         data_is_valid = data_pat.search(data)
         if data_is_valid:
             num = data_is_valid.group(1)
@@ -140,9 +218,9 @@ def check_data(data):
 
 
 def check_growth_rate(data_name, data_master, denom_master, years):
-    """ Given the data name,list,denomination and years, return a data "
-    frame with growth rates
-    """    
+    """ Given the data name,list,denomination and years, return a data """
+    """ frame with growth rates                                        """
+    
     data = True
     df = pd.DataFrame(
         {data_name: data_master, 'Denoms': denom_master, 'Years': years})
@@ -166,7 +244,7 @@ def check_growth_rate(data_name, data_master, denom_master, years):
     df['Growth'] = df['Growth'].apply(prettify_num)
     df.loc[df['Growth'] == 'inf%', 'Growth'] = 'NA'
     df.loc[df['Growth'] == 'nan%', 'Growth'] = 'NA'
-    return data, df
+    return data, df, df['Growth'].head(1).values[0]
 
 
 def debug(data, data_master, *args):
@@ -204,15 +282,21 @@ def prettify_num(num):
 
 def get_links():
     """ Links """
-    links = {url_sales_ninc_eps: "Sales,NetInc,EPS",
-             url_roic: "Roic", url_fcf: "Fcf", url_bvps: "Bvps"}
+    links = {
+            url_sales_ninc_eps: "Sales,NetInc,EPS",
+            url_roic: "Roic",
+            url_fcf: "Fcf",
+            url_bvps: "Bvps",
+            url_ni_ttm : "Net Inc TMM",
+            url_pe_ttm : "PE TTM"
+    }             
     for link, text in links.items():
         print(link + " =", text)
     print("")
 
 
 def get_years_rev_ninc_eps(soup_sales_ninc_eps):
-    """ Years (Revenue,Net Inc and EPS - including USD and EUR """
+    """ Years (Revenue,Net Inc and EPS) - including USD and EUR """
     years_rev_ninc_eps = []
     rev_text_pattern = re.compile(
         "Fiscal year is \w+-\w+. All values \w+ millions")
@@ -221,7 +305,7 @@ def get_years_rev_ninc_eps(soup_sales_ninc_eps):
         years_links = years_main_th_tag.find_next_siblings()
     except AttributeError as e:
         print("No Rev-EPS-NINC web data patterns found - exiting")
-        print("")
+        get_links()
         sys.exit(0)
     else:
         max = 5
@@ -240,6 +324,7 @@ def get_years_rev_ninc_eps(soup_sales_ninc_eps):
 
 def get_rev(soup_sales_ninc_eps, years_rev_ninc_eps):
     """ Revenue """
+    rev_rn1 = '0'
     revenue = True
     revenue_master = []
     revenue_denom_master = []
@@ -259,10 +344,10 @@ def get_rev(soup_sales_ninc_eps, years_rev_ninc_eps):
         sales_data_links = sales_td_parent.find_next_siblings(
             "td", attrs={'class': 'valueCell'})
     except AttributeError as e:
-        print("No Sales data web patterns found")
+        print("No Revenue data found")
         print("")
         revenue = False
-        return revenue, revenue_master
+        return revenue, revenue_master, rev_rn1 
     else:
         if sales_data_links is not None:
             for link in sales_data_links:
@@ -273,14 +358,15 @@ def get_rev(soup_sales_ninc_eps, years_rev_ninc_eps):
 
         debug('revenue', revenue_master,
               years_rev_ninc_eps, revenue_denom_master)
-        revenue, revdf = check_growth_rate(
+        revenue, revdf, rev_rn1 = check_growth_rate(
             'revenue', revenue_master, revenue_denom_master, years_rev_ninc_eps)
         summarize('revenue', revdf)
-        return revenue, revdf['Millions']
+        return revenue, revdf['Millions'], rev_rn1
 
 
 def get_ninc(soup_sales_ninc_eps, years_rev_ninc_eps):
     """ Net Income """
+    net_inc_rn1 = '0'
     net_inc = True
     net_inc_master = []
     net_inc_denom_master = []
@@ -292,10 +378,10 @@ def get_ninc(soup_sales_ninc_eps, years_rev_ninc_eps):
         net_inc_values = net_inc_link.fetchNextSiblings(
             'td', class_="valueCell")
     except AttributeError as e:
-        print("No Net Income data web patterns found")
+        print("No Net Income data found")
         print("")
         net_inc = False
-        return net_inc, net_inc_master
+        return net_inc, net_inc_master, net_inc_rn1
     else:
         for link in net_inc_values:
             net_income_val = link.string
@@ -305,15 +391,16 @@ def get_ninc(soup_sales_ninc_eps, years_rev_ninc_eps):
 
         debug('Net Income', net_inc_master,
               years_rev_ninc_eps, net_inc_denom_master)
-        net_inc, net_inc_df = check_growth_rate(
+        net_inc, net_inc_df, net_inc_rn1 = check_growth_rate(
             'Net Income', net_inc_master, net_inc_denom_master,
             years_rev_ninc_eps)
         summarize('Net Income', net_inc_df)
-        return net_inc, net_inc_df['Millions']
+        return net_inc, net_inc_df['Millions'], net_inc_rn1
 
 
 def get_eps(soup_sales_ninc_eps, years_rev_ninc_eps):
     """ EPS """
+    eps_rn1 = '0'
     eps_master = []
     eps_denom_master = []
 
@@ -324,7 +411,7 @@ def get_eps(soup_sales_ninc_eps, years_rev_ninc_eps):
         eps_data = main_eps_td_tag_parent.find_next_siblings(
             'td', attrs={'class': 'valueCell'})
     except AttributeError as e:
-        print("No EPS data web patterns found")
+        print("No EPS data found")
         print("")
         eps = False
         return eps, eps_master
@@ -333,7 +420,7 @@ def get_eps(soup_sales_ninc_eps, years_rev_ninc_eps):
             print("No EPS data found at all")
             print("")
             eps = False
-            return eps, eps_master
+            return eps, eps_master, eps_rn1
         else:
             for tag in eps_data:
                 eps_val = tag.string
@@ -343,15 +430,16 @@ def get_eps(soup_sales_ninc_eps, years_rev_ninc_eps):
                 eps_denom_master.append(denom_val)
 
             debug('EPS', eps_master, eps_denom_master, years_rev_ninc_eps)
-            eps, eps_df = check_growth_rate(
+            eps, eps_df, esp_rn1 = check_growth_rate(
                 'EPS', eps_master, eps_denom_master, years_rev_ninc_eps)
             summarize('EPS', eps_df)
-            return eps, eps_df['Millions']
+            return eps, eps_df['Millions'], esp_rn1
 
 
 def get_fcf(soup_fcf):
     """ Free Cash Flow """
     fcf = True
+    fcf_rn1 = '0'
     years_fcf = []
     fcf_master = []
     fcf_denom_master = []
@@ -363,7 +451,7 @@ def get_fcf(soup_fcf):
         fcf_data = fcf_link_parent.find_next_siblings(
             attrs={'class': 'valueCell'})
     except AttributeError as e:
-        print("No FCF data web patterns found")
+        print("No FCF data found")
         print("")
         fcf = False
         return fcf, fcf_master, years_fcf
@@ -382,10 +470,10 @@ def get_fcf(soup_fcf):
             fcf_years_data = fcf_years_data_th.find_next_siblings()
 
         except AttributeError as e:
-            print("No FCF years web patterns found")
+            print("No FCF years found")
             print("")
             fcf = False
-            return fcf, fcf_master, years_fcf
+            return fcf, fcf_master, years_fcf, fcf_rn1
         else:
             max = 5
             for tag in fcf_years_data:
@@ -404,15 +492,16 @@ def get_fcf(soup_fcf):
 
         debug('FCF', fcf_master, years_fcf, fcf_denom_master)
 
-        fcf, fcf_df = check_growth_rate(
+        fcf, fcf_df, fcf_rn1 = check_growth_rate(
             'FCF', fcf_master, fcf_denom_master, years_fcf)
         summarize('FCF', fcf_df)
-        return fcf, fcf_df['Millions'], years_fcf
+        return fcf, fcf_df['Millions'], years_fcf, fcf_rn1 
 
 
 def get_bvps(soup_bvps):
     """ BVPS """
     bvps = True
+    bvps_rn1 = '0'
     years_bvps = []
     bvps_master = []
     bvps_denom_master = []
@@ -424,10 +513,10 @@ def get_bvps(soup_bvps):
         bvps_data_in_links = main_bvps_td_tag.find_next_siblings()
         bvps_years_data = main_bvps_years.find_next('td').find_next_siblings()
     except AttributeError as e:
-        print("No BVPS data web patterns found")
+        print("No BVPS data found")
         print("")
         bvps = False
-        return bvps, bvps_master, years_bvps
+        return bvps, bvps_master, years_bvps, bvps_rn1
     else:
         bvps_data_pat = re.compile('-?[0-9]{1,9}.[0-9]{1,2}')
         for tag in bvps_data_in_links:
@@ -453,14 +542,14 @@ def get_bvps(soup_bvps):
     else:
         bvps = False
         print("No BVPS years data found")
-        print('')
-        return bvps, bvps_master, years_bvps
+        print("")
+        return bvps, bvps_master, years_bvps, bvps_rn1
 
     debug('BVPS', bvps_master, years_bvps)
-    bvps, bvps_df = check_growth_rate(
+    bvps, bvps_df, bvps_rn1 = check_growth_rate(
         'BVPS', bvps_master, bvps_denom_master, years_bvps)
     summarize('BVPS', bvps_df)
-    return bvps, bvps_df['BVPS'], years_bvps
+    return bvps, bvps_df['BVPS'], years_bvps, bvps_rn1
 
 
 def get_roic(soup_roic):
@@ -472,17 +561,45 @@ def get_roic(soup_roic):
             'p', attrs={'class': 'data lastcolumn'})
         # ROIC is just one value. Leave as NavString
     except AttributeError as e:
-        print("No Roic data web patterns found")
-        print("")
+        print("No Roic data found")
         roic = False
         return roic
     else:
         roic = roic_data.string
         print(stock, "had", roic, "ROIC")
-        print("")
         return roic
 
+def get_ni_ttm(soup_ni_ttm ):
+    """ Net Income TTM """
+    net_inc_ttm = soup_ni_ttm.find('span',attrs={'id':'pgNameVal'})
+    try:
+        net_inc_ttm_data = net_inc_ttm.string
+    except AttributeError as e:
+        print ("No NetInc TTM found")
+    else:
+        ni_ttm, ni_ttm_denom = check_data(net_inc_ttm_data)
+        print(stock, "had", ni_ttm, ni_ttm_denom, "NetInc TTM")
+        return ni_ttm
 
+def get_pe_ttm(soup_pe_ttm):
+    """ Get Trailing TTM for PE """
+    web_patt=re.compile("P/E\s+\(TTM\).*?:.*?[0-9]{1,9}?\.[0-9]{0,2}", re.DOTALL)
+    pe_data_tag = soup_pe_ttm.find('th', text=web_patt)
+    if pe_data_tag:
+       pe_data = pe_data_tag.string    
+       local_patt=re.compile("(-?[0-9]{1,9}?\.[0-9]{0,2})")
+       pe_ttm_match =  local_patt.search(pe_data)
+       if pe_ttm_match:
+           pe_ttm = pe_ttm_match.group(1)
+           print (stock,"has", pe_ttm, "PE")
+           print ("")
+           return pe_ttm
+    else:
+       print ("No PE TTM data found")
+       print ("")
+       return "NA"
+    
+    
 """ Data Checks """
 def check_years(years_bvps, years_rev_ninc_eps, years_fcf):
     """ Quick data quality check #1 """
@@ -507,7 +624,7 @@ def check_data_blocks(eps_master, revenue_master, fcf_master,
         print("OK: EPS, Revenue, FCF, BVPS, and Net Income have 5 years data")
         return True
     else:
-        print("Check data - some data missing")
+        print("Check overall data - some data is missing")
 
 
 def data_is_filled(years_bvps, years_rev_ninc_eps, years_fcf, eps_master,
@@ -519,7 +636,18 @@ def data_is_filled(years_bvps, years_rev_ninc_eps, years_fcf, eps_master,
         print("GREAT: Data for " + stock +
               " is filled for all years and big 5 numbers")
 
-
+def check_rn1(rev_rn1, net_inc_rn1, eps_rn1, fcf_rn1, bvp_rn1, roic, pe_ttm):
+    """ Are all the Big 4, 4 years of compounded growth rate at least 10%? """
+    """ Is the PE within our current acceptable range?                     """
+    mylist = [ rev_rn1, net_inc_rn1, eps_rn1, fcf_rn1, bvp_rn1 ]
+    if any (x == 'NA' for x in mylist):
+        return
+    mylist = [ float(x.rstrip("%")) for x in mylist ]
+    if all( x >= 10 for x in mylist):
+        print ("Awesome: (5)", stock," - Big 4 have 4 year CAGR of 10% and ROIC %10")
+        if lo_pe <= float(pe_ttm) <= hi_pe:
+            print ("Bonus: (RN1) : PE is between", lo_pe, "and", hi_pe)
+            
 """ Plotting  """
 def plot_or_not(stock, roic, revenue, years_rev_ninc_eps, revenue_master,
                 net_inc, net_inc_master, eps, eps_master, bvps, years_bvps,
@@ -578,20 +706,34 @@ def plot_or_not(stock, roic, revenue, years_rev_ninc_eps, revenue_master,
             if popup_browser_plot:
                 show(p)
 
-
 def main():
     """" Start Here """
-    r_sales_ninc_eps, r_roic, r_url_fcf, r_bvps = get_web_data()
-    soup_sales_ninc_eps, soup_fcf, soup_bvps, soup_roic = make_soup(
-        r_sales_ninc_eps, r_url_fcf, r_bvps, r_roic)
+    if web_mode:
+        (r_sales_ninc_eps, r_roic, r_url_fcf, r_bvps, r_ni_ttm, r_pe_ttm,
+        content_dict) = get_web_data()
+        if save_data_locally:
+            write_content(content_dict)
+        (soup_sales_ninc_eps, soup_fcf, soup_bvps, soup_roic, soup_ni_ttm,
+         soup_pe_ttm)  =  make_soup(r_sales_ninc_eps, r_url_fcf, r_bvps,
+                                   r_roic, r_ni_ttm, r_pe_ttm )
+    else:
+    #local mode- get data from disk
+        (soup_sales_ninc_eps, soup_fcf, soup_bvps, soup_roic, soup_ni_ttm,
+         soup_pe_ttm) = read_content() 
+    #Do the following *regaahhdless* -in a thick Boston accent.   
     years_rev_ninc_eps = get_years_rev_ninc_eps(soup_sales_ninc_eps)
-    revenue, revenue_master = get_rev(soup_sales_ninc_eps, years_rev_ninc_eps)
-    net_inc, net_inc_master = get_ninc(soup_sales_ninc_eps, years_rev_ninc_eps)
-    eps, eps_master = get_eps(soup_sales_ninc_eps, years_rev_ninc_eps)
-    fcf, fcf_master, years_fcf = get_fcf(soup_fcf)
-    bvps, bvps_master, years_bvps = get_bvps(soup_bvps)
+    revenue, revenue_master, rev_rn1 = get_rev(soup_sales_ninc_eps, 
+                                               years_rev_ninc_eps)
+    net_inc, net_inc_master, net_inc_rn1  = get_ninc(soup_sales_ninc_eps,
+                                                      years_rev_ninc_eps)
+    eps, eps_master, eps_rn1 = get_eps(soup_sales_ninc_eps, years_rev_ninc_eps)
+    fcf, fcf_master, years_fcf, fcf_rn1 = get_fcf(soup_fcf)
+    bvps, bvps_master, years_bvps, bvp_rn1 = get_bvps(soup_bvps)
     roic = get_roic(soup_roic)
+    get_ni_ttm(soup_ni_ttm)
+    pe_ttm = get_pe_ttm(soup_pe_ttm)
     get_links()
+    check_rn1(rev_rn1, net_inc_rn1, eps_rn1, fcf_rn1, bvp_rn1, roic, pe_ttm)
     plot_or_not(stock, roic, revenue, years_rev_ninc_eps, revenue_master,
                 net_inc, net_inc_master, eps, eps_master, bvps, years_bvps,
                 bvps_master, fcf, years_fcf, fcf_master,)
