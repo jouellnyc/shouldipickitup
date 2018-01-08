@@ -13,8 +13,6 @@ from bokeh.layouts import gridplot
 from bokeh.plotting import figure
 
 
-""" Setup stock and mode via cmd line """
-""" Default stock=GOOG and mode=web   """
 parser = argparse.ArgumentParser()
 parser.description = "Get Stock Data and Return Growth Rates"
 parser.epilog =  "Example: " +  sys.argv[0] + " -s AAPL -m local"
@@ -24,37 +22,38 @@ parser.add_argument('-k', '--keep',  help="Keep data locally",action='store_true
 parser.add_argument('-d', '--debug', help="debug",action='store_true')
 parser.add_argument('-p', '--plot',  help="Save Plot Data",action='store_true')
 namespace = parser.parse_args(sys.argv[1:])
-
+    
 if namespace.stock:
     stock=namespace.stock
 else:
     stock='GOOG'
 ustock = stock.upper()
-
+    
 if namespace.keep:
     save_data_locally = True
 else:
     save_data_locally  = False
-    
+        
 if namespace.debug:
     debugon = True
 else:
     debugon = False
-
+    
 if namespace.plot:
     plot  = True
 else:
     plot = False
-
+    
 if namespace.mode:
     if namespace.mode == 'local':
         web_mode=False
     elif namespace.mode == 'web':
         web_mode=True
 else:
-        web_mode=True
+    web_mode=True
+            
 
-""" Globals """
+""" Globals  """
 lo_pe=4
 hi_pe=25
 mynan = np.nan
@@ -144,7 +143,7 @@ def read_content():
                 soup_list.append(soup)
         except FileNotFoundError:
             print ("File not found:",file)
-            print ("Run with -m web first!\nExiting") 
+            print ("Run with -m web -k first!\nExiting") 
             sys.exit(1)
     return soup_list       
 
@@ -414,7 +413,7 @@ def get_eps(soup_sales_ninc_eps, years_rev_ninc_eps):
         print("No EPS data found")
         print("")
         eps = False
-        return eps, eps_master
+        return eps, eps_master, eps_rn1
     else:
         if eps_data is None:
             print("No EPS data found at all")
@@ -454,7 +453,7 @@ def get_fcf(soup_fcf):
         print("No FCF data found")
         print("")
         fcf = False
-        return fcf, fcf_master, years_fcf
+        return fcf, fcf_master, years_fcf, fcf_rn1
     else:
         for tag in fcf_data:
             fcf_val = tag.string
@@ -639,7 +638,7 @@ def data_is_filled(years_bvps, years_rev_ninc_eps, years_fcf, eps_master,
 def check_rn1(rev_rn1, net_inc_rn1, eps_rn1, fcf_rn1, bvp_rn1, roic, pe_ttm):
     """ Are all the Big 4, 4 years of compounded growth rate at least 10%? """
     """ Is the PE within our current acceptable range?                     """
-    mylist = [ rev_rn1, net_inc_rn1, eps_rn1, fcf_rn1, bvp_rn1 ]
+    mylist = [ rev_rn1, net_inc_rn1, eps_rn1, fcf_rn1, bvp_rn1, pe_ttm]
     if any (x == 'NA' for x in mylist):
         return
     mylist = [ float(x.rstrip("%")) for x in mylist ]
