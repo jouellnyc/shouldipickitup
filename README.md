@@ -6,3 +6,4 @@
 3. Rule #1 Financial Scraping - Crash Course - Part #3.ipynb - Part #3
 4. Rule 1 Python Client - Preview.ipynb - Simple Preview of workings script
 5. market_sales.py - Personal Scraper for Rule #1 - working, functional, never complete...
+6. Dockerfile and url
