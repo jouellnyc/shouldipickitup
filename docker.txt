@@ -1,0 +1,14 @@
+#docker run -i -t market_sales  python3 market_sales.py 
+Retrieving HTML for  GOOG
+Parsing HTML
+Pulling Data out of HTML
+
+GOOG had 59,730.0 M revenue in 2013 4 GR Rate =  16.76%
+GOOG had 65,830.0 M revenue in 2014 3 GR Rate =  19.03%
+GOOG had 73,590.0 M revenue in 2015 2 GR Rate =  22.83%
+GOOG had 89,730.0 M revenue in 2016 1 GR Rate =  23.73%
+GOOG had 111,020.0 M revenue in 2017 0 GR Rate =  0.00%
+
+GOOG had 12,160.0 M Net Income in 2013 4 GR Rate =  1.01%
+GOOG had 13,400.0 M Net Income in 2014 3 GR Rate =  -1.88%
+<SNIP>
