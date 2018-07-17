@@ -1,4 +1,6 @@
-#docker run -i -t market_sales  python3 market_sales.py 
+#docker login --username='YOUR_USERNAME@docker'
+#docker pull modulusmath/market_sales
+#docker run -i -t modulusmath/market_sales   python3 market_sales.py  python3 market_sales.py 
 Retrieving HTML for  GOOG
 Parsing HTML
 Pulling Data out of HTML
@@ -11,4 +13,4 @@ GOOG had 111,020.0 M revenue in 2017 0 GR Rate =  0.00%
 
 GOOG had 12,160.0 M Net Income in 2013 4 GR Rate =  1.01%
 GOOG had 13,400.0 M Net Income in 2014 3 GR Rate =  -1.88%
-<SNIP>
+<SNIP FOR LENGTH>
