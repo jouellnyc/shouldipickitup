@@ -741,4 +741,5 @@ def main():
                        revenue_master, fcf_master, bvps_master, net_inc_master)
 
 
-main()
+if __name__ == "__main__":
+    main()
