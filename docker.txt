@@ -3,7 +3,7 @@
 2) #docker pull modulusmath/market_sales
 
 3a) ###RUN from outside the container
-#docker run -i -t modulusmath/market_sales   python3 market_sales.py  python3 market_sales.py 
+#docker run -i -t modulusmath/market_sales   python3 market_sales.py  
 Retrieving HTML for  GOOG
 Parsing HTML
 Pulling Data out of HTML
