@@ -2,7 +2,7 @@
 
 2) docker pull modulusmath/market_sales
 
-3a) docker run -i -t modulusmath/market_sales   python3 market_sales.py  
+3a) docker run -i -t modulusmath/market_sales   python3.7 market_sales.py  
 
 Retrieving HTML for  GOOG
 Parsing HTML
@@ -26,7 +26,7 @@ GOOG had 13,400.0 M Net Income in 2014 3 GR Rate =  -1.88%
 root@3a71cf286194:/# mkdir /data
 
 ## Get data from the Web
-root@3a71cf286194:/# time python ./market_sales.py -m web -k -s AAPL
+root@3a71cf286194:/# time python3.7 ./market_sales.py -m web -k -s AAPL
 Retrieving HTML for  AAPL
 Parsing HTML
 Pulling Data out of HTML
@@ -40,7 +40,7 @@ user	0m2.204s
 sys	0m0.462s
 
 ## Get data from your local cache
-root@3a71cf286194:/# time python ./market_sales.py -m local -s AAPL
+root@3a71cf286194:/# time python3.7 ./market_sales.py -m local -s AAPL
 AAPL had 170,870.0 M revenue in 2013 4 GR Rate =  7.54%
 AAPL had 183,240.0 M revenue in 2014 3 GR Rate =  7.65%
 AAPL had 231,280.0 M revenue in 2015 2 GR Rate =  -0.59%
