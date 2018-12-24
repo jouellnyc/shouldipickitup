@@ -42,6 +42,8 @@ Pulling Data out of HTML
 NOTE: Create data directory if you want to save data locally using "-k"
 ```
 appuser@bf8f27c38b48:/$ mkdir /tmp/data
+appuser@bf8f27c38b48:/$ python3.7 ./market_sales.py  -s GOOG -k 
+Retrieving HTML for  GOOG
 ```
 
 ## Extra Details
