@@ -7,5 +7,5 @@
 - Preview.ipynb - Simple Preview of workings script
 #### market_sales.py 
 - Python Client to pull Rule #1 Style Stock dat
-#### Dockerfile 
-- Run client as a self contained Docker image 
+#### docker
+- Docker Support Files 
