@@ -27,7 +27,7 @@ GOOG had 13,400.0 M Net Income in 2014 3 GR Rate =  -1.88%
 <SNIP FOR LENGTH>
 ```
 
-# OR #
+#### OR ####
 
 3. Run from insider  the container
 ```
