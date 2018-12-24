@@ -44,9 +44,6 @@ Pulling Data out of HTML
 ## Extra Details
 
 ## Timings: 
-```
-$ docker run -i -t modulusmath/market_sales  bash
-```
 
 ### Getting data from the Web
 
