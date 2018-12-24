@@ -6,6 +6,6 @@
 #### Rule 1 Python Client 
 - Preview.ipynb - Simple Preview of workings script
 #### market_sales.py 
-- Personal Scraper for Rule #1 - working, functional, never complete...
+- Python Client to pull Rule #1 Style Stock dat
 #### Dockerfile 
-- and url
+- Run client as a self contained Docker image 
