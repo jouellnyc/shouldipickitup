@@ -30,7 +30,6 @@ GOOG had 13,400.0 M Net Income in 2014 3 GR Rate =  -1.88%
 #### OR ####
 
 3. Run from insider  the container
-. Keep data
 
 ```
 docker run -i -t modulusmath/market_sales  bash
@@ -40,12 +39,6 @@ Retrieving HTML for  GOOG
 Parsing HTML
 Pulling Data out of HTML
 <SNIP FOR LENGTH>
-```
-
-```
-appuser@bf8f27c38b48:/$ mkdir /tmp/data
-appuser@bf8f27c38b48:/$ python3.7 ./market_sales.py  -s GOOG -k 
-Retrieving HTML for  GOOG
 ```
 
 ## Extra Details
@@ -66,7 +59,7 @@ user	0m2.204s
 sys	0m0.462s
 ```
 
-### Timings: Getting data from your local cache
+### Timings: Getting data from your local cache after saving with -k (above)
 ```
 root@3a71cf286194:/# time python3.7 ./market_sales.py -m local -s AAPL
 AAPL had 170,870.0 M revenue in 2013 4 GR Rate =  7.54%
