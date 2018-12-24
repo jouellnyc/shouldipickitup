@@ -1,7 +1,7 @@
 ## Docker Usage 
-1) docker login --username='YOUR_USERNAME@docker'
+1. docker login --username='YOUR_USERNAME@docker'
 
-2) docker pull modulusmath/market_sales
+2. docker pull modulusmath/market_sales
 
 3a) docker run -i -t modulusmath/market_sales   python3.7 market_sales.py  
 
