@@ -6,6 +6,6 @@
 #### Rule 1 Python Client 
 - Preview.ipynb - Simple Preview of working script
 #### market_sales.py 
-- Python Client to pull Rule #1 Style Stock dat
+- Python Client to pull Rule #1 Style Stock data
 #### docker
 - Docker Support Files 
