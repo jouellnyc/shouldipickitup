@@ -41,8 +41,6 @@ Pulling Data out of HTML
 <SNIP FOR LENGTH>
 ```
 
-## Extra Details
-
 ## Timings: 
 
 ### Getting data from the Web
