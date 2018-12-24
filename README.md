@@ -1,5 +1,5 @@
 ## What's Here
-#### Rule #1 Financial Scraping 
+#### Rule #1 Financial Scraping Intro
 - Crash Course - Part #1.ipynb - Part #1
 - Crash Course - Part #2.ipynb - Part #2
 - Crash Course - Part #3.ipynb - Part #3
