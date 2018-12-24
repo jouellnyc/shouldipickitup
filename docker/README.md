@@ -46,7 +46,9 @@ Pulling Data out of HTML
 ### Timings: Getting data from the Web
 ```
 $ docker run -i -t modulusmath/market_sales  bash
+```
 
+```
 appuser@11f6e8db4d97:/$ time python3.7 ./market_sales.py -m web -k -s AAPL
 Retrieving HTML for  AAPL
 Parsing HTML
