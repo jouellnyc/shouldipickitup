@@ -38,10 +38,12 @@ Retrieving HTML for  GOOG
 Parsing HTML
 Pulling Data out of HTML
 <SNIP FOR LENGTH>
-
-NOTE: Create data directory only if you want to save data locally using "-k" ###
-
 ```
+NOTE: Create data directory if you want to save data locally using "-k"
+```
+appuser@bf8f27c38b48:/$ mkdir /tmp/data
+```
+
 ## Extra Details
 
 ### Timings: Getting data from the Web
