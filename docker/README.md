@@ -37,9 +37,9 @@ NOTE: Create data directory only if you want to save data locally using "-k" ###
 root@3a71cf286194:/# mkdir /data
 
 ```
-# Extra Details
+## Extra Details
 
-## Timings: Getting data from the Web
+### Timings: Getting data from the Web
 ```
 root@3a71cf286194:/# time python3.7 ./market_sales.py -m web -k -s AAPL
 Retrieving HTML for  AAPL
@@ -55,7 +55,7 @@ user	0m2.204s
 sys	0m0.462s
 ```
 
-## Timings: Getting data from your local cache
+### Timings: Getting data from your local cache
 ```
 root@3a71cf286194:/# time python3.7 ./market_sales.py -m local -s AAPL
 AAPL had 170,870.0 M revenue in 2013 4 GR Rate =  7.54%
