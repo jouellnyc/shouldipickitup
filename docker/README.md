@@ -33,8 +33,13 @@ GOOG had 13,400.0 M Net Income in 2014 3 GR Rate =  -1.88%
 ```
 docker run -i -t modulusmath/market_sales  bash
 
+appuser@f308fe3de651:/$ python3.7 ./market_sales.py  -s GOOG 
+Retrieving HTML for  GOOG
+Parsing HTML
+Pulling Data out of HTML
+<SNIP FOR LENGTH>
+
 NOTE: Create data directory only if you want to save data locally using "-k" ###
-root@3a71cf286194:/# mkdir /data
 
 ```
 ## Extra Details
