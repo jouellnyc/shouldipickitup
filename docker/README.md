@@ -3,7 +3,7 @@
 
 2. docker pull modulusmath/market_sales
 
-3a) docker run -i -t modulusmath/market_sales   python3.7 market_sales.py  
+3a. docker run -i -t modulusmath/market_sales   python3.7 market_sales.py  
 
 Retrieving HTML for  GOOG
 Parsing HTML
