@@ -9,7 +9,7 @@ docker pull modulusmath/market_sales
 ```
 3. Run Docker Image 
 ```
-docker run -i -t modulusmath/market_sales   python3.7 market_sales.py  
+$ docker run -i -t modulusmath/market_sales  python3.7 market_sales.py  -s GOOG
 
 Retrieving HTML for  GOOG
 Parsing HTML
