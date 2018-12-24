@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/home/john/anaconda3/bin/python3
 
 import re
 import os
@@ -69,6 +69,8 @@ url_fcf = "http://www.marketwatch.com/investing/stock/"+stock+"/financials/cash-
 url_bvps = "https://www.gurufocus.com/term/Book+Value+Per+Share/"+stock+"/Book-Value-per-Share"
 url_ni_ttm = "https://ycharts.com/companies/" + ustock + "/net_income_ttm"
 url_pe_ttm = "https://www.gurufocus.com/stock/"+ ustock
+url_rev_ttm = "https://ycharts.com/companies/" + ustock + "/revenues_ttm"
+
 
 
 """ Functions """
@@ -110,18 +112,21 @@ def get_web_data():
     r_bvps = err_web(url_bvps)
     r_ni_ttm = err_web(url_ni_ttm)
     r_pe_ttm = err_web(url_pe_ttm)
+    r_rev_ttm = err_web(url_rev_ttm)
+    
     content_dict = {
             
-    'sales' : r_sales_ninc_eps,
-    'fcf'   : r_url_fcf, 
-    'bvps'  : r_bvps, 
-    'roic'  : r_roic,
-    'ninc'  : r_ni_ttm,
-    'pe'    : r_pe_ttm
-            
+    'sales'  : r_sales_ninc_eps,
+    'fcf'    : r_url_fcf, 
+    'bvps'   : r_bvps, 
+    'roic'   : r_roic,
+    'ninc'   : r_ni_ttm,
+    'pe'     : r_pe_ttm,
+    'revttm' : r_rev_ttm
+                
     }
     return (r_sales_ninc_eps, r_roic, r_url_fcf,
-            r_bvps, r_ni_ttm, r_pe_ttm, content_dict)
+            r_bvps, r_ni_ttm, r_pe_ttm, r_rev_ttm, content_dict)
     
 def write_content(content_dict):    
         for name,request in content_dict.items():
@@ -133,7 +138,7 @@ def write_content(content_dict):
                 print ("File not found:",file)
                
 def read_content():
-    content_list = ['sales','fcf','bvps','roic','ninc','pe']
+    content_list = ['sales','fcf','bvps','roic','ninc','pe','revttm']
     soup_list = []
     for name in content_list:
         file=plot_dir + '/'+ ustock + '-' + name + '-' + 'data.html'
@@ -147,7 +152,8 @@ def read_content():
             sys.exit(1)
     return soup_list       
 
-def make_soup(r_sales_ninc_eps, r_url_fcf, r_bvps, r_roic, r_ni_ttm, r_pe_ttm):
+def make_soup(r_sales_ninc_eps, r_url_fcf, r_bvps, r_roic, r_ni_ttm, r_pe_ttm,
+              r_rev_ttm):
     """ Soup Setup """
     print("Parsing HTML")
     # Note: if you make it here, soup objects will be assigned ok
@@ -157,10 +163,11 @@ def make_soup(r_sales_ninc_eps, r_url_fcf, r_bvps, r_roic, r_ni_ttm, r_pe_ttm):
     soup_roic = bsoup(r_roic.content, "lxml")
     soup_ni_ttm = bsoup(r_ni_ttm.content, "lxml")
     soup_pe_ttm = bsoup(r_pe_ttm.content, "lxml")
+    soup_rev_ttm = bsoup(r_rev_ttm.content, "lxml")
     print("Pulling Data out of HTML")
     print("")
     return soup_sales_ninc_eps, soup_fcf, soup_bvps, \
-           soup_roic, soup_ni_ttm, soup_pe_ttm
+           soup_roic, soup_ni_ttm, soup_pe_ttm, soup_rev_ttm
 
 
 def calc_growth(last, first, period):
@@ -182,6 +189,7 @@ def calc_cagr(years, data):
 
 def check_data(data):
     """ Return a Number and a Denomination Value (typically M or B) """
+
     """ Ensure each list is filled by returning NaN if no match     """
 
     if data is None:
@@ -287,7 +295,9 @@ def get_links():
             url_fcf: "Fcf",
             url_bvps: "Bvps",
             url_ni_ttm : "Net Inc TMM",
-            url_pe_ttm : "PE TTM"
+            url_pe_ttm : "PE TTM",
+            url_rev_ttm : "Revenue TTM" 
+            
     }             
     for link, text in links.items():
         print(link + " =", text)
@@ -359,7 +369,7 @@ def get_rev(soup_sales_ninc_eps, years_rev_ninc_eps):
               years_rev_ninc_eps, revenue_denom_master)
         revenue, revdf, rev_rn1 = check_growth_rate(
             'revenue', revenue_master, revenue_denom_master, years_rev_ninc_eps)
-        summarize('revenue', revdf)
+        summarize('Revenue', revdf)
         return revenue, revdf['Millions'], rev_rn1
 
 
@@ -591,14 +601,25 @@ def get_pe_ttm(soup_pe_ttm):
        if pe_ttm_match:
            pe_ttm = pe_ttm_match.group(1)
            print (stock,"has", pe_ttm, "PE")
-           print ("")
            return pe_ttm
     else:
-       print ("No PE TTM data found")
-       print ("")
+       print ("No PE TTM data found for " + stock)
        return "NA"
-    
-    
+   
+def get_rev_ttm(soup_rev_ttm):
+    "Get Trailing TTM for Revenue"
+    rev_ttm_tag = soup_rev_ttm.find('span',attrs={'id':'pgNameVal'})
+    try:
+        rev_ttm_data =  rev_ttm_tag.string
+    except AttributeError as e:
+        print(e,"error")
+    else:
+        rev_ttm, rev_ttm_denom = check_data(rev_ttm_data)
+        #return rev_ttm 
+        print(stock + " had " + str(rev_ttm) + " " + str(rev_ttm_denom) + 
+              " Revenue TTM")
+        print("")
+        
 """ Data Checks """
 def check_years(years_bvps, years_rev_ninc_eps, years_fcf):
     """ Quick data quality check #1 """
@@ -708,17 +729,22 @@ def plot_or_not(stock, roic, revenue, years_rev_ninc_eps, revenue_master,
 def main():
     """" Start Here """
     if web_mode:
-        (r_sales_ninc_eps, r_roic, r_url_fcf, r_bvps, r_ni_ttm, r_pe_ttm,
+        (r_sales_ninc_eps, r_roic, r_url_fcf, r_bvps, r_ni_ttm, r_pe_ttm, r_rev_ttm,
         content_dict) = get_web_data()
         if save_data_locally:
             write_content(content_dict)
-        (soup_sales_ninc_eps, soup_fcf, soup_bvps, soup_roic, soup_ni_ttm,
-         soup_pe_ttm)  =  make_soup(r_sales_ninc_eps, r_url_fcf, r_bvps,
-                                   r_roic, r_ni_ttm, r_pe_ttm )
+        (soup_sales_ninc_eps, soup_fcf, 
+         soup_bvps, soup_roic, 
+         soup_ni_ttm, soup_pe_ttm,
+         soup_rev_ttm)  =                make_soup(r_sales_ninc_eps,r_url_fcf,
+                                                   r_bvps, r_roic,
+                                                   r_ni_ttm, r_pe_ttm, 
+                                                   r_rev_ttm)
+
     else:
     #local mode- get data from disk
         (soup_sales_ninc_eps, soup_fcf, soup_bvps, soup_roic, soup_ni_ttm,
-         soup_pe_ttm) = read_content() 
+         soup_pe_ttm, soup_rev_ttm) = read_content() 
     #Do the following *regaahhdless* -in a thick Boston accent.   
     years_rev_ninc_eps = get_years_rev_ninc_eps(soup_sales_ninc_eps)
     revenue, revenue_master, rev_rn1 = get_rev(soup_sales_ninc_eps, 
@@ -731,6 +757,8 @@ def main():
     roic = get_roic(soup_roic)
     get_ni_ttm(soup_ni_ttm)
     pe_ttm = get_pe_ttm(soup_pe_ttm)
+    #No need to store Revenue TTM as it's never used in a calculation
+    get_rev_ttm(soup_rev_ttm)
     get_links()
     check_rn1(rev_rn1, net_inc_rn1, eps_rn1, fcf_rn1, bvp_rn1, roic, pe_ttm)
     plot_or_not(stock, roic, revenue, years_rev_ninc_eps, revenue_master,
