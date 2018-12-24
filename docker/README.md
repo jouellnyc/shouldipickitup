@@ -43,10 +43,12 @@ Pulling Data out of HTML
 
 ## Extra Details
 
-### Timings: Getting data from the Web
 ```
 $ docker run -i -t modulusmath/market_sales  bash
 ```
+
+### Timings: 
+Getting data from the Web
 
 ```
 appuser@11f6e8db4d97:/$ time python3.7 ./market_sales.py -m web -k -s AAPL
@@ -64,7 +66,9 @@ user	0m2.204s
 sys	0m0.462s
 ```
 
-### Timings: Getting data from your local cache after saving with -k (above)
+### Timings: 
+Getting data from your local cache after saving with -k (above)
+
 ```
 appuser@11f6e8db4d97:/$ time python3.7 ./market_sales.py -m local  -s AAPL
 AAPL had 183,240.0 M Revenue in 2014 4 GR Rate =  9.75%
