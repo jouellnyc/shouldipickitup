@@ -1,9 +1,16 @@
 ## Docker Usage 
-1. docker login --username='YOUR_USERNAME@docker'
-
-2. docker pull modulusmath/market_sales
-
-3. docker run -i -t modulusmath/market_sales   python3.7 market_sales.py  
+1. Login
+```
+docker login --username='YOUR_USERNAME@docker'
+```
+2. Pull Docker Image 
+```
+docker pull modulusmath/market_sales
+```
+3. Run Docker Image 
+```
+docker run -i -t modulusmath/market_sales   python3.7 market_sales.py  
+```
 
 Retrieving HTML for  GOOG
 Parsing HTML
