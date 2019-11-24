@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
+
 Created on Wed Nov 20 17:01:23 2019
 
-@author: john
+@author: jouell 
+
 """
-
-'''TBD
-posting has been deleted by its author
-'''
-
 
 import re
 import json
