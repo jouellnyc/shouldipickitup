@@ -1,39 +1,27 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-
-Created on Wed Nov 20 17:01:23 2019
-
-@author: jouell 
-
-"""
-
 import re
 import sys
 #import json
 import requestwrap
 from bs4 import BeautifulSoup
 from geopy.distance import geodesic                                                                                  
-
-import zip2dict
 import czips
+import zip2dict2mem
 zipcode = sys.argv[1]
 
+#Given a zip, find the closest numerial match and return city,state names
+city, state = zip2dict2mem.lookup_craigs_urls(zipcode)
+print(city, state)
 
-#Create zip db
-myzips  = zip2dict.csv_handler()
-
-#Given a zip, find the closest numerial match and return city, state name
-closest_city, closest_state = zip2dict.lookup_craigs_urls(zipcode,myzips)
-print(closest_city, closest_state)
+sys.exit()   
 
 #Given a city name, find the closest Craigslist Url
 craigs_links = czips.make_craigs_city_dict()
 closest_craigs_list_url = czips.lookup_craigs_url(closest_city,craigs_links)
 print(closest_craigs_list_url)
 
-sys.exit()                            
 
 start  = '40.6490763'
 end    = '-73.9762069'                                                                                     
