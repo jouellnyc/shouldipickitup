@@ -7,7 +7,7 @@ import sys
 import requestwrap
 from bs4 import BeautifulSoup
 from geopy.distance import geodesic                                                                                  
-import czips
+import craigzips
 import zip2dict2mem
 zipcode = sys.argv[1]
 
@@ -15,13 +15,11 @@ zipcode = sys.argv[1]
 city, state = zip2dict2mem.lookup_craigs_urls(zipcode)
 print(city, state)
 
-sys.exit()   
-
 #Given a city name, find the closest Craigslist Url
-craigs_links = czips.make_craigs_city_dict()
-closest_craigs_list_url = czips.lookup_craigs_url(closest_city,craigs_links)
-print(closest_craigs_list_url)
+craigs_list_url = craigzips.lookup_craigs_url(city)
+print(craigs_list_url)
 
+sys.exit()   
 
 start  = '40.6490763'
 end    = '-73.9762069'                                                                                     
