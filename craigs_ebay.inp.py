@@ -3,22 +3,16 @@
 
 try:
     import sys
-    print (sys.path)
     from lib import websitepuller
-    print ('websitepuller' in sys.modules)
     from lib import govzipsandcities
-    print ('govzipsandcities' in sys.modules)
     from lib import craigzipsandurls
-    print ('craigzipsandurls' in sys.modules)
 except Exception as e:
     print(f"Error in inp: ",e)
 
 start  = '40.6490763'
 end    = '-73.9762069'
 
-#zipcode = sys.argv[1]
-zipcode = '11218'
-
+zipcode = sys.argv[1]
 
 ''' Given a zip, find the closest numerial match and return city,state names '''
 city, state = govzipsandcities.lookup_city_state_given_zip(zipcode)
