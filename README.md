@@ -2,7 +2,7 @@
 Given a free listing on Craiglist, should I pick it up?
 
 ```
-![ShouldIpickItUp?](screen_shot.png)
+![ShouldIpickItUp](screen_shot.png)
 
 
 In [21]: %run craigs_lyft_ebay.py
