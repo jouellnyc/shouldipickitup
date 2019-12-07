@@ -1,3 +1,5 @@
+ #!/home/john/anaconda3/bin/python3.7
+
 import sys
 import requests
 
@@ -29,4 +31,3 @@ def err_web(url):
         sys.exit(1)
     else:
         return r
-
