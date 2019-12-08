@@ -1,6 +1,9 @@
 #!/home/john/anaconda3/bin/python3.7
 #http://federalgovernmentzipcodes.us/download.html
 
+''' Build and load zip code data into a file or memcached and '''
+''' make available functions to return that data              '''
+
 try:
     import re
     import csv
