@@ -1,5 +1,9 @@
 #!/home/john/anaconda3/bin/python3.7
 
+
+''' Build and load urls for craigslist and a zip code map. Load         '''
+''' it into memcached and make available functions to return that data  '''
+
 try:
     from bs4 import BeautifulSoup
     from pymemcache.client import base
