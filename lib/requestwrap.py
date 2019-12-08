@@ -1,5 +1,8 @@
  #!/home/john/anaconda3/bin/python3.7
 
+
+''' wrap repetitive web requests ''' 
+
 import sys
 import requests
 
