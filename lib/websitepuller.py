@@ -1,5 +1,6 @@
 #!/home/john/anaconda3/bin/python3.7
 
+''' All the code to pull data for *each* item  from Ebay, Lyft or Craiglist '''
 
 try:
     import re
