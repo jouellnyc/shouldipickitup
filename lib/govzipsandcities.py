@@ -8,7 +8,7 @@ try:
 except Exception as e:
     print("died in gov ", e)
 
-zip_code_file = ('../inp/data/free-zipcode-database-Primary.no.header.csv')
+zip_code_file = ('/home/john/gitrepos/shouldipickitup/data/free-zipcode-database-Primary.no.header.csv')
 
 def create_zips_city_state_dict_from_file(zip_code_file):
     ''' Return a dictionary with zip : (city,state) tuples '''
