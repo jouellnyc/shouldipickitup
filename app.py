@@ -1,5 +1,10 @@
 #!/home/john/anaconda3/bin/python3
 
+'''
+
+https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
+
+'''
 
 import os
 import sys
@@ -7,17 +12,22 @@ import time
 import pickle
 
 from flask import Flask
-from flask import render_template
+from flask import request
 
 app = Flask(__name__)
 app.debug = True
 
-import  maintest
 
-@app.route('/craigslist')
+@app.route('/')
+def hi():
+    return "hi"
+
+@app.route('/forms/', methods=['POST', 'GET'])
 def get_data():
-    data = maintest.main()
-    return render_template('bootstrap_template.html', title='Home', data=data[0:3])
+        try:
+            return str(request.form.get('zip'))
+        except Exception as e:
+            return str(e)
 
 if __name__ == "__main__":
     dir(app.run)
