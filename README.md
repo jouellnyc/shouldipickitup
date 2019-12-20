@@ -1,7 +1,7 @@
 # shouldipickitup
 Given a free listing on Craiglist, should I pick it up?
 
-NOTE: This project is "in progress" and serves currently only for inspiration of future possibilities
+NOTE: This project is "in progress" and serves currently only for inspiration of future possibilities.
 
 ![ShouldIpickItUp](static/cgeorge.png)
 
