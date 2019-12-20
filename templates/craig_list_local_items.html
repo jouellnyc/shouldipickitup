@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title> Craigslist Free stuff in {{zip}}</title>
+    </head>
+    <body>
+
+      <table>
+              <tr>
+                      <td>
+                        <img src="{{ url_for('static', filename='cgeorge.png')}}"/>
+                      </td>
+
+                      <td>    <font size=7>SHOULDIPICKITUP.COM</font>
+                           <P><font size=3>See the top free items on Craigslist and how much you can
+                                   command on Ebay in one click!</font>
+                           <P><font size=3>Order a Lyft now!</font>
+                      </td>
+              </tr>
+      </table>
+
+<P>
+
+
+
+
+      <table border=1 >
+
+        <tr>
+
+          {% for num in len_items %}
+          <th> ITEM #{{num}}  </th>
+          {% endfor %}
+        </tr>
+
+        <tr>
+          {% for item in items %}
+          <td> {{item}} </td>
+          {% endfor %}
+        </tr>
+
+      </table>
+
+
+
+
+    </body>
+</html>
