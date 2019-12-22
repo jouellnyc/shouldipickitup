@@ -2,17 +2,14 @@
 
 ''' All the code to pull data for *each* item  from Ebay, Lyft or Craiglist '''
 
-try:
-    import re
-    import sys
-    import json
+import re
+import sys
+import json
 
-    from bs4 import BeautifulSoup
-    from geopy.distance import geodesic
+from bs4 import BeautifulSoup
+from geopy.distance import geodesic
 
-    from . import requestwrap
-except Exception as e:
-    print("died in web ", e)
+from . import requestwrap
 
 def lookup_craigs_posts(craigs_list_url):
     craigs_response = requestwrap.err_web(craigs_list_url)

@@ -411,4 +411,3 @@ youngstown,OH=https://youngstown.craigslist.org
 yuba-sutter,CA=https://yubasutter.craigslist.org
 yuma,AZ=https://yuma.craigslist.org
 zanesville/cambridge=https://zanesville.craigslist.org
-feedback=https://forums.craigslist.org/?forumID=8
