@@ -57,7 +57,6 @@ def lookup_craigs_url_from_dict_file(*args):
     print(web_links[citytext])
     return web_links[citytext]
 
-
 def write_craigs_city_url_dict_to_memcached(dict):
     client = base.Client(('localhost', 11211))
     for citytext,url in dict.items():
@@ -67,7 +66,7 @@ def lookup_craigs_url_memcached(citytext):
     client = base.Client(('localhost', 11211))
     link   = client.get(citytext)
     if link is None:
-         raise ValueError('No data')
+        raise ValueError('No data')
     else:
         return link
 

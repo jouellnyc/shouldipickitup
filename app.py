@@ -28,10 +28,11 @@ def hi():
 @app.route('/forms/', methods=['POST', 'GET'])
 def get_data():
     try:
-        zip       = str(request.form.get('zip'))
-        items     = main.main(zip)
-        len_items = list( range(0,len(items)) )
-        return render_template('craig_list_local_items.html', len_items=len_items,items=items, zip=zip)
+        zip                      = str(request.form.get('zip'))
+        items, city, state,      = main.main(zip)
+        len_items                = list( range(0,len(items)) )
+        return render_template('craig_list_local_items.html', \
+            len_items=len_items,items=items, zip=zip, city=city, state=state)
     except Exception as e:
         flask.abort(500)
         #return a default here()

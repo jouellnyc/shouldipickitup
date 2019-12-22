@@ -1,7 +1,5 @@
 #!/home/john/anaconda3/bin/python3.7
 
-#http://federalgovernmentzipcodes.us/download.html
-
 ''' Build and load zip code data into a file or memcached and '''
 ''' make available functions to return that data              '''
 
@@ -12,11 +10,14 @@ import sys
 
 from pymemcache.client import base
 
+URL = 'http://federalgovernmentzipcodes.us/download.html' # not used
 my_file_name = os.path.basename(__file__)
 zip_code_file = ('/home/john/gitrepos/shouldipickitup/data/free-zipcode-database-Primary.no.header.csv')
 
 def create_zips_city_state_dict_from_file(zip_code_file):
-    ''' Return a dictionary with zip : (city,state) tuples '''
+    ''' Return a dictionary with zip : (city,state) tuples  '''
+    ''' give the file at URL                                '''
+
     with open(zip_code_file) as csv_fh:
             myzips = {}
             csv_reader = csv.reader(csv_fh, delimiter=',')
@@ -48,14 +49,15 @@ def lookup_city_state_given_zip_memcached(zip):
     #if memcached is down ConnectionRefusedError is returned
     client      =  base.Client(('localhost', 11211))
     data        = client.get(zip)
-    city, state = data.decode("utf-8").split(',')
-    patt  = re.compile('\w+')
-    city  = patt.search(city).group()
-    state = patt.search(state).group()
-    city, state = city.lower(),state.lower()
-    if city is None and state is None:
+
+    if data is None:
         raise ValueError('No data')
     else:
+        city, state = data.decode("utf-8").split(',')
+        patt  = re.compile('\w+')
+        city  = patt.search(city).group()
+        state = patt.search(state).group()
+        city, state = city.lower(),state.lower()
         return (city,state)
 
 if __name__ == "__main__":

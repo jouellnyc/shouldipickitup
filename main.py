@@ -21,7 +21,7 @@ def main(zip):
         citytext = f"{city},{state}"
         citytext = citytext.lower() #not needed?
     except ValueError:
-        citytext = ""
+        citytext = 'SFbayarea'
     except ConnectionRefusedError:
         city, state = govzipsandcities.lookup_city_state_given_zip_file(zip,zip_code_file)
         city, state = city.lower() , state.upper()
@@ -29,22 +29,35 @@ def main(zip):
         #citytext = citytext.lower()
         print(f"Debug citytext: {citytext}")
 
+
     ''' Given a city name, find the closest local Craigslist Url '''
     try:
         craigs_list_url = craigzipsandurls.lookup_craigs_url_memcached(citytext)
         craigs_list_url = craigs_list_url.decode('UTF-8')
-    except ValueError:
+    except ValueError as e:
+        print('veeqq',type(e),e)
         craigs_list_url = 'https://sfbay.craigslist.org' #no trailing /
+        city  = f"Couldn't find anything near {zip}, but here's Bay Area "
+        state = ""
+        print(craigs_list_url)
     except ConnectionRefusedError:
         try:
             print('h1')
             web_links = craigzipsandurls.create_craigs_url_dict_from_disk()
             craigs_list_url = craigzipsandurls.lookup_craigs_url_from_dict_file(citytext, web_links)
+            print('h1a')
+        except KeyError:
+            print("KE:")
+            citytext = 'SFbayarea'
+            craigs_list_url = 'https://sfbay.craigslist.org' #no trailing /
+            city  = f"Couldn't find anything near {zip}, but here's Bay Area "
+            state = ""
             print(f"Debug url: {craigs_list_url}")
-        except Exception as e:
-            print('eeeeeeqq',type(e),e)
+            print(city, state, citytext)
+    except Exception as e:
+        print('eeeeeeqq',type(e),e)
         #else:
-        #   print(f"Debug: {citytext} is available at {craigs_list_url}")
+        #print(f"Debug: {citytext} is available at {craigs_list_url}")
 
     ''' Given the the closest local Craigslist url, return the free items '''
     print('h2')
@@ -65,14 +78,13 @@ def main(zip):
         price = 5
         #mind,maxd              = websitepuller.lookup_cost_lyft(start_lat,start_lng,end_lat,end_lng)
         mind,maxd = 8, 9
-        printable_data         = (f"{each_item.text} is Free on Craigslist in "
-            f"{city}, and is selling for {price} on Ebay and is {miles:.2f} miles away"
-            f"from you. Using Lyft it will cost between {mind} and {maxd} dollars to"
-            f"pick up.\n")
+        printable_data         = (f"{each_item.text} is selling for {price} on "
+            f"Ebay and is {miles:.2f} miles away from you. Using Lyft it will "
+            f"cost between {mind} and {maxd} dollars to pick up.\n")
         all_posts.append(printable_data)
         #all_posts_text =  " ".join(str(x) for x in all_posts)
     #return all_posts_text
-    return all_posts
+    return all_posts, city.capitalize(), state.upper()
 
 if __name__ == "__main__":
 
