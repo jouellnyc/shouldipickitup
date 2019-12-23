@@ -31,6 +31,7 @@ def create_zips_city_state_dict_from_file(zip_code_file):
                 zip   = row[0]
                 city  = row[2]
                 city  = city.lower()
+                city  = "".join(city.split()) # no spaces
                 state = row[3]
                 state = state.upper()
                 myzips[zip] = (city,state)
