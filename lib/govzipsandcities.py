@@ -1,7 +1,12 @@
 #!/home/john/anaconda3/bin/python3.7
 
-''' Build and load zip code data into a file or memcached and '''
-''' make available functions to return that data              '''
+''' Build and load zip code data into a file or memcached and              '''
+''' make available functions to return that data                           '''
+
+''' Specifically this module only cares about zipcode to citytext:         '''
+'''        '32546' => 'gainesville,FL'                                     '''
+''' cities will be loaded lowercase into the local file and Memcached      '''
+''' STATES will be UPPER in both                                           '''
 
 import os
 import re
@@ -12,7 +17,7 @@ from pymemcache.client import base
 
 URL = 'http://federalgovernmentzipcodes.us/download.html' # not used
 my_file_name = os.path.basename(__file__)
-zip_code_file = ('/home/john/gitrepos/shouldipickitup/data/free-zipcode-database-Primary.no.header.csv')
+zip_code_file = '/home/john/gitrepos/shouldipickitup/data/free-zipcode-database-Primary.no.header.csv'
 
 def create_zips_city_state_dict_from_file(zip_code_file):
     ''' Return a dictionary with zip : (city,state) tuples  '''
@@ -25,7 +30,9 @@ def create_zips_city_state_dict_from_file(zip_code_file):
             for row in csv_reader:
                 zip   = row[0]
                 city  = row[2]
+                city  = city.lower()
                 state = row[3]
+                state = state.upper()
                 myzips[zip] = (city,state)
 
     return myzips
@@ -57,7 +64,6 @@ def lookup_city_state_given_zip_memcached(zip):
         patt  = re.compile('\w+')
         city  = patt.search(city).group()
         state = patt.search(state).group()
-        city, state = city.lower(),state.lower()
         return (city,state)
 
 if __name__ == "__main__":
@@ -78,10 +84,10 @@ if __name__ == "__main__":
             load_zips_to_memcached(myzips)
             city,state = lookup_city_state_given_zip_memcached(zip)
             print(city,state)
-        except Exception as e:
-            #print("Memcached seems down; going to file:",e)
+        except Exception as e: #Catches ConnectionRefusedError
+            print("Memcached seems down; going to file:",e)
             try:
-                city, state = lookup_city_state_given_zip_file(zip_code_file)
+                city, state = lookup_city_state_given_zip_file(zip, zip_code_file)
                 city, state = city.lower(),state.lower()
                 print(city,state)
             except OSError as e:

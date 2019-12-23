@@ -1,8 +1,12 @@
 #!/home/john/anaconda3/bin/python3.7
 
+''' Build and load urls for craigslist and a zip code map. Load            '''
+''' it into memcached and make available functions to return that data     '''
 
-''' Build and load urls for craigslist and a zip code map. Load         '''
-''' it into memcached and make available functions to return that data  '''
+''' Specifically this module only cares about citytext to craigslist link: '''
+'''        'dallas/fortworth' => 'https://dallas.craigslist.org            '''
+'''        'all  lower  case'                                              '''
+
 
 from bs4 import BeautifulSoup
 from pymemcache.client import base
@@ -10,13 +14,14 @@ from pymemcache.client import base
 craigs_links_file = '/home/john/gitrepos/shouldipickitup/data/craigs_links.txt'
 
 def make_craigs_city_url_dict_web():
-    ''' make dictionary of cities live from the web '''
+    ''' make dictionary of cities live from the web               '''
+
     url   = 'https://geo.craigslist.org/iso/us'
     resp  = requestwrap.err_web(url)
     soup  = BeautifulSoup(resp.text, 'html.parser')
     links = soup.find_all('a')
 
-    craigs_zip_links = {}
+    citytext_to_craiglinks = {}
     for x in links:
         if not x['href'].startswith(('https://www.c','http://www.c','//',
            'https://forums','https://play.goog','https://apps.apple.com')):
@@ -25,8 +30,8 @@ def make_craigs_city_url_dict_web():
             citytext = x.text
             citytext = citytext.replace(" ", "")
             #print(f"{citytext} {url}")
-            craigs_zip_links[citytext] = url
-    return craigs_zip_links
+            citytext_to_craiglinks[citytext] = url
+    return citytext_to_craiglinks
 
 def write_craigs_city_url_dict_to_file(dict,file):
     fh = open(file,'w')
@@ -68,6 +73,7 @@ def lookup_craigs_url_memcached(citytext):
     if link is None:
         raise ValueError('No data')
     else:
+        print(link.decode('UTF-8'))
         return link
 
 if __name__ == "__main__":
@@ -76,18 +82,36 @@ if __name__ == "__main__":
     import requestwrap
 
     try:
-         citytext = sys.argv[1]
-    except IndexError as e:
-        print(e,"Did you specify city text?")
-        sys.exit()
 
-    #craigs_links_file = '/home/john/gitrepos/shouldipickitup/data/craigs_links.txt'
-    #all_craigs_cities_and_urls = make_craigs_city_url_dict_web()
-    #write_craigs_city_url_dict_to_file(all_craigs_cities_and_urls,craigs_links_file)
-    #load_craigs_city_url_dict_to_memcached(all_craigs_cities_and_urls)
-    #web_links = create_craigs_url_dict_from_disk(craigs_links_file)
-    web_links = create_craigs_url_dict_from_disk()
-    lookup_craigs_url_from_dict_file(citytext,web_links)
+        citytext = sys.argv[1]
+        if len(sys.argv) > 2:
+            citytext = sys.argv[1]
+            where    = sys.argv[2]
+            if where == 'file':
+                web_links = create_craigs_url_dict_from_disk()
+                lookup_craigs_url_from_dict_file(citytext,web_links)
+            elif where == 'memcached':
+                lookup_craigs_url_memcached(citytext)
+            else:
+                print("from where?")
+                sys.exit(1)
+        else:
+            if sys.argv[1] == 'load_mem':
+                web_links = create_craigs_url_dict_from_disk()
+                write_craigs_city_url_dict_to_memcached(web_links)
+            elif sys.argv[1] == 'web_get':
+                all_craigs_cities_and_urls = make_craigs_city_url_dict_web()
+                write_craigs_city_url_dict_to_file(all_craigs_cities_and_urls,craigs_links_file)
+            else:
+                print("try again")
+                sys.exit(1)
+
+    except IndexError as e:
+            print("Did you specify city text? or load_mem? or web_get?")
+            print(len(sys.argv))
+            sys.exit()
+
+
 
 else:
     from . import requestwrap

@@ -18,17 +18,21 @@ def main(zip):
     ''' Given a zip, find the closest numerial match and return city,state names '''
     try:
         city, state = govzipsandcities.lookup_city_state_given_zip_memcached(zip)
-        citytext = f"{city},{state}"
-        citytext = citytext.lower() #not needed?
+        citytext = f"{city},{state}" #Add the comman back in...
+        print(f"Debug citytext: {citytext}\n"
+              f"city: {city}\n"
+              f"state:{state}")
     except ValueError:
         citytext = 'SFbayarea'
+        city  = f"Couldn't find anything near {zip}, but here's Bay Area "
+        state = ""
     except ConnectionRefusedError:
-        city, state = govzipsandcities.lookup_city_state_given_zip_file(zip,zip_code_file)
+        city, state = govzipsandcities.lookup_city_state_given_zip_file(zip, zip_code_file)
         city, state = city.lower() , state.upper()
         citytext = f"{city},{state}"
         #citytext = citytext.lower()
-        print(f"Debug citytext: {citytext}")
-
+    #finally:
+    #    print(f"Debug citytext: {citytext}, {city}, {state}, {citytext}")
 
     ''' Given a city name, find the closest local Craigslist Url '''
     try:
