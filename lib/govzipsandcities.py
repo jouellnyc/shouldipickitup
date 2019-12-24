@@ -4,7 +4,8 @@
 ''' make available functions to return that data                           '''
 
 ''' Specifically this module only cares about zipcode to citytext:         '''
-'''        '32546' => 'gainesville,FL'                                     '''
+'''        '32546' => 'gainesville,FL'
+'''        At the moment about 40k ; i.e 86305, but not 86306               '''
 ''' cities will be loaded lowercase into the local file and Memcached      '''
 ''' STATES will be UPPER in both                                           '''
 
