@@ -5,7 +5,11 @@
 
 ''' Specifically this module only cares about zipcode to citytext:         '''
 '''        '32546' => 'gainesville,FL'                                     '''
-'''        At the moment about 40k ; i.e 86305, but not 86306              '''
+'''                                                                        '''
+'''        At the moment the free zip code file has about 40k entries      '''
+'''        i.e '86301'->'86305', but not '86306', so we ravage that file   '''
+'''        to find the closet city given a zip and store that in memcached '''
+''' NOTE:                                                                  '''
 ''' cities will be loaded lowercase into the local file and Memcached      '''
 ''' STATES will be UPPER in both                                           '''
 

@@ -6,7 +6,8 @@
 ''' Specifically this module only cares about citytext to craigslist link: '''
 '''        'dallas/fortworth' => 'https://dallas.craigslist.org            '''
 '''        'all  lower  case'                                              '''
-
+''' We support 169 out the 450+ craigslist links (see.. data/cities.txt)   '''
+''' It will take a bit more effort to de-obfuscate the others              '''
 
 from bs4 import BeautifulSoup
 from pymemcache.client import base
