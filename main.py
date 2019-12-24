@@ -74,9 +74,14 @@ def main(zip):
     ''' 2) How much on Ebay                             '''
     ''' 3) How much for a Lyft                          '''
 
-    ''' only show me 5 items '''
+    ''' only show me a few items '''
+
     all_posts = []
+    all_links = []
+
     for each_item in craigs_local_posts[0:3]:
+
+        each_link = (each_item.attrs['href'])
         end_lat,end_lng,miles  = websitepuller.lookup_miles_from_user(each_item,start_lat,start_lng)
         #price                  = websitepuller.lookup_price_on_ebay(each_item)
         price = 5
@@ -86,9 +91,9 @@ def main(zip):
             f"Ebay and is {miles:.2f} miles away from you. Using Lyft it will "
             f"cost between {mind} and {maxd} dollars to pick up.\n")
         all_posts.append(printable_data)
-        #all_posts_text =  " ".join(str(x) for x in all_posts)
-    #return all_posts_text
-    return all_posts, city.capitalize(), state.upper()
+        all_links.append(each_link)
+    all_links = enumerate(all_links,1)
+    return all_posts, all_links, city.capitalize(), state.upper()
 
 if __name__ == "__main__":
 

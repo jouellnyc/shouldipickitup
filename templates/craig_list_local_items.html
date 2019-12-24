@@ -26,17 +26,17 @@
       <table border=0>
 
         <tr>
-           {{city}}, {{state}} FREE items:
+            {{city}}, {{state}} FREE items near {{zip}}:
            <P>
-          {% for num in len_items %}
-          <th> ITEM #{{num}}  </th>
-          {% endfor %}
-        </tr>
+            {% for result in all_links %}
+           <th><a href="{{result[1]}}"> ITEM {{result[0]}} </a>
+           {% endfor %}
+        <tr>
 
         <tr>
-          {% for item in items %}
-          <td> {{item}} </td>
-          {% endfor %}
+           {% for post in all_posts %}
+           <td> {{post}} </td>
+           {% endfor %}
         </tr>
 
       </table>
