@@ -20,11 +20,6 @@ import main
 app = Flask(__name__)
 app.debug = True
 
-
-@app.route('/')
-def hi():
-    return "hi"
-
 @app.route('/forms/', methods=['POST', 'GET'])
 def get_data():
     try:
@@ -37,7 +32,6 @@ def get_data():
     except Exception as e:
         print(e)
         flask.abort(500)
-        #return a default here()
 
 if __name__ == "__main__":
     dir(app.run)

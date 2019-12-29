@@ -21,7 +21,9 @@ import re
 import csv
 import sys
 
+import json
 from pymemcache.client import base
+from pymongo import MongoClient
 
 URL = 'http://federalgovernmentzipcodes.us/download.html' # not used
 my_file_name = os.path.basename(__file__)
@@ -52,8 +54,20 @@ def generate_all_possible_closest_zips():
     for zip in ("%.5d" % x for x in range(99999)):
         print(f"{zip}:", end='')
         city, state       = lookup_city_state_given_zip_file(zip,myzips)
-        print(city, state)
         closest_city_state[zip] = (city,state)
+    return closest_city_state
+
+def generate_all_possible_closest_zips_mongodb():
+    closest_city_state = []
+    print('genall3')
+    for zip in ("%.5d" % x for x in range(9)):
+        city, state       = lookup_city_state_given_zip_file(zip,myzips)
+        citytext          = f"{city},{state}"
+        url =  craigzipsandurls.lookup_craigs_url_from_dict_file(citytext,web_links)
+        x = {'zip': zip, 'Details': {'City': city, 'State': state},
+        'craigs_local_url' : url}
+        print(x)
+        closest_city_state.append(x)
     return closest_city_state
 
 def lookup_city_state_given_zip_file(zip, zip_code_dict):
@@ -85,10 +99,24 @@ def load_zips_to_memcached(zipcode_dict):
     for zip,(city,state) in zipcode_dict.items():
         client.set(zip,(city,state))
 
+def load_zips_to_mongodb(closest_list):
+    ''' write all the key/values to mongodb '''
+    client = MongoClient()
+    db = client.posts
+    posts = db.posts
+    print('load4')
+    #for x in closest_list:
+    #    print(x.rstrip(','))
+    #    result = posts.insert_one(x.rstrip(','))
+    new_result = posts.insert_many(closest_list)
+    print('Multiple posts: {0}'.format(new_result.inserted_ids))
+    #print(result.inserted_id)
+
 if __name__ == "__main__":
 
     import sys
     import app_logger
+    import craigzipsandurls
 
     try:
         zip = sys.argv[1]
@@ -96,9 +124,12 @@ if __name__ == "__main__":
             print('Please wait')
             #zip = sys.argv[2]
             myzips              = create_zips_city_state_dict_from_file(zip_code_file)
-            closest_city_states = generate_all_possible_closest_zips()
+            web_links = craigzipsandurls.create_craigs_url_dict_from_disk()
+            #closest_city_states = generate_all_possible_closest_zips()
+            closest_city_states  = generate_all_possible_closest_zips_mongodb()
+            load_zips_to_mongodb(closest_city_states)
             #print(lookup_city_state_given_zip_file(zip, myzips))
-            load_zips_to_memcached(closest_city_states)
+            #load_zips_to_memcached(closest_city_states)
             #print(lookup_city_state_given_zip_memcached(zip))
         else:
             try:

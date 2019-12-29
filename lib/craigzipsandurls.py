@@ -77,6 +77,14 @@ def lookup_craigs_url_memcached(citytext):
         print(link.decode('UTF-8'))
         return link
 
+def lookup_items_in_zip_memcached(zip):
+    zip_item_key = zip + '-'
+    client = base.Client(('localhost', 11211))
+    resp = client.get(zip_item_key).decode("utf-8")
+    items = resp.split(":")
+    return items
+
+
 if __name__ == "__main__":
 
     import sys
@@ -115,4 +123,4 @@ if __name__ == "__main__":
 
 
 else:
-    from . import requestwrap
+    import requestwrap
