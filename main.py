@@ -45,22 +45,28 @@ def main(zip):
     """ only show me a few items """
     for each_item in craigs_local_posts[0:3]:
 
-        each_link = each_item.attrs["href"]
-        end_lat, end_lng, miles = websitepuller.lookup_miles_from_user(
+        try:
+            each_link = each_item.attrs["href"]
+            end_lat, end_lng, miles = websitepuller.lookup_miles_from_user(
             each_item, start_lat, start_lng
-        )
-        # price                  = websitepuller.lookup_price_on_ebay(each_item)
-        price = 5
-        # mind,maxd              = websitepuller.lookup_cost_lyft(start_lat,start_lng,end_lat,end_lng)
-        mind, maxd = 8, 9
-        printable_data = (
-            f"{each_item.text} is selling for {price} on "
-            f"Ebay and is {miles:.2f} miles away from you. Using Lyft it will "
-            f"cost between {mind} and {maxd} dollars to pick up.\n"
-        )
-        all_posts.append(printable_data)
-        all_links.append(each_link)
-    all_links = enumerate(all_links, 1)
+            )
+            # price                  = websitepuller.lookup_price_on_ebay(each_item)
+            price = 5
+
+            # mind,maxd              = websitepuller.lookup_cost_lyft(start_lat,start_lng,end_lat,end_lng)
+            mind, maxd = 8, 9
+
+            printable_data = (
+                f"{each_item.text} is selling for {price} on "
+                f"Ebay and is {miles:.2f} miles away from you. Using Lyft it will "
+                f"cost between {mind} and {maxd} dollars to pick up.\n"
+            )
+            all_posts.append(printable_data)
+            all_links.append(each_link)
+        except AttributeError:
+            break
+
+    all_links = enumerate(all_links, start = 1)
     return all_posts, all_links, city, state
 
 

@@ -31,11 +31,11 @@ def lookup_miles_from_user(each_item, start_lat, start_lng):
         end_lat, end_lng, _ = (
             googurl.attrs["href"].split("@")[1].split("z")[0].split(",")
         )
+        miles = geodesic((start_lat, start_lng), (end_lat, end_lng)).mi
+        return end_lat, end_lng, miles
     except AttributeError:
         print(f"{each_item.text} was likely deleted")
-        pass
-    miles = geodesic((start_lat, start_lng), (end_lat, end_lng)).mi
-    return end_lat, end_lng, miles
+        raise
 
 
 def lookup_price_on_ebay(each_item):

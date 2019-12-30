@@ -130,10 +130,10 @@ def generate_documents_to_import_to_mongodb(zips2knowncityurls, gov_city_state_z
                 zip, zips2knowncityurls)
 
         city, state = lookup_city_state_given_zip(zip, gov_city_state_zips)
-        x = {'zip': zip, 'Details': {'City': city,
+        mongo_doc = {'zip': zip, 'Details': {'City': city,
                                      'State': state}, 'craigs_local_url': url}
-        city_state_zip_map.append(x)
-        print(x)
+        city_state_zip_map.append(mongo_doc)
+        print(mongo_doc)
 
     return city_state_zip_map
 

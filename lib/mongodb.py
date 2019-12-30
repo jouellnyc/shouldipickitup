@@ -13,7 +13,6 @@ def lookup_craigs_url_given_zip(zip):
         raise ValueError
     else:
         url = response['craigs_local_url']
-        print("URL", url)
         return url
 
 
