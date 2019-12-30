@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from lib import mongodb
 from lib import websitepuller
-from lib import govzipsandcities
-from lib import craigzipsandurls
-
-zip_code_file = ('/home/john/gitrepos/shouldipickitup/data/free-zipcode-database-Primary.no.header.csv')
 
 def main(zip):
 
@@ -15,54 +12,18 @@ def main(zip):
     start_lat = '29.5964'
     start_lng = '-82.2178'
 
-    ''' Given a zip, find the closest numerial match and return city,state names '''
-    try:
-        return craigzipsandurls.lookup_items_in_zip_memcached(zip), ['a','b','c'], 'b', 'c'
-    except ValueError:
-        try:
-            city, state = govzipsandcities.lookup_city_state_given_zip_memcached(zip)
-            citytext = f"{city},{state}" #Add the comman back in...
-            print(f"Debug citytext: {citytext}\n"
-                  f"city: {city}\n"
-                  f"state:{state}")
-        except ValueError:
-            citytext = 'SFbayarea'
-            city  = f"Couldn't find anything near {zip}, but here's Bay Area "
-            state = ""
-        except ConnectionRefusedError:
-            city, state = govzipsandcities.lookup_city_state_given_zip_file(zip, zip_code_file)
-            city, state = city.lower() , state.upper()
-            citytext = f"{city},{state}"
-            #print(f"Debug citytext: {citytext}, {city}, {state}, {citytext}")
 
-    ''' Given a city name, find the closest local Craigslist Url '''
+    ''' Given a zip, find the Craigslist Url '''
     try:
-        craigs_list_url = craigzipsandurls.lookup_craigs_url_memcached(citytext)
-        craigs_list_url = craigs_list_url.decode('UTF-8')
+        craigs_list_url = mongodb.lookup_craigs_url_given_zip(zip)
+        city, state     = mongodb.lookup_city_state_given_zip(zip)
+        print(craigs_list_url, city, state )
     except ValueError as e:
-        print('veeqq',type(e),e)
-        craigs_list_url = 'https://sfbay.craigslist.org' #no trailing /
-        city  = f"Couldn't find anything near {zip}, but here's Bay Area "
-        state = ""
         print(craigs_list_url)
     except ConnectionRefusedError:
-        try:
-            print('h1')
-            web_links = craigzipsandurls.create_craigs_url_dict_from_disk()
-            craigs_list_url = craigzipsandurls.lookup_craigs_url_from_dict_file(citytext, web_links)
-            print('h1a')
-        except KeyError:
-            print("KE:")
-            citytext = 'SFbayarea'
-            craigs_list_url = 'https://sfbay.craigslist.org' #no trailing /
-            city  = f"Couldn't find anything near {zip}, but here's Bay Area "
-            state = ""
-            print(f"Debug url: {craigs_list_url}")
-            print(city, state, citytext)
+        pass
     except Exception as e:
-        print('eeeeeeqq',type(e),e)
-        #else:
-        #print(f"Debug: {citytext} is available at {craigs_list_url}")
+        print(e)
 
     ''' Given the the closest local Craigslist url, return the free items '''
     print('h2')
