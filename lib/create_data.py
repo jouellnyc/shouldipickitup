@@ -18,10 +18,10 @@ craigs_links.txt = City, State names to Craigslist zips2knowncityurls
 
 #Round 1
 Create 2 dictionaries:
-#zip to city
-11111-> boston ma
 
-#City to craigslist url
+#Zip to city
+11111-> boston ma
+#city to craigslist url
 boston,ma -> link.craig.com
 
 #Set up a table from those 2 dictionaries with details:
