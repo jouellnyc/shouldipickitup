@@ -8,6 +8,41 @@ import sys
 import json
 from pymongo import MongoClient
 
+'''
+===============================================
+Zip code, City, State, Craigslist Url strategy:
+===============================================
+
+free-zipcode-database-Primary.no.header.csv - zip codes to City, State generate_documents_to_import_to_mongodb
+craigs_links.txt = City, State names to Craigslist zips2knowncityurls
+
+#Round 1
+Create 2 dictionaries:
+#zip to city
+11111-> boston ma
+
+#City to craigslist url
+boston,ma -> link.craig.com
+
+#Set up a table from those 2 dictionaries with details:
+{'zip': '49831', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url': "blah.com"}
+{'zip': '49832', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url':     None  }
+
+#Round 2
+#Then get the closest zip to the  known zips (fill in the Nones) using a 3rd dictionary
+{'zip': '49831', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url': None}
+
+#This is still imperfect data, but at least all of the zip in the government
+#file will have relevant data from somewhere 'somewhat' close.
+
+#Round 3
+Find out all the other mappings w/o commas and load those.
+
+#Round 4
+Load PR and any other remote sites
+
+'''
+
 URL = 'http://federalgovernmentzipcodes.us/download.html' # not used
 my_file_name = os.path.basename(__file__)
 zip_code_file = '/home/john/gitrepos/shouldipickitup/data/free-zipcode-database-Primary.no.header.csv'
@@ -32,6 +67,8 @@ def create_zips_city_state_dict_from_local_file(zip_code_file):
     return city_state_zips
 
 def create_craigs_url_dict_from_local_file(craigs_links_file):
+    ''' Return a dictionary (city,state => url)             '''
+    ''' give the craigs_links_file file                     '''
     with open(craigs_links_file) as fh:
         contents = fh.readlines()
         craigs_city_links = {}
@@ -40,7 +77,6 @@ def create_craigs_url_dict_from_local_file(craigs_links_file):
             craigs_link = ''.join(craigs_link.split())
             craigs_city_links[citytext] = craigs_link
     return craigs_city_links
-
 
 def lookup_closest_craigs_url_given_zip_with_known_link(zip, city_state_zips):
     ''' Given a zipcode;  return URL of a zip with a known Craigslist URL '''
@@ -60,6 +96,7 @@ def lookup_craigs_url_given_zip(zip, zip_code_dict):
     return zip_code_dict[zip]
 
 def create_map_of_zips_to_known_city_urls(craigs_city_links, gov_city_state_zips):
+    ''' Given the 2 mappings, combine where you can pull out a craiglist url '''
     city_state_zip_map = {}
     for zip in (gov_city_state_zips.keys()):
         city, state       = lookup_city_state_given_zip(zip, gov_city_state_zips)
@@ -71,7 +108,8 @@ def create_map_of_zips_to_known_city_urls(craigs_city_links, gov_city_state_zips
     return city_state_zip_map
 
 def generate_documents_to_import_to_mongodb(zips2knowncityurls, gov_city_state_zips):
-
+    ''' Format the data for importing to Mongodb                              '''
+    ''' If a url is not found, find the closest zip and use that url          '''
     city_state_zip_map = []
 
     for zip in (gov_city_state_zips.keys()):
