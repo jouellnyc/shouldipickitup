@@ -10,6 +10,24 @@ Out[122]:
 db.posts.count_documents({})
 db.posts.drop( {} )
 
+
+In [155]: posts.replace_one({'zip':'94016'}, {'zip':'94016','Details': {'City': 'dalycity', 'State': 'CA','craigs_local_url':
+     ...: 'https://santamaria.craigslist.org', 'item1' : "text", 'item2': "text2", 'item3' : "text3"}})
+Out[155]: <pymongo.results.UpdateResult at 0x7fbca8933be0>
+
+In [156]: posts.find_one({'zip':'94016'})
+Out[156]:
+{'_id': ObjectId('5e094f293dc4a1350a76b5bb'),
+ 'zip': '94016',
+ 'Details': {'City': 'dalycity',
+  'State': 'CA',
+  'craigs_local_url': 'https://santamaria.craigslist.org',
+  'item1': 'text',
+  'item2': 'text2',
+  'item3': 'text3'}}
+
+
+
 ===
 db.posts.find({"craigs_local_url":{$eq:null}}).count()
 db.posts.find({"craigs_local_url":{$ne:null}}).count()

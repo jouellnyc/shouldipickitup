@@ -8,9 +8,13 @@ def lookup_craigs_url_given_zip(zip):
     db = client.posts
     posts = db.posts
     response = posts.find_one({'zip':zip})
-    url = response['craigs_local_url']
-    return url
-
+    if response is None:
+        raise ValueError
+    else:
+        url = response['craigs_local_url']
+        print("URL", url)
+        return url
+        
 def lookup_city_state_given_zip(zip):
     ''' Given a zip, return city, state '''
     client = MongoClient()

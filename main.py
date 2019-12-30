@@ -17,11 +17,16 @@ def main(zip):
     try:
         craigs_list_url = mongodb.lookup_craigs_url_given_zip(zip)
         city, state     = mongodb.lookup_city_state_given_zip(zip)
+        city, state     = city.capitalize(), state.upper()
         print(craigs_list_url, city, state )
     except ValueError as e:
-        print(craigs_list_url)
+        craigs_list_url = 'https://sfbay.craigslist.org'
+        city, state     = (
+                            f"Sorry didn't find data for {zip}, here's items for "
+                            f"San Francisco "
+                          ), "CA"
     except ConnectionRefusedError:
-        pass
+        pass # for now
     except Exception as e:
         print(e)
 
@@ -55,7 +60,7 @@ def main(zip):
         all_posts.append(printable_data)
         all_links.append(each_link)
     all_links = enumerate(all_links,1)
-    return all_posts, all_links, city.capitalize(), state.upper()
+    return all_posts, all_links, city, state
 
 if __name__ == "__main__":
 
