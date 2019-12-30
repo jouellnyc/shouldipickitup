@@ -1,0 +1,19 @@
+
+        #zip = sys.argv[1]
+        #print(city_state_zips)
+        #city, state = lookup_city_state_given_zip(zip, city_state_zips)
+        #print("city, state:", city, state)
+        #citytext = city + ',' + state
+        #print("citytext:", citytext)
+                #print('hi there')
+        #print(craigs_city_links)
+        #try:
+        #    craigs_url = lookup_craigs_url_given_city(citytext, craigs_city_links)
+        #except KeyError as e:
+        #    print(e)
+
+        #for line in open('../data/cities.txt'):
+        #    line =  line.rstrip()
+        #    print ("=====", line, "=====")
+        #    print(len(line), type(line))
+        #    print(lookup_craigs_url_given_city(line, craigs_city_links))

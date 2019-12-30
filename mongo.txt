@@ -1,0 +1,16 @@
+
+posts.find_one({'zip':'23286'})
+
+Out[122]:
+{'_id': ObjectId('5e082f35c020534f098fbda5'),
+ 'zip': '23286',
+ 'Details': {'City': 'richmond', 'State': 'VA'},
+ 'craigs_local_url': 'https://richmond.craigslist.org'}
+
+db.posts.count_documents({})
+db.posts.drop( {} )
+
+===
+db.posts.find({"craigs_local_url":{$eq:null}}).count()
+db.posts.find({"craigs_local_url":{$ne:null}}).count()
+use posts

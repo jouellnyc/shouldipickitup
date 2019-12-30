@@ -1,0 +1,4 @@
+https://lzone.de/blog/How-to%20Dump%20Keys%20from%20Memcache
+
+
+stats cachedump 2 500
