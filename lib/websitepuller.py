@@ -29,7 +29,8 @@ def lookup_miles_from_user(each_item, start_lat, start_lng):
 
     try:
         end_lat, end_lng, _ = (
-            googurl.attrs["href"].split("@")[1].split("z")[0].split(","))
+            googurl.attrs["href"].split("@")[1].split("z")[0].split(",")
+        )
     except AttributeError:
         print(f"{each_item.text} was likely deleted")
         pass
@@ -47,9 +48,7 @@ def lookup_price_on_ebay(each_item):
     ebay_soup = BeautifulSoup(ebay_resp.text, "html.parser")
     # print("soup eb: " + str( len(ebay_soup) ) )
     try:
-        item = ebay_soup.find("h3", {
-            "class": "s-item__title"
-        }).get_text(separator=" ")
+        item = ebay_soup.find("h3", {"class": "s-item__title"}).get_text(separator=" ")
     except AttributeError:
         item = "no match"
         price = "no price"
