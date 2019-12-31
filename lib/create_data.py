@@ -13,14 +13,21 @@ from pymongo import MongoClient
 Zip code, City, State, Craigslist Url strategy:
 ===============================================
 
+
+#Round 1
+
+Take 2 files:
+
 free-zipcode-database-Primary.no.header.csv - zip codes to City, State generate_documents_to_import_to_mongodb
 craigs_links.txt = City, State names to Craigslist zips2knowncityurls
 
-#Round 1
 Create 2 dictionaries:
 
 #Zip to city
 11111-> boston ma
+
+and
+
 #city to craigslist url
 boston,ma -> link.craig.com
 
@@ -28,15 +35,18 @@ boston,ma -> link.craig.com
 {'zip': '49831', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url': "blah.com"}
 {'zip': '49832', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url':     None  }
 
+
 #Round 2
 #Then get the closest zip to the  known zips (fill in the Nones) using a 3rd dictionary
 {'zip': '49831', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url': None}
 
 #This is still imperfect data, but at least all of the zip in the government
 #file will have relevant data from somewhere 'somewhat' close.
+#This also means Brooklyn could be considered close to Albany...(well, kind of, for now)
 
 #Round 3
 Find out all the other mappings w/o commas and load those.
+
 
 #Round 4
 Load PR and any other remote sites
@@ -90,18 +100,14 @@ def lookup_closest_craigs_url_given_zip_with_known_link(zip, city_state_zips):
     except TypeError as e:
         raise ValueError(e)
 
-
 def lookup_craigs_url_given_city(citytext, craigs_city_links):
     return craigs_city_links[citytext]
-
 
 def lookup_city_state_given_zip(zip, zip_code_dict):
     return zip_code_dict[zip]
 
-
 def lookup_craigs_url_given_zip(zip, zip_code_dict):
     return zip_code_dict[zip]
-
 
 def create_map_of_zips_to_known_city_urls(craigs_city_links, gov_city_state_zips):
     ''' Given the 2 mappings, combine where you can pull out a craiglist url '''
@@ -119,7 +125,7 @@ def create_map_of_zips_to_known_city_urls(craigs_city_links, gov_city_state_zips
 def generate_documents_to_import_to_mongodb(zips2knowncityurls, gov_city_state_zips):
     ''' Format the data for importing to Mongodb                              '''
     ''' If a url is not found, find the closest zip and use that url          '''
-    city_state_zip_map = []
+    mongo_city_state_zip_map = []
 
     for zip in (gov_city_state_zips.keys()):
 
@@ -130,12 +136,11 @@ def generate_documents_to_import_to_mongodb(zips2knowncityurls, gov_city_state_z
                 zip, zips2knowncityurls)
 
         city, state = lookup_city_state_given_zip(zip, gov_city_state_zips)
-        mongo_doc = {'zip': zip, 'Details': {'City': city,
-                                     'State': state}, 'craigs_local_url': url}
-        city_state_zip_map.append(mongo_doc)
+        mongo_doc = {'zip': zip, 'City': city,'State': state, 'craigs_url' : url}
         print(mongo_doc)
+        mongo_city_state_zip_map.append(mongo_doc)
 
-    return city_state_zip_map
+    return mongo_city_state_zip_map
 
 
 if __name__ == "__main__":
@@ -156,6 +161,5 @@ if __name__ == "__main__":
             zips2knowncityurls, gov_city_state_zips)
         mongodb.load_zips_to_mongodb(mongo_city_state_zip_map)
         # This takes about 2-3 minutes
-        # This also means Brooklyn could be considered close to Albany...(well, kind of, for now)
     except Exception as e:
         print(e)

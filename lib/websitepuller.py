@@ -8,8 +8,10 @@ import json
 from bs4 import BeautifulSoup
 from geopy.distance import geodesic
 
-from . import requestwrap
-
+try:
+    from lib import requestwrap #if called from ..main()
+except ModuleNotFoundError:
+    import requestwrap          #if called from .
 
 def lookup_craigs_posts(craigs_list_url):
     craigs_response = requestwrap.err_web(craigs_list_url)
@@ -73,7 +75,3 @@ def lookup_cost_lyft(start_lat, start_lng, end_lat, end_lng):
     mind = min / 100
     maxd = max / 100
     return mind, maxd
-
-
-if __name__ == "__main__":
-    pass
