@@ -32,13 +32,13 @@ and
 boston,ma -> link.craig.com
 
 #Set up a table from those 2 dictionaries with details:
-{'zip': '49831', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url': "blah.com"}
-{'zip': '49832', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url':     None  }
 
+{'zip': '49831', 'City': 'Felch', 'State': 'MI', 'craigs_local_url': "blah.com"}
+{'zip': '49832', 'City': 'Felch', 'State': 'MI', 'craigs_local_url':  None}
+...
 
 #Round 2
 #Then get the closest zip to the  known zips (fill in the Nones) using a 3rd dictionary
-{'zip': '49831', 'Details': {'City': 'felch', 'State': 'MI'}, 'craigs_local_url': None}
 
 #This is still imperfect data, but at least all of the zip in the government
 #file will have relevant data from somewhere 'somewhat' close.
@@ -159,7 +159,7 @@ if __name__ == "__main__":
         # Round 2
         mongo_city_state_zip_map = generate_documents_to_import_to_mongodb(
             zips2knowncityurls, gov_city_state_zips)
-        mongodb.load_zips_to_mongodb(mongo_city_state_zip_map)
+        mongodb.init_load_city_state_zip_map(mongo_city_state_zip_map)
         # This takes about 2-3 minutes
     except Exception as e:
         print(e)
