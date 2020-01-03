@@ -36,7 +36,7 @@ def main(zip):
 
         all_posts, all_links = mongodb.lookup_craigs_posts(zip)
 
-    except (KeyError, ValueError, ConnectionRefusedError) as e:
+    except (KeyError, ValueError, ConnectionRefusedError, ServerSelectionTimeoutError) as e:
         ''' If there are no items whatsoever, if ItemX DNE '''
 
         print("NoMo Mongo: ", e) #Why print Item1?
@@ -76,9 +76,7 @@ def main(zip):
             except AttributeError:
                 break
 
-    else:
-
-        all_links = enumerate(all_links, start = 1)
+    all_links = enumerate(all_links, start = 1)
 
     return all_posts, all_links, city, state
 

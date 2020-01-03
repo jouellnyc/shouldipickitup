@@ -6,3 +6,4 @@
 - implement item caching
 - touch up flask / nginx configs
 - make site prettier
+- test for mongo is down

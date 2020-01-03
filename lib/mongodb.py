@@ -18,18 +18,30 @@ def lookup_craigs_url_given_zip(zip):
     dbh = ConnectToMongo()
     response = dbh.find_one({"zip": zip})
     if response is None:
-        raise ValueError
+        raise ValueError("No data in Mongo for " + str(zip))
     else:
-        print(response)
         url = response["craigs_url"]
         return url
+
 
 def lookup_city_state_given_zip(zip):
     """ Given a zip, return city, state """
     dbh = ConnectToMongo()
     response = dbh.find_one({"zip": zip})
-    city, state = response["City"], response["State"]
-    return city, state
+    if response is None:
+        raise ValueError("No data in Mongo for " + str(zip))
+    else:
+        city, state = response["City"], response["State"]
+        return city, state
+
+def lookup_craigs_posts(zip):
+    dbh = ConnectToMongo()
+    response = dbh.find_one({"zip": zip})
+    if response is None:
+        raise ValueError
+    else:
+        return ([response['Item1'], response['Item2'], response['Item3'] , response['Item4']],
+                [response['Url1'] , response['Url2'] , response['Url3']  ,  response['Url4']])
 
 
 def update_one_document(mongo_filter, mongo_doc):
@@ -38,14 +50,6 @@ def update_one_document(mongo_filter, mongo_doc):
     new_result = dbh.update_one(mongo_filter, mongo_doc)
     print(new_result.raw_result)
 
-def lookup_craigs_posts(zip):
-    dbh = ConnectToMongo()
-    response = dbh.find_one({"zip": zip})
-    if response is None:
-        raise ValueError
-    else:
-        return ([ response['Item1'], response['Item2'], response['Item3'] ],
-                [ response['Url1'] , response['Url2'] , response['Url3']  ])
 
 def init_load_city_state_zip_map(closest_list):
     """ write all the key/values to mongodb """
