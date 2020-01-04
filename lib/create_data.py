@@ -118,6 +118,6 @@ if __name__ == "__main__":
         mongo_city_state_zip_map = generate_master_documents_import_to_mongodb(
             craigs_city_links,gov_city_state_zips)
         mongodb.init_load_city_state_zip_map(mongo_city_state_zip_map)
-        # This takes about 15 seconds now!
+        # This takes about 5 seconds now!
     except Exception as e:
         print(e)
