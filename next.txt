@@ -1,11 +1,7 @@
 
-
-- add 'main_url' collection; containing names.
-  query for items of main url in new collection
 - update all callers exceptions
+- test for mongo is down
 - update all zips for correct data
 - implement timeout for item caching
-- implement item caching
 - touch up flask / nginx configs
 - make site prettier
-- test for mongo is down
