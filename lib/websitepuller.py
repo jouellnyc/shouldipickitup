@@ -9,9 +9,9 @@ from bs4 import BeautifulSoup
 from geopy.distance import geodesic
 
 try:
-    from lib import requestwrap #if called from ..main()
+    from lib import requestwrap    #if called from ..main()
 except ModuleNotFoundError:
-    import requestwrap          #if called from .
+    import requestwrap             #if called from .
 
 def lookup_craigs_posts(craigs_list_url):
     craigs_response = requestwrap.err_web(craigs_list_url)
@@ -19,9 +19,7 @@ def lookup_craigs_posts(craigs_list_url):
     craigs_posts = craigs_soup.find_all("a", class_="result-title hdrlnk")
     return craigs_posts
 
-
 mapsre = re.compile("https://www.google.com/maps/preview/")
-
 
 def lookup_miles_from_user(each_item, start_lat, start_lng):
     item_url = each_item.attrs["href"]
