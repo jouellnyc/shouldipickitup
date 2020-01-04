@@ -1,5 +1,7 @@
 
 
+- add 'main_url' collection; containing names.
+  query for items of main url in new collection
 - update all callers exceptions
 - update all zips for correct data
 - implement timeout for item caching
