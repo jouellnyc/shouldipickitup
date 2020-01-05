@@ -1,15 +1,14 @@
 #!/home/john/anaconda3/bin/python3.7
 
 import os
-import re
 import sys
+import logging
 
 import csv
-import json
 import statistics
+
 from collections import defaultdict
 
-from pymongo import MongoClient
 
 '''
 ===============================================
@@ -61,7 +60,7 @@ my_file_name = os.path.basename(__file__)
 zip_code_file = '/home/john/gitrepos/shouldipickitup/data/free-zipcode-database-Primary.no.header.csv'
 craigs_links_file = '/home/john/gitrepos/shouldipickitup/data/craigs_links.txt'
 
-def create_govcity_state_zips_dict_from_local_file(zip_code_file):
+def create_gov_city_state_mutlizips_map(zip_code_file):
     ''' Return a dictionary with (city,state) zip values    '''
     ''' give the file at URL                                '''
     gov_city_state_zips = defaultdict(list)
@@ -96,7 +95,7 @@ def lookup_craigs_url_with_city(citystate, craigs_city_links):
     return craigs_city_links[citystate]
 
 def create_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_zips):
-
+    ''' return the mean of the zips associated with a craigsurl '''
     mean_zip2craigs_url = {}
 
     for citystate, ziplist in gov_city_state_zips.items():
@@ -128,18 +127,51 @@ def find_closest_craigs_url_for_other_cities(zip, mean_zip2craigs_url):
 def generate_master_documents_import_to_mongodb(
     craigs_city_links, gov_city_state_zips, mean_zip2craigs_url):
 
-    mongo_city_state_zip_map = []
+    '''  We want this format:
+    {'craigs_list_url': 'https://zanesville.craigslist.org',
+    'CityState': None,
+    'Zips': [],
+    'AltZips': [],
+    'AltCities': []
+    }
+    '''
+
+    master_mongo_city_state_zip_map  = {}
+    master_mongo_city_state_zip_data = []
+
+    for url in craigs_city_links.values():
+
+        master_mongo_city_state_zip_map[url]               = {}
+        master_mongo_city_state_zip_map[url]['CityState']  = None
+        master_mongo_city_state_zip_map[url]['Zips']       = []
+        master_mongo_city_state_zip_map[url]['AltZips']    = []
+        master_mongo_city_state_zip_map[url]['AltCities']  = []
 
     for citystate, ziplist in gov_city_state_zips.items():
+
         try:
             url = lookup_craigs_url_with_city(citystate, craigs_city_links)
+            master_mongo_city_state_zip_map[url]['CityState']  = citystate
+            master_mongo_city_state_zip_map[url]['Zips']       = ziplist
         except KeyError:
-            url = find_closest_craigs_url_for_other_cities(ziplist[0], mean_zip2craigs_url)
-        mongo_doc = ({'craigs_url': url , "zips" : ziplist, "CityState": citystate })
-        print(mongo_doc)
-        mongo_city_state_zip_map.append(mongo_doc)
-    return mongo_city_state_zip_map
+            #continue
+            first_zip = ziplist[0]
+            url = find_closest_craigs_url_for_other_cities(first_zip, mean_zip2craigs_url)
+            master_mongo_city_state_zip_map[url]['AltZips'].extend(ziplist)
+            master_mongo_city_state_zip_map[url]['AltCities'].append(citystate)
+        except Exception as e:
+            logging.exception('Caught an error')
+        #If we print out here we see it building vs the end state
 
+        #master_mongo_city_state_zip_data.append(master_mongo_city_state_zip_map)
+        #mongodoc = f"{{'craigs_list_url' : {k} ,  {v} }}"1
+
+    for url in craigs_city_links.values():
+        print("=== ", url, " ===")
+        for k, v in master_mongo_city_state_zip_map[url].items():
+            print(k,v)
+
+    #return master_mongo_city_state_zip_data
 
 if __name__ == "__main__":
 
@@ -148,13 +180,14 @@ if __name__ == "__main__":
 
     try:
         #Round 3
-        craigs_city_links        = create_craigs_url_dict_from_local_file(craigs_links_file)
-        gov_city_state_zips      = create_govcity_state_zips_dict_from_local_file(zip_code_file)
-        mean_zip2craigs_url      = create_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_zips)
-        print(mean_zip2craigs_url)
-        mongo_city_state_zip_map =  generate_master_documents_import_to_mongodb(
-                craigs_city_links, gov_city_state_zips, mean_zip2craigs_url)
-        mongodb.init_load_city_state_zip_map(mongo_city_state_zip_map)
-        # This takes about 10 seconds now!
+        craigs_city_links            = create_craigs_url_dict_from_local_file(
+            craigs_links_file)
+        gov_city_state_mutlizips_map = create_gov_city_state_mutlizips_map(
+            zip_code_file)
+        mean_zip2craigs_url          = create_zipcode_2_craigs_url_map(
+            craigs_city_links, gov_city_state_mutlizips_map)
+        master_mongo_city_state_zip_data = generate_master_documents_import_to_mongodb(
+            craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url)
+        #mongodb.init_load_city_state_zip_map(master_mongo_city_state_zip_data)
     except Exception as e:
-        print(e)
+        print("Error: ", e)

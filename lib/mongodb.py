@@ -1,5 +1,7 @@
 #!/home/john/anaconda3/bin/python3.7
 
+##import pymongo
+
 from pymongo import MongoClient
 
 database_name = "shouldipickitup"
@@ -57,8 +59,12 @@ def insert_one_document(mongo_filter, mongo_doc):
     new_result = dbh.insert_one(mongo_filter, mongo_doc)
     print(new_result.inserted_id)
 
-def init_load_city_state_zip_map(mongo_city_state_zip_map):
+def init_load_city_state_zip_map(master_mongo_city_state_zip_data):
     """ write all the key/values to mongodb """
     dbh = ConnectToMongo()
-    new_result = dbh.insert_many(mongo_city_state_zip_map)
-    #print("Multiple posts: {0}".format(new_result.inserted_ids))
+    try:
+        new_result = dbh.insert_many(master_mongo_city_state_zip_data)
+        #print("Multiple posts: {0}".format(new_result.inserted_ids))
+    except BulkWriteError as bwe:
+        print(bwe.details)
+        raise

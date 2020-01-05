@@ -58,3 +58,62 @@ Out[212]:
 db.posts.find({"craigs_local_url":{$eq:null}}).count()
 db.posts.find({"craigs_local_url":{$ne:null}}).count()
 use posts
+
+
+==
+> db.data.findOne({'craigs_url':'https://albany.craigslist.org','zips':'test'})
+{
+	"_id" : ObjectId("5e111cee9bbd040a7ae150bb"),
+	"craigs_url" : "https://albany.craigslist.org",
+	"zips" : "test",
+	"CityState" : "bronx,NY"
+}
+> db.data.updateOne({'craigs_url':'https://albany.craigslist.org'},  {"$set":{'zips':'test2'} })
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.data.findOne({'craigs_url':'https://albany.craigslist.org','zips':'test'})
+null
+> db.data.findOne({'craigs_url':'https://albany.craigslist.org','zips':'test2'})
+{
+	"_id" : ObjectId("5e111cee9bbd040a7ae150bb"),
+	"craigs_url" : "https://albany.craigslist.org",
+	"zips" : "test2",
+	"CityState" : "bronx,NY"
+}
+
+
+==
+
+
+
+
+In [188]: dbh.insert_one({"craigs_url" : "https://eugene.craigslist.orgz", "zips" : zips })
+Out[188]: <pymongo.results.InsertOneResult at 0x7f0fcb2b66e0>
+
+In [189]: dbh.find_one({'craigs_url': 'https://eugene.craigslist.orgz'})
+Out[189]:
+{'_id': ObjectId('5e112d9e7b3bd11f58ff4e58'),
+ 'craigs_url': 'https://eugene.craigslist.orgz',
+ 'zips': ['12122', '32323']}
+
+
+
+> db.data.findOne({'craigs_url':'https://albany.craigslist.org','zips':'test2'})
+{
+	"_id" : ObjectId("5e111cee9bbd040a7ae150bb"),
+	"craigs_url" : "https://albany.craigslist.org",
+	"zips" : "test2",
+	"CityState" : "bronx,NY"
+}
+> db.data.updateOne({'craigs_url': 'https://eugene.craigslist.orgz'}, {"$push":{ "zips": "test3"} } )
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.data.findOne({'craigs_url':'https://eugene.craigslist.orgz'})
+{
+	"_id" : ObjectId("5e112d9e7b3bd11f58ff4e58"),
+	"craigs_url" : "https://eugene.craigslist.orgz",
+	"zips" : [
+		"12122",
+		"32323",
+		"test3"
+	]
+}
+>
