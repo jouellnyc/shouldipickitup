@@ -1,12 +1,11 @@
 #!/home/john/anaconda3/bin/python3.7
 
-##import pymongo
 
 from pymongo import MongoClient
+import logging
 
 database_name = "shouldipickitup"
 collection_name = "data"
-
 
 def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
     client = MongoClient()
@@ -16,16 +15,27 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
 
 
 def lookup_craigs_url_citystate_and_items_given_zip(zip):
-    dbh = ConnectToMongo()
-    response = dbh.find_one({"zips": zip})
-    if response is None:
-        raise ValueError("No data in Mongo for " + str(zip))
+
+    try:
+        dbh = ConnectToMongo()
+        response = dbh.find_one({"$or": [ {"zips" : zip}, {"AltZips" : zip} ]  })
+        if response is None:
+            raise ValueError("No data in Mongo for " + str(zip))
+    except Exception as e:
+        logging.exception('Caught an error')
+        print(e)
+        raise
     else:
-        citytext = response['CityState']
-        city, state = response['CityState'].split(',')
-        url      = response['craigs_url']
-    return(city, state, url, [response['Item1'], response['Item2'], response['Item3'],
-         response['Item4'], response['Url1'], response['Url2'], response['Url3'] , response['Url4'] ])
+        try:
+            citytext    = response['CityState']
+            city, state = response['CityState'].split(',')
+            url         = response['craigs_url']
+            return(city, state, url, [response['Item1'], response['Item2'], response['Item3'],
+                response['Item4'], response['Url1'], response['Url2'], response['Url3'] , response['Url4'] ])
+        except KeyError as e:
+            raise ValueError("No details in Mongo for " + str(zip))
+        except Exception as e:
+            raise
 
 def lookup_city_state_given_zip(zip):
     """ Given a zip, return city, state """

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import logging
+
 from lib import mongodb
 from lib import websitepuller
 
@@ -22,8 +24,9 @@ def main(zip):
         all_links = enumerate(all_links, start = 1)
         return all_posts, all_links, city, state
 
-    except (ValueError, ConnectionRefusedError, ServerSelectionTimeoutError) as e:
+    except (ValueError, ConnectionRefusedError, ServerSelectionTimeoutError, KeyError) as e:
 
+        logging.exception('Caught an error')
         craigs_list_url = "https://sfbay.craigslist.org"
         city, state = (
             (f"Sorry didn't find data for {zip}, here's items for " f"San Francisco "),
