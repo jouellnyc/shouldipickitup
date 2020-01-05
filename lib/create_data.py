@@ -136,12 +136,12 @@ def generate_master_documents_import_to_mongodb(
     }
     '''
 
-    master_mongo_city_state_zip_map  = {}
     master_mongo_city_state_zip_data = []
+    master_mongo_city_state_zip_map  = {}
 
     for url in craigs_city_links.values():
 
-        master_mongo_city_state_zip_map[url]               = {}
+        master_mongo_city_state_zip_map[url]               = { 'craigs_url':url }
         master_mongo_city_state_zip_map[url]['CityState']  = None
         master_mongo_city_state_zip_map[url]['Zips']       = []
         master_mongo_city_state_zip_map[url]['AltZips']    = []
@@ -161,17 +161,14 @@ def generate_master_documents_import_to_mongodb(
             master_mongo_city_state_zip_map[url]['AltCities'].append(citystate)
         except Exception as e:
             logging.exception('Caught an error')
-        #If we print out here we see it building vs the end state
+        #If we print out  or iterate here, we see it building vs the end state
 
-        #master_mongo_city_state_zip_data.append(master_mongo_city_state_zip_map)
-        #mongodoc = f"{{'craigs_list_url' : {k} ,  {v} }}"1
-
+    #If we print out or iterate here,  life is good:
     for url in craigs_city_links.values():
-        print("=== ", url, " ===")
-        for k, v in master_mongo_city_state_zip_map[url].items():
-            print(k,v)
+        print(master_mongo_city_state_zip_map[url])
+        master_mongo_city_state_zip_data.append(master_mongo_city_state_zip_map[url])
 
-    #return master_mongo_city_state_zip_data
+    return master_mongo_city_state_zip_data
 
 if __name__ == "__main__":
 
@@ -188,6 +185,6 @@ if __name__ == "__main__":
             craigs_city_links, gov_city_state_mutlizips_map)
         master_mongo_city_state_zip_data = generate_master_documents_import_to_mongodb(
             craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url)
-        #mongodb.init_load_city_state_zip_map(master_mongo_city_state_zip_data)
+        mongodb.init_load_city_state_zip_map(master_mongo_city_state_zip_data)
     except Exception as e:
         print("Error: ", e)
