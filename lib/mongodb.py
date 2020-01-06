@@ -18,7 +18,7 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
 
     try:
         dbh = ConnectToMongo()
-        response = dbh.find_one({"$or": [ {"zips" : zip}, {"AltZips" : zip} ]  })
+        response = dbh.find_one({"$or": [ {"Zips" : zip}, {"AltZips" : zip} ]  })
         if response is None:
             raise ValueError("No data in Mongo for " + str(zip))
     except Exception as e:
