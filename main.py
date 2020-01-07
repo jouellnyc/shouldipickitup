@@ -17,10 +17,11 @@ def main(zip):
     """ Given a zip, find the Craigslist Url """
     try:
 
-        city, state, craigs_list_url, items = mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
+        city, state, url, Items, Urls = \
+            mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
         city, state = city.capitalize(), state.upper()
-        all_posts = items[0:4]
-        all_links = items[4:8]
+        all_posts = Items.values()
+        all_links = Urls.values()
         all_links = enumerate(all_links, start = 1)
         return all_posts, all_links, city, state
 
@@ -36,6 +37,7 @@ def main(zip):
 
     except Exception as e:
         print("Error", e)
+
     else:
         print("Debug:", craigs_list_url, city, state, items)
 

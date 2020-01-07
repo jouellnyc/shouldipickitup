@@ -31,8 +31,9 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
             citytext    = response['CityState']
             city, state = response['CityState'].split(',')
             url         = response['craigs_url']
-            return(city, state, url, [response['Item1'], response['Item2'], response['Item3'],
-                response['Item4'], response['Url1'], response['Url2'], response['Url3'] , response['Url4'] ])
+            Items       = response['Items']
+            Urls        = response['Urls']
+            return (city, state, url, Items, Urls)
         except KeyError as e:
             raise ValueError("No details in Mongo for " + str(zip))
         except Exception as e:

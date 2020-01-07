@@ -1,5 +1,4 @@
 
-- query for main zips and alt zips
 
 - update all callers exceptions
 - test for mongo is down
