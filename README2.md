@@ -12,6 +12,8 @@ Feedback Welcome.
 
 ## Usage example
 
+```
+
 In [21]: %run craigs_lyft_ebay.py
 "Dish Drying Rack" is Free on Craigslist, is selling for $14.99 on Ebay and is 0.46 miles away from you.
  Using Lyft it will cost between 9.0 and 12.0 dollars to pick up.
