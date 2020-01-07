@@ -1,5 +1,5 @@
 # shouldipickitup
-Given a free listing on Craiglist, should I pick it up?
+> Given a free listing on Craiglist, should I pick it up?
 
 NOTE: This project is intentionally "in progress". Not Secured Yet.
 It serves currently for inspiration to learn Python and for future possibilities.
@@ -10,8 +10,9 @@ Feedback Welcome.
 ![ShouldIpickItUp](static/cgeorge.png)
 
 
-```
+## Usage example
 
+```
 
 In [21]: %run craigs_lyft_ebay.py
 "Dish Drying Rack" is Free on Craigslist, is selling for $14.99 on Ebay and is 0.46 miles away from you.
@@ -58,3 +59,19 @@ In [21]: %run craigs_lyft_ebay.py
  Using Lyft it will cost between 10.0 and 12.0 dollars to pick up.
 
 ```
+
+
+## Release History
+* 0.2.1
+    * CHANGE: Update docs (module code remains unchanged)
+
+## Meta
+John Ouellette – [@jjouell](https://twitter.com/jjouell) – twitter[1:]@gmail.com
+
+## Contributing
+
+1. Fork it (<https://github.com/jouellnyc/shouldipickitup>)
+2. Create your feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Pull Request
