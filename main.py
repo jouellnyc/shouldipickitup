@@ -18,7 +18,7 @@ functions:
     * main - the main function of the script
 
 TBD: Input validation. Better outcome if MongoDB is down.
-""""
+"""
 
 import logging
 
