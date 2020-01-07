@@ -10,7 +10,7 @@ app.py - Main Flask application file
 - It expects to be passed:
     - zip  # from nginx html forms
 
-- It sends all returnables to return flasks render_template
+- It sends all returnables to return flask's render_template
 
 - Credit:
 https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
