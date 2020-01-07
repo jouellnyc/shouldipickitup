@@ -1,14 +1,27 @@
-#!/home/john/anaconda3/bin/python3
+#!/usr/bin/env python3
 
+"""
+app.py - Main Flask application file
 
-'''
+- This script is the WSGI form parser/validator.
+
+- This script requires Flask to be installed.
+
+- It expects to be passed:
+    - zip  # from nginx html forms
+
+- It sends all returnables to return flasks render_template
+
+- Credit:
 https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
-'''
+
+"""
+
+
 
 import os
 import sys
 import time
-import pickle
 
 import flask
 from flask import Flask
