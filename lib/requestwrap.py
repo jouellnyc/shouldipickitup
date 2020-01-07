@@ -1,15 +1,26 @@
- #!/home/john/anaconda3/bin/python3.7
+ #!/usr/bin/env python3
 
-
-''' wrap repetitive web requests ''' 
+''' requestwrap.py -  wrap repetitive web requests '''
 
 import sys
 import requests
 
-""" Functions """
 def err_web(url):
-    """ Catch the Errors from the Web Connections             """
-    """ All or nothing here: If not 200 OK - exit the program """
+    """
+    Catch the Errors from the Web Requests
+    All or nothing here: If not 200 OK - exit the program
+
+    Parameters
+    ----------
+    url : str
+        The URL to crawl
+
+    Returns
+    -------
+    r :  A  Beautiful Soup object
+    """"
+
+
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1)'
