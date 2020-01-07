@@ -8,6 +8,7 @@ database_name = "shouldipickitup"
 collection_name = "data"
 
 def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
+    """ Connect to MongoDB """
     client = MongoClient()
     database_handle = client[database_name]
     collection_handle = database_handle[collection_name]
@@ -15,7 +16,7 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
 
 
 def lookup_craigs_url_citystate_and_items_given_zip(zip):
-
+    """ Return all the goodies: items, urls , city , state """
     try:
         dbh = ConnectToMongo()
         response = dbh.find_one({"$or": [ {"Zips" : zip}, {"AltZips" : zip} ]  })
@@ -49,6 +50,7 @@ def lookup_city_state_given_zip(zip):
 
 
 def lookup_craigs_posts(zip):
+    """ return Items and Urls """
     dbh = ConnectToMongo()
     response = dbh.find_one({"zip": zip})
     if response is None:
@@ -58,13 +60,13 @@ def lookup_craigs_posts(zip):
                 [response['Url1'] , response['Url2'] , response['Url3']  ,  response['Url4']])
 
 def update_one_document(mongo_filter, mongo_doc):
-    """ update one doc to mongodb """
+    """ update one doc to mongodb regardless if exists """
     dbh = ConnectToMongo()
-    new_result = dbh.update_one(mongo_filter, mongo_doc)
+    new_result = dbh.update_one(mongo_filter, mongo_doc, upsert=True)
     print(new_result.raw_result)
 
 def insert_one_document(mongo_filter, mongo_doc):
-    """ update one doc to mongodb """
+    """ insert one doc to mongodb """
     dbh = ConnectToMongo()
     new_result = dbh.insert_one(mongo_filter, mongo_doc)
     print(new_result.inserted_id)

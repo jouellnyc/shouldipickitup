@@ -18,15 +18,20 @@ except (ValueError, NameError) as e:
 else:
     print('It Worked. Sending to Mongo...')
 
+howmany = 9 # Set to one more than how many items wanted
+
 mongo_filter = { 'craigs_url': craigs_list_url }
-mongo_doc = { "$set": {} }
-for num, each_item in enumerate(craigs_local_posts[0:8], start=1):
+mongo_doc    = { "$set" :  { 'Items' : {}}}
+#mongo_doc    = { "$set" : { 'Items' : {'item1': 'text1', 'url1' : 'link1' }}}
+
+for num, each_item in enumerate(craigs_local_posts[0:howmany], start=1):
         each_link = each_item.attrs["href"]
         each_text = each_item.text
         item = f"Item{num}"
         url  = f"Url{num}"
-        mongo_doc['$set'][item] = each_text
-        mongo_doc['$set'][url]  = each_link
+        mongo_doc['$set']['Items'][item] =  each_text
+        mongo_doc['$set']['Items'][url]   = each_link
+
         ''' mongo_doc will look like this:
             mongo_doc    = { "$set":  {
                 item1 : each_text1, url1: each_link1,
