@@ -1,4 +1,4 @@
- #!/usr/bin/env python3
+#!/usr/bin/env python3
 
 """ crawler.py  - Web CrawlerCrawl
 
@@ -28,24 +28,24 @@ except (ValueError, NameError) as e:
     print("Error: ", e)
     sys.exit()
 else:
-    print('It Worked. Sending to Mongo...')
+    print("It Worked. Sending to Mongo...")
 
-howmany = 9 # Set to one more than how many items wanted
-mongo_filter = { 'craigs_url': craigs_list_url }
-mongo_doc    = { "$set" :  { 'Items' : {}, 'Urls' : {}   }}
+howmany = 9  # Set to one more than how many items wanted
+mongo_filter = {"craigs_url": craigs_list_url}
+mongo_doc = {"$set": {"Items": {}, "Urls": {}}}
 
 """ We use an Embedded Mongo Doc  to List Items and URls """
 """ Python wise that means a dictionary of dictionaries  """
 
 for num, each_item in enumerate(craigs_local_posts[0:howmany], start=1):
-        each_link = each_item.attrs["href"]
-        each_text = each_item.text
-        item = f"Item{num}"
-        url  = f"Url{num}"
-        mongo_doc['$set']['Items'][item] =  each_text
-        mongo_doc['$set']['Urls'][url]   = each_link
+    each_link = each_item.attrs["href"]
+    each_text = each_item.text
+    item = f"Item{num}"
+    url = f"Url{num}"
+    mongo_doc["$set"]["Items"][item] = each_text
+    mongo_doc["$set"]["Urls"][url] = each_link
 
-        ''' mongo_doc will look like this:
+    """ mongo_doc will look like this:
             {
                 "$set":
 
@@ -57,6 +57,6 @@ for num, each_item in enumerate(craigs_local_posts[0:howmany], start=1):
 
                 }
             }
-        '''
+        """
 print(mongo_filter, mongo_doc)
 mongodb.update_one_document(mongo_filter, mongo_doc)

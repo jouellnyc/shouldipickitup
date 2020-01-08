@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 """ websitepuller.py -
+
 All the code to pull data for *each* item from  Ebay, Lyft or Craiglist
 
 - This script takes in a zip code from Flask/app.py or via cmd line, and then
@@ -13,7 +14,6 @@ It then returns the free items (see below) associated with that MongoDB doc.
 
 -This file contains the following functions:
 
-
 """
 
 
@@ -25,9 +25,10 @@ from bs4 import BeautifulSoup
 from geopy.distance import geodesic
 
 try:
-    from lib import requestwrap    #if called from ..main()
+    from lib import requestwrap  # if called from ..main()
 except ModuleNotFoundError:
-    import requestwrap             #if called from .
+    import requestwrap  # if called from .
+
 
 def lookup_craigs_posts(craigs_list_url):
     """
@@ -40,13 +41,15 @@ def lookup_craigs_posts(craigs_list_url):
     -------
     craigs_posts : list
         A list of all the BeautifulSoup objects containing free items
-    """"
+    """
     craigs_response = requestwrap.err_web(craigs_list_url)
     craigs_soup = BeautifulSoup(craigs_response.text, "html.parser")
     craigs_posts = craigs_soup.find_all("a", class_="result-title hdrlnk")
     return craigs_posts
 
+
 mapsre = re.compile("https://www.google.com/maps/preview/")
+
 
 def lookup_miles_from_user(each_item, start_lat, start_lng):
     """
@@ -66,7 +69,7 @@ def lookup_miles_from_user(each_item, start_lat, start_lng):
 
     Exceptions
         AttributeError - a post without any text
-    """"
+    """
     item_url = each_item.attrs["href"]
     craigs_resp = requestwrap.err_web(item_url)
     craigs_soup = BeautifulSoup(craigs_resp.text, "html.parser")
@@ -92,11 +95,11 @@ def lookup_price_on_ebay(each_item):
 
     Returns
     -------
-    prince  - string
+    price - string
         Price as per Ebay
     Exceptions
         AttributeError - a post without any price info
-    """"
+    """
 
     ebay_url = "https://www.ebay.com/sch/i.html?_from=R40&_trksid=m570.l1313&_nkw="
     ebay_path = (
@@ -105,15 +108,12 @@ def lookup_price_on_ebay(each_item):
     ebay_query_url = ebay_url + ebay_path
     ebay_resp = requestwrap.err_web(ebay_query_url)
     ebay_soup = BeautifulSoup(ebay_resp.text, "html.parser")
-    # print("soup eb: " + str( len(ebay_soup) ) )
     try:
         item = ebay_soup.find("h3", {"class": "s-item__title"}).get_text(separator=" ")
     except AttributeError:
         item = "no match"
         price = "no price"
         return price
-    # print("soup i: " + str( len(item)      ) )
-    # print("eb: " + item)
     try:
         price = ebay_soup.find("span", {"class": "s-item__price"}).get_text()
     except AttributeError:
@@ -132,7 +132,7 @@ def lookup_cost_lyft(start_lat, start_lng, end_lat, end_lng):
     -------
     mind, maxd - strings
         - minimum and maximum Lyft cost
-    """"
+    """
     lyft_url = "http://www.lyft.com"
     lyft_path = f"/api/costs?start_lat={start_lat}&start_lng={start_lng}&end_lat={end_lat}&end_lng={end_lng}"
     lyft_costurl = lyft_url + lyft_path

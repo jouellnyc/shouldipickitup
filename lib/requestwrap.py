@@ -1,11 +1,11 @@
- #!/usr/bin/env python3
+#!/usr/bin/env python3
 
 """ requestwrap.py -  wrap repetitive web requests
 
 - This script module:
     - uses requests to screen scrape and serves as a wrapper for requests
     - takes in a url and crawls it
-    
+
 -This script requires the requests module.
 
 -This file is meant to be imported as a module.
@@ -17,6 +17,7 @@
 
 import sys
 import requests
+
 
 def err_web(url):
     """
@@ -35,13 +36,14 @@ def err_web(url):
 
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1)'
-            'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 '
-            'Safari/537.36'
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1)"
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 "
+            "Safari/537.36"
         }
-        httprequest = requests.get(url, timeout=10,
-                     allow_redirects=True, headers=headers)
-        #raie_for_status() never execs if httprequest.get above has connect error/timeouts
+        httprequest = requests.get(
+            url, timeout=10, allow_redirects=True, headers=headers
+        )
+        # raise_for_status() never execs if httprequest.get above has connect error/timeouts
         httprequest.raise_for_status()
     except reqests.exceptions.HTTPError as errh:
         print("HTTP Error:", errh)
