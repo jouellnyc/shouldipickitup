@@ -1,8 +1,12 @@
 # shouldipickitup
 > Given a free listing on Craiglist, should I pick it up?
 
-NOTE: This project is intentionally "in progress". Not Secured Yet.
+NOTE: This project is intentionally "in progress".
+
+Not Secured Yet.
+
 It serves currently for inspiration to learn Python and for future possibilities.
+
 And for fun. Light and breezy. Nothing serious going on here!
 
 Feedback Welcome.
