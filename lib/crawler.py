@@ -1,6 +1,18 @@
-#!/home/john/anaconda3/bin/python3.7
+ #!/usr/bin/env python3
 
-''' What do I do? I crawl a Craigslist URL Page and load items into MongoDB '''
+""" crawler.py  - Web CrawlerCrawl
+
+-This script:
+    - Takes in a Craigslist URL
+    - Crawls the page
+    - Prepares a MongoDB insert_one_document
+    - Sends data to  MongoDB
+
+-If no data matches or if MongoDB errors, S.F data will be returned
+-This script requires the mongodb and websitepuller helper modules.
+-This file is mean to be run outside of the Flask Appself.
+
+"""
 
 import sys
 
@@ -22,6 +34,8 @@ howmany = 9 # Set to one more than how many items wanted
 mongo_filter = { 'craigs_url': craigs_list_url }
 mongo_doc    = { "$set" :  { 'Items' : {}, 'Urls' : {}   }}
 
+""" We use an Embedded Mongo Doc  to List Items and URls """
+""" Python wise that means a dictionary of dictionaries  """
 
 for num, each_item in enumerate(craigs_local_posts[0:howmany], start=1):
         each_link = each_item.attrs["href"]

@@ -1,6 +1,19 @@
  #!/usr/bin/env python3
 
-''' requestwrap.py -  wrap repetitive web requests '''
+""" requestwrap.py -  wrap repetitive web requests
+
+- This script module:
+    - uses requests to screen scrape and serves as a wrapper for requests
+    - takes in a url and crawls it
+    
+-This script requires the requests module.
+
+-This file is meant to be imported as a module.
+
+- It contains the following functions:
+    * err_web- the main function of the script wrapping requests
+
+"""
 
 import sys
 import requests
@@ -17,9 +30,8 @@ def err_web(url):
 
     Returns
     -------
-    r :  A  Beautiful Soup object
-    """"
-
+    httprequest :  A  Beautiful Soup object
+    """
 
     try:
         headers = {
@@ -27,11 +39,11 @@ def err_web(url):
             'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 '
             'Safari/537.36'
         }
-        r = requests.get(url, timeout=10,
-                         allow_redirects=True, headers=headers)
-        #raise_for_status() never execs if request.get above has connect error/timeouts
-        r.raise_for_status()
-    except requests.exceptions.HTTPError as errh:
+        httprequest = requests.get(url, timeout=10,
+                     allow_redirects=True, headers=headers)
+        #raie_for_status() never execs if httprequest.get above has connect error/timeouts
+        httprequest.raise_for_status()
+    except reqests.exceptions.HTTPError as errh:
         print("HTTP Error:", errh)
         sys.exit(1)
     except requests.exceptions.ConnectionError as errc:
@@ -44,4 +56,4 @@ def err_web(url):
         print("OOps: Something Else", err)
         sys.exit(1)
     else:
-        return r
+        return httprequest
