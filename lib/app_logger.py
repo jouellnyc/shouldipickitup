@@ -1,4 +1,7 @@
-#!/home/john/anaconda3/bin/python3.7
+#!/usr/bin/env python3
+
+
+""" I am not implemented yet! """
 
 
 import datetime

@@ -1,4 +1,4 @@
-#!/home/john/anaconda3/bin/python3.7
+#!/usr/bin/env python3
 
 import os
 import sys

@@ -1,4 +1,4 @@
-#!/home/john/anaconda3/bin/python3.7
+#!/usr/bin/env python3
 
 
 from pymongo import MongoClient
