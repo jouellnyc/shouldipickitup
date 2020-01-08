@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-main.py - interface into flask and mongodb
+main.py - interface into flask and mongodb.
 
 - This script takes in a zip code from Flask/app.py or via cmd line, and then
 determines the right Craiglist URL by qurying 'Zips' or 'AltZips' in MongoDB.
@@ -26,6 +26,8 @@ from lib import mongodb
 
 def main(zip):
     """
+    Send data to flask template for display after querying MongoDB.
+
     Parameters
     ----------
     zip : str
@@ -42,11 +44,10 @@ def main(zip):
     state
         [str] - the state associated with the zip (for display only)
 
-    start_lat \
-    start_lng /   to be used to calculate distance (disabled for now)
+    start_lat
+    start_lng    to be used to calculate distance (disabled for now)
 
     """
-
     start_lat = "40.6490763"
     start_lng = "-73.9762069"
 
