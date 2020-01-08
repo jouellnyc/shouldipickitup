@@ -1,17 +1,6 @@
 #!/usr/bin/env python3
 
-import os
-import sys
-import logging
-
-import csv
-import statistics
-
-from collections import defaultdict
-
-
-"""
-create_data.py -
+""" create_data.py -
 
 - This script takes 2 files:
     - free-zipcode-database-Primary.no.header.csv - government zip DB
@@ -33,6 +22,16 @@ This also means Brooklyn could be considered close to Albany...(well, kind of, f
 
 TBD: Fine tune the other 200 craiglist surls
 """
+
+import os
+import sys
+import logging
+
+import csv
+import statistics
+
+from collections import defaultdict
+
 
 URL = "http://federalgovernmentzipcodes.us/download.html"  # not used
 my_file_name = os.path.basename(__file__)

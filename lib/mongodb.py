@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-"""
-mongodb.py - interface into MongoDB
+""" mongodb.py - interface into MongoDB
 
 - This script takes in a zip code uses pymongo to connect to  MongoDB.
 

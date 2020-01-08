@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-""" websitepuller.py -
-
-All the code to pull data for *each* item from  Ebay, Lyft or Craiglist
+""" websitepuller.py - pull data for *each* item  - Ebay, Lyft or Craiglist
 
 - This script takes in a zip code from Flask/app.py or via cmd line, and then
 determines the right Craiglist URL by qurying 'Zips' or 'AltZips' in MongoDB.

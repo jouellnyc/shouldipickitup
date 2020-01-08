@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" crawler.py  - Web CrawlerCrawl
+""" crawler.py  - Web Crawler
 
 -This script:
     - Takes in a Craigslist URL
