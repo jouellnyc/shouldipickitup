@@ -66,8 +66,16 @@ In [21]: %run craigs_lyft_ebay.py
 
 
 ## Release History
-* 0.2.1
-    * CHANGE: Update docs (module code remains unchanged)
+* 0.4.2
+    * CHANGE: Update Docstrings (module code remains unchanged)
+* 0.4.1
+    * CHANGE: Change how data is munged and loaded into Mongo 
+* 0.3.X
+    * CHANGE: Use Mongdb; rm Memcached 
+* 0.2.X
+    * CHANGE: Incorporate Flask
+* 0.1.X
+    * Testing MemCached and Basic Setup
 
 ## Meta
 John Ouellette – [@jjouell](https://twitter.com/jjouell) – twitter[1:]@gmail.com
