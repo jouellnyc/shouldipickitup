@@ -2,30 +2,34 @@
 
 """ crawler.py  - Web Crawler
 
--This script:
+- This script:
     - Takes in a Craigslist URL
     - Crawls the page
     - Prepares a MongoDB insert_one_document
     - Sends data to  MongoDB
 
--If no data matches or if MongoDB errors, S.F data will be returned
--This script requires the mongodb and websitepuller helper modules.
--This file is mean to be run outside of the Flask Appself.
+- If no data matches or if MongoDB errors, S.F data will be returned
+- This script requires the mongodb and websitepuller helper modules.
+- This file is meant to be run outside of the Flask App itself and
+- not imported as a module.
 
 """
 
 import sys
+import logging
 
 import mongodb
 import websitepuller
 
 craigs_list_url = sys.argv[1]
+send_to_mongo   = sys.argv[2]
 
 try:
     craigs_local_url = craigs_list_url + "/d/free-stuff/search/zip"
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
 except (ValueError, NameError) as e:
     print("Error: ", e)
+    logging.exception("Error")
     sys.exit()
 else:
     print("It Worked. Sending to Mongo...")
@@ -59,4 +63,8 @@ for num, each_item in enumerate(craigs_local_posts[0:howmany], start=1):
             }
         """
 print(mongo_filter, mongo_doc)
-mongodb.update_one_document(mongo_filter, mongo_doc)
+
+if send_to_mongo == 'noindex': 
+    pass
+else:
+    mongodb.update_one_document(mongo_filter, mongo_doc)

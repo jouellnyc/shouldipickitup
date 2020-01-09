@@ -86,7 +86,6 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
             raise ValueError("No data in Mongo for " + str(zip))
     except Exception as e:
         logging.exception("Caught an error")
-        print(e)
         raise
     else:
         try:
@@ -119,7 +118,7 @@ def lookup_city_state_given_zip(zip):
         [str] - the state associated with the zip (for display only)
     """
     dbh = ConnectToMongo()
-    response = dbh.find_one({"zips": zip})
+    response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
     if response is None:
         raise ValueError("No data in Mongo for " + str(zip))
     else:
@@ -142,7 +141,7 @@ def lookup_craigs_posts(zip):
         {dictionary} of all the local posts in the free section
     """
     dbh = ConnectToMongo()
-    response = dbh.find_one({"zip": zip})
+    response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
     if response is None:
         raise ValueError
     else:

@@ -23,6 +23,7 @@ TBD: Input validation. Better outcome if MongoDB is down.
 import logging
 
 from lib import mongodb
+from pymongo.errors import ServerSelectionTimeoutError
 
 def main(zip):
     """
@@ -55,6 +56,8 @@ def main(zip):
     start_lng = "-82.2178"
 
     try:
+
+        raise IOError
         """ Given a zip, find the Craigslist Url """
         city, state, url, Items, Urls = \
             mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
@@ -64,18 +67,22 @@ def main(zip):
         all_links = enumerate(all_links, start = 1)
         return all_posts, all_links, city, state
 
-    except (ValueError, ConnectionRefusedError, ServerSelectionTimeoutError, KeyError) as e:
+    except (ValueError, ConnectionRefusedError, KeyError, ServerSelectionTimeoutError) as e:
 
-        logging.exception('Caught an error')
         craigs_list_url = "https://sfbay.craigslist.org"
         city, state = (
             (f"Sorry didn't find data for {zip}, here's items for " f"San Francisco "),
             "CA",
         )
-        print(city, state)
+
+        all_posts = []
+        all_links = []
+        return all_posts, all_links, city, state
 
     except Exception as e:
-        print("Error", e)
+
+        #logging.exception('Bad:, Caught an unexpected error')
+        raise
 
     else:
         print("Debug:", craigs_list_url, city, state, items)
@@ -94,10 +101,10 @@ if __name__ == "__main__":
     try:
         zip = sys.argv[1]
     except IndexError as e:
-        print(e, "Did you specify a zip?")
+        print("Did you specify a zip?")
         sys.exit()
 
     try:
-        print(main(zip))
+        print("Main", main(zip))
     except Exception as e:
-        print(e)
+        print("Error Main: ", e)
