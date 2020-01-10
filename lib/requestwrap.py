@@ -43,7 +43,7 @@ def err_web(url):
         httprequest = requests.get(
             url, timeout=10, allow_redirects=True, headers=headers
         )
-        # raise_for_status() never execs if httprequest.get above has connect error/timeouts
+        # raise_for_status() never execs if requests.get above has connect error/timeouts
         httprequest.raise_for_status()
     except requests.exceptions.HTTPError as errh:
         print("HTTP Error:", errh)

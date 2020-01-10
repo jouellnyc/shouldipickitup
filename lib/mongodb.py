@@ -30,6 +30,7 @@ TBD: Reuse the MongoDB handles.
 """
 
 from pymongo import MongoClient
+from pymongo import MongoClient
 import logging
 
 database_name = "shouldipickitup"
@@ -51,7 +52,7 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
     -------
         collection_handle :  pymongo connect object
     """
-    client = MongoClient()
+    client = MongoClient(serverSelectionTimeoutMS=3000)
     database_handle = client[database_name]
     collection_handle = database_handle[collection_name]
     return collection_handle
@@ -79,6 +80,12 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
     state
         [str] - the state associated with the zip (for display only)
     """
+<<<<<<< HEAD
+    dbh = ConnectToMongo()
+    response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+    if response is None:
+        raise ValueError("No data in Mongo for " + str(zip))
+=======
     try:
         dbh = ConnectToMongo()
         response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
@@ -87,6 +94,7 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
     except Exception as e:
         logging.exception("Caught an error")
         raise
+>>>>>>> 6f6d65e63798a527865dd61ca3ebc88a693630db
     else:
         try:
             citytext = response["CityState"]
@@ -99,7 +107,6 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
             raise ValueError("No details in Mongo for " + str(zip))
         except Exception as e:
             raise
-
 
 def lookup_city_state_given_zip(zip):
     """
