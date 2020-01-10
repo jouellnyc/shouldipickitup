@@ -29,6 +29,8 @@ from pymongo.errors import ConnectionFailure
 from lib import mongodb
 from lib import pickleme
 
+=======
+from pymongo.errors import ServerSelectionTimeoutError
 
 def main(zip):
     """
@@ -63,6 +65,8 @@ def main(zip):
     fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zip"
 
     try:
+
+        raise IOError
         """ Given a zip, find the Craigslist Url """
         city, state, url, Items, Urls = \
             mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
@@ -72,14 +76,21 @@ def main(zip):
         all_links = enumerate(all_links, start = 1)
         return all_posts, all_links, city, state
 
+<<<<<<< HEAD
     except (ConnectionFailure, ValueError, KeyError) as e:
 
         #TBD - log error to log - we handled it - move on
+=======
+    except (ValueError, ConnectionRefusedError, KeyError, ServerSelectionTimeoutError) as e:
+
+        craigs_list_url = "https://sfbay.craigslist.org"
+>>>>>>> 6f6d65e63798a527865dd61ca3ebc88a693630db
         city, state = (
             (f"Sorry didn't find data for {zip}, here's items for " f"San Francisco "),
             "CA",
         )
 
+<<<<<<< HEAD
         try:
             pickled   = pickleme.load(file="data/sf.pickle")
             all_posts = list(pickled['$set']['Items'].values())
@@ -98,6 +109,16 @@ def main(zip):
 
     except Exception as e:
         print("Unexpected Error", e)
+=======
+        all_posts = []
+        all_links = []
+        return all_posts, all_links, city, state
+
+    except Exception as e:
+
+        #logging.exception('Bad:, Caught an unexpected error')
+        raise
+>>>>>>> 6f6d65e63798a527865dd61ca3ebc88a693630db
 
     else:
         print("Debug:", craigs_list_url, city, state, items)
@@ -116,10 +137,10 @@ if __name__ == "__main__":
     try:
         zip = sys.argv[1]
     except IndexError as e:
-        print(e, "Did you specify a zip?")
+        print("Did you specify a zip?")
         sys.exit()
 
     try:
-        print(main(zip))
+        print("Main", main(zip))
     except Exception as e:
-        print(e)
+        print("Error Main: ", e)
