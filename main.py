@@ -27,7 +27,8 @@ import pymongo
 from pymongo.errors import ConnectionFailure
 
 from lib import mongodb
-from lib import pickleme
+from lib import pickledata
+
 
 def main(zip):
     """
@@ -59,12 +60,13 @@ def main(zip):
     start_lat = "29.5964"
     start_lng = "-82.2178"
 
+    """ Defaults - Worst Case scenario """
     fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zip"
-
     all_posts = ['Items Error'] * 3
     all_links = [fall_back_url] * 3
     all_links = enumerate(all_links, start = 1)
-
+    city, state = (f"Sorry didn't find data for {zip} "
+                   f"here's items for San Francisco", "CA")
     try:
 
         """ Given a zip, find the Craigslist Url """
@@ -75,35 +77,39 @@ def main(zip):
         all_links = Urls.values()
         all_links = enumerate(all_links, start = 1)
 
-    except (ValueError, ConnectionRefusedError, KeyError, ServerSelectionTimeoutError) as e:
+    except (ConnectionFailure, ValueError, KeyError) as e:
 
-        city, state = (
-            (f"Sorry didn't find data for {zip}, here's items for " f"San Francisco "),
-            "CA",
-        )
+        Emsg = "MondoDB Connection Errors - DB down?"
+        Wmsg = f"No data for {zip}"
+        logging.error(Emsg)
+        logging.warning(Wmsg)
 
         try:
-            pickled   = pickleme.load(file="data/sf.pickle")
+            pickled   = pickledata.loadit(file="data/sf.pickle")
             all_posts = list(pickled['$set']['Items'].values())
             all_links = list(pickled['$set']['Urls'].values())
             all_links = enumerate(all_links, start = 1)
-        except (IOError, KeyError, TypeError):
-            print ("Pickle data error")
-            #TBD - logging.exception or error to log - we handled it - move on
-        else:
-            return all_posts, all_links, city, state
+        except (IOError, KeyError, TypeError) as e:
+            Pmsg = "Even the file is erroring!: "
+            Pmsg += str(e)
+            logging.error(Pmsg)
+            #Sms/page out
+
+    except Exception as e:
+
+        msg = "Unexpected Error=> "
+        logging.exception(f"{msg}Text:{e} Type:{e.__class__.__name__}")
 
     else:
-        print("Debug:", craigs_list_url, city, state, items)
+        print("Match:", craigs_list_url, city, state, items)
+
+    finally:
         return all_posts, all_links, city, state
 
-
-""" Given the free items, see:                      """
-""" 1) How far away?                                """
-""" 2) How much on Ebay                             """
-""" 3) How much for a Lyft                          """
-
-
+        """ Given the free items, see:                      """
+        """ 1) How far away?                                """
+        """ 2) How much on Ebay                             """
+        """ 3) How much for a Lyft                          """
 
 if __name__ == "__main__":
 
@@ -112,10 +118,10 @@ if __name__ == "__main__":
     try:
         zip = sys.argv[1]
     except IndexError as e:
-        print("Did you specify a zip?")
+        print(e, "Did you specify a zip?")
         sys.exit()
 
     try:
-        print("Main", main(zip))
+        print("Main: ", main(zip))
     except Exception as e:
-        print("Error Main: ", e)
+        print(e)
