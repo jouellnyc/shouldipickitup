@@ -29,9 +29,6 @@ from pymongo.errors import ConnectionFailure
 from lib import mongodb
 from lib import pickleme
 
-=======
-from pymongo.errors import ServerSelectionTimeoutError
-
 def main(zip):
     """
     Send data to flask template for display after querying MongoDB.
@@ -64,9 +61,12 @@ def main(zip):
 
     fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zip"
 
+    all_posts = ['Items Error'] * 3
+    all_links = [fall_back_url] * 3
+    all_links = enumerate(all_links, start = 1)
+
     try:
 
-        raise IOError
         """ Given a zip, find the Craigslist Url """
         city, state, url, Items, Urls = \
             mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
@@ -74,23 +74,14 @@ def main(zip):
         all_posts = Items.values()
         all_links = Urls.values()
         all_links = enumerate(all_links, start = 1)
-        return all_posts, all_links, city, state
 
-<<<<<<< HEAD
-    except (ConnectionFailure, ValueError, KeyError) as e:
-
-        #TBD - log error to log - we handled it - move on
-=======
     except (ValueError, ConnectionRefusedError, KeyError, ServerSelectionTimeoutError) as e:
 
-        craigs_list_url = "https://sfbay.craigslist.org"
->>>>>>> 6f6d65e63798a527865dd61ca3ebc88a693630db
         city, state = (
             (f"Sorry didn't find data for {zip}, here's items for " f"San Francisco "),
             "CA",
         )
 
-<<<<<<< HEAD
         try:
             pickled   = pickleme.load(file="data/sf.pickle")
             all_posts = list(pickled['$set']['Items'].values())
@@ -99,34 +90,18 @@ def main(zip):
         except (IOError, KeyError, TypeError):
             print ("Pickle data error")
             #TBD - logging.exception or error to log - we handled it - move on
-            #Sms/page out
-            all_posts = ['Items Error'] * 3
-            all_links = [fall_back_url] * 3
-            all_links = enumerate(all_links, start = 1)
-            return all_posts, all_links, city, state
         else:
             return all_posts, all_links, city, state
 
-    except Exception as e:
-        print("Unexpected Error", e)
-=======
-        all_posts = []
-        all_links = []
-        return all_posts, all_links, city, state
-
-    except Exception as e:
-
-        #logging.exception('Bad:, Caught an unexpected error')
-        raise
->>>>>>> 6f6d65e63798a527865dd61ca3ebc88a693630db
-
     else:
         print("Debug:", craigs_list_url, city, state, items)
+        return all_posts, all_links, city, state
 
-        """ Given the free items, see:                      """
-        """ 1) How far away?                                """
-        """ 2) How much on Ebay                             """
-        """ 3) How much for a Lyft                          """
+
+""" Given the free items, see:                      """
+""" 1) How far away?                                """
+""" 2) How much on Ebay                             """
+""" 3) How much for a Lyft                          """
 
 
 
