@@ -2,47 +2,30 @@
 
 """ crawler.py  - Web Crawler
 
-- This script:
+-This script:
     - Takes in a Craigslist URL
     - Crawls the page
     - Prepares a MongoDB insert_one_document
     - Sends data to  MongoDB
 
-- If no data matches or if MongoDB errors, S.F data will be returned
-- This script requires the mongodb and websitepuller helper modules.
-- This file is meant to be run outside of the Flask App itself and
-- not imported as a module.
+-If no data matches or if MongoDB errors, S.F data will be returned
+-This script requires the mongodb and websitepuller helper modules.
+-This file is mean to be run outside of the Flask Appself.
 
 """
 
 import sys
-import logging
 
 import mongodb
 import websitepuller
-import pickleme
+import pickledata
 
-<<<<<<< HEAD
 def get_web_data(craigs_list_url):
     craigs_local_url = craigs_list_url + "/d/free-stuff/search/zip"
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
 
 def format_mongodocs(soup_object, howmany=9):
-=======
-craigs_list_url = sys.argv[1]
-send_to_mongo   = sys.argv[2]
-
-try:
-    craigs_local_url = craigs_list_url + "/d/free-stuff/search/zip"
-    craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
-except (ValueError, NameError) as e:
-    print("Error: ", e)
-    logging.exception("Error")
-    sys.exit()
-else:
-    print("It Worked. Sending to Mongo...")
->>>>>>> 6f6d65e63798a527865dd61ca3ebc88a693630db
 
     #Set howmany to one more than how many items wanted
     mongo_filter = {"craigs_url": craigs_list_url}
@@ -72,8 +55,7 @@ else:
                     }
                 }
         """
-<<<<<<< HEAD
-        
+
     return mongo_doc
 
 if __name__ == "__main__":
@@ -96,15 +78,7 @@ if __name__ == "__main__":
     else:
         if noindex == "noindex":
             print("Pickling...")
-            pickleme.save(mongo_doc)
+            pickledata.save(mongo_doc)
         else:
             print("Sending to Mongo")
-            mongodb.update_one_document(mongo_filter, mongo_doc)
-=======
-print(mongo_filter, mongo_doc)
-
-if send_to_mongo == 'noindex': 
-    pass
-else:
-    mongodb.update_one_document(mongo_filter, mongo_doc)
->>>>>>> 6f6d65e63798a527865dd61ca3ebc88a693630db
+            pickledata.update_one_document(mongo_filter, mongo_doc)
