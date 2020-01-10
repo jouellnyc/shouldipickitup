@@ -21,6 +21,7 @@ import websitepuller
 import pickledata
 
 def get_web_data(craigs_list_url):
+
     craigs_local_url = craigs_list_url + "/d/free-stuff/search/zip"
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
@@ -66,6 +67,7 @@ if __name__ == "__main__":
         noindex         = sys.argv[2]
         craig_posts     = get_web_data(craigs_list_url)
         mongo_doc       = format_mongodocs(craig_posts)
+        mongo_filter    = {'craigs_url': craigs_list_url }
         print(mongo_doc)
 
     except IndexError as e:
@@ -81,4 +83,4 @@ if __name__ == "__main__":
             pickledata.save(mongo_doc)
         else:
             print("Sending to Mongo")
-            pickledata.update_one_document(mongo_filter, mongo_doc)
+            mongodb.update_one_document(mongo_filter, mongo_doc)
