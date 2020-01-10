@@ -19,6 +19,8 @@ functions:
     * main - the main function of the script
 
 TBD: Input validation.
+     There should be a better outcome if MondoDB is downself.
+     Minimally don't load a file every time ...
 """
 
 import logging
@@ -68,7 +70,7 @@ def main(zip):
     city, state = (f"Sorry didn't find data for {zip} "
                    f"here's items for San Francisco", "CA")
     try:
-
+        
         """ Given a zip, find the Craigslist Url """
         city, state, url, Items, Urls = \
             mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
@@ -101,6 +103,7 @@ def main(zip):
         logging.exception(f"{msg}Text:{e} Type:{e.__class__.__name__}")
 
     else:
+
         print("Match:", craigs_list_url, city, state, items)
 
     finally:
@@ -123,5 +126,5 @@ if __name__ == "__main__":
 
     try:
         print("Main: ", main(zip))
-    except Exception as e:
-        print(e)
+    except MemoryError as e:
+        print("Main e:", e)
