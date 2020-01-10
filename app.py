@@ -44,7 +44,7 @@ def get_data():
             len_items = len_items, all_links = all_links)
     except Exception as e:
         print(e)
-        flask.abort(404)
+        flask.abort(500)
 
 if __name__ == "__main__":
     dir(app.run)

@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 
 """
-main.py - interface into flask and mongodb.
 
+main.py - interface into flask and mongodb.
 - This script takes in a zip code from Flask/app.py or via cmd line, and then
 determines the right Craiglist URL by qurying 'Zips' or 'AltZips' in MongoDB.
 It then returns the free items (see below) associated with that MongoDB doc.
 
-- If no data matches or if MongoDB errors, S.F data will be returned
+- If there is no data for the zip entered, S.F data will be returned
+- If MongoDB is down S.F data will be returned (if data was crawled and loaded)
 
 -This script requires the mongodb helper module.
 
@@ -17,12 +18,17 @@ functions:
 
     * main - the main function of the script
 
-TBD: Input validation. Better outcome if MongoDB is down.
+TBD: Input validation.
 """
 
 import logging
 
+import pymongo
+from pymongo.errors import ConnectionFailure
+
 from lib import mongodb
+from lib import pickleme
+
 
 def main(zip):
     """
@@ -54,6 +60,8 @@ def main(zip):
     start_lat = "29.5964"
     start_lng = "-82.2178"
 
+    fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zip"
+
     try:
         """ Given a zip, find the Craigslist Url """
         city, state, url, Items, Urls = \
@@ -64,18 +72,32 @@ def main(zip):
         all_links = enumerate(all_links, start = 1)
         return all_posts, all_links, city, state
 
-    except (ValueError, ConnectionRefusedError, ServerSelectionTimeoutError, KeyError) as e:
+    except (ConnectionFailure, ValueError, KeyError) as e:
 
-        logging.exception('Caught an error')
-        craigs_list_url = "https://sfbay.craigslist.org"
+        #TBD - log error to log - we handled it - move on
         city, state = (
             (f"Sorry didn't find data for {zip}, here's items for " f"San Francisco "),
             "CA",
         )
-        print(city, state)
+
+        try:
+            pickled   = pickleme.load(file="data/sf.pickle")
+            all_posts = list(pickled['$set']['Items'].values())
+            all_links = list(pickled['$set']['Urls'].values())
+            all_links = enumerate(all_links, start = 1)
+        except (IOError, KeyError, TypeError):
+            print ("Pickle data error")
+            #TBD - logging.exception or error to log - we handled it - move on
+            #Sms/page out
+            all_posts = ['Items Error'] * 3
+            all_links = [fall_back_url] * 3
+            all_links = enumerate(all_links, start = 1)
+            return all_posts, all_links, city, state
+        else:
+            return all_posts, all_links, city, state
 
     except Exception as e:
-        print("Error", e)
+        print("Unexpected Error", e)
 
     else:
         print("Debug:", craigs_list_url, city, state, items)
