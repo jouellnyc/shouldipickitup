@@ -3,13 +3,12 @@
 
 NOTE: This project is intentionally "in progress".
 
-Not Secured Yet.
 
 It serves currently for inspiration to learn Python and for future possibilities.
 
 And for fun. Light and breezy. Nothing serious going on here!
 
-Feedback Welcome.
+Feedback or Collaborators Welcome.
 
 ![ShouldIpickItUp](static/cgeorge.png)
 
