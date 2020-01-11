@@ -1,10 +1,7 @@
 
 - update data reasoning
-
-- update all callers exceptions
-- test for mongo is down
+- get ebay data again
 - implement timeout for item caching
-
 - touch up flask / nginx configs
 - make site prettier
 - update nuances like Brooklyn/Queens; get 'real' data for the 200+ CL links
