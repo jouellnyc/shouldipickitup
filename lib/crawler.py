@@ -21,29 +21,36 @@ import websitepuller
 import pickledata
 
 def get_web_data(craigs_list_url):
+    """ Return SF data from local if Mongdb is down/server Timeout.
+    Parameters
+    ----------
+    craigs_list_url
+        str - local Craigs List Url
 
+    Returns
+    -------
+    craigs_local_posts
+        beautiful soup_object - list of all free items
+    """
     craigs_local_url = craigs_list_url + "/d/free-stuff/search/zip"
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
 
-def format_mongodocs(soup_object, howmany=9):
+def format_mongodocs(soup_object, howmany=10):
+    """ Return Formatted Mongdo Doc
+    Parameters
+    ----------
+    soup_object
+        beautiful soup_object - list of all free items crawled
 
-    #Set howmany to one more than how many items wanted
-    mongo_filter = {"craigs_url": craigs_list_url}
-    mongo_doc = {"$set": {"Items": {}, "Urls": {}}}
+    Returns
+    -------
+    mongo_doc
+        dictionary of dictionaries  - mongo_doc object -
 
-    """ We use an Embedded Mongo Doc  to List Items and URls """
-    """ Python wise that means a dictionary of dictionaries  """
+    - We use an Embedded Mongo Doc to List Items and URls
 
-    for num, each_item in enumerate(soup_object[0:howmany], start=1):
-        each_link = each_item.attrs["href"]
-        each_text = each_item.text
-        item = f"Item{num}"
-        url = f"Url{num}"
-        mongo_doc["$set"]["Items"][item] = each_text
-        mongo_doc["$set"]["Urls"][url] = each_link
-
-        """ mongo_doc will look like this:
+     mongo_doc will look like this:
                 {
                     "$set":
 
@@ -55,7 +62,19 @@ def format_mongodocs(soup_object, howmany=9):
 
                     }
                 }
-        """
+    - Set 'howmany' to one more than how many items wanted
+    """
+    howmany = howmany +1 
+    mongo_filter = {"craigs_url": craigs_list_url}
+    mongo_doc = {"$set": {"Items": {}, "Urls": {}}}
+
+    for num, each_item in enumerate(soup_object[0:howmany], start=1):
+        each_link = each_item.attrs["href"]
+        each_text = each_item.text
+        item = f"Item{num}"
+        url = f"Url{num}"
+        mongo_doc["$set"]["Items"][item] = each_text
+        mongo_doc["$set"]["Urls"][url] = each_link
 
     return mongo_doc
 
@@ -66,7 +85,7 @@ if __name__ == "__main__":
         craigs_list_url = sys.argv[1]
         noindex         = sys.argv[2]
         craig_posts     = get_web_data(craigs_list_url)
-        mongo_doc       = format_mongodocs(craig_posts)
+        mongo_doc       = format_mongodocs(craig_posts, howmany=8)
         mongo_filter    = {'craigs_url': craigs_list_url }
         print(mongo_doc)
 

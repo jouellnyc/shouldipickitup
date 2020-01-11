@@ -19,8 +19,7 @@ functions:
     * main - the main function of the script
 
 TBD: Input validation.
-     There should be a better outcome if MondoDB is downself.
-     Minimally don't load a file every time ...
+     If MondoDB is downself don't load a file every time ...
 """
 
 import logging
@@ -33,8 +32,7 @@ from lib import pickledata
 
 
 def main(zip):
-    """
-    Send data to flask template for display after querying MongoDB.
+    """Send data to flask template for display after querying MongoDB.
 
     Parameters
     ----------
@@ -109,6 +107,18 @@ def main(zip):
         """ 3) How much for a Lyft                          """
 
 def fallback_to_pickle():
+    """ Return SF data from local if Mongdb is down/server Timeout.
+    Parameters
+    ----------
+    none
+
+    Returns
+    -------
+    all_posts
+        A [list] of all the local posts in the free sections
+    all_links
+        A [list] of all the local posts in the free sections
+    """
     try:
         pickled   = pickledata.loadit(file="data/sf.pickle")
         all_posts = list(pickled['$set']['Items'].values())
