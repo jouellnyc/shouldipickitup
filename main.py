@@ -70,7 +70,7 @@ def main(zip):
     city, state = (f"Sorry didn't find data for {zip} "
                    f"here's items for San Francisco", "CA")
     try:
-        
+
         """ Given a zip, find the Craigslist Url """
         city, state, url, Items, Urls = \
             mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
@@ -79,23 +79,17 @@ def main(zip):
         all_links = Urls.values()
         all_links = enumerate(all_links, start = 1)
 
-    except (ConnectionFailure, ValueError, KeyError) as e:
+    except (ValueError, KeyError) as e:
 
-        Emsg = "MondoDB Connection Errors - DB down?"
-        Wmsg = f"No data for {zip}"
-        logging.error(Emsg)
-        logging.warning(Wmsg)
+        msg = f"No data for {zip} - Going to pickle data"
+        logging.warning(msg)
+        all_posts, all_links = fallback_to_pickle()
 
-        try:
-            pickled   = pickledata.loadit(file="data/sf.pickle")
-            all_posts = list(pickled['$set']['Items'].values())
-            all_links = list(pickled['$set']['Urls'].values())
-            all_links = enumerate(all_links, start = 1)
-        except (IOError, KeyError, TypeError) as e:
-            Pmsg = "Even the file is erroring!: "
-            Pmsg += str(e)
-            logging.error(Pmsg)
-            #Sms/page out
+    except ConnectionFailure as e:
+
+        msg = "MondoDB Connection Errors - DB down?"
+        logging.error(msg)
+        all_posts, all_links = fallback_to_pickle()
 
     except Exception as e:
 
@@ -114,6 +108,20 @@ def main(zip):
         """ 2) How much on Ebay                             """
         """ 3) How much for a Lyft                          """
 
+def fallback_to_pickle():
+    try:
+        pickled   = pickledata.loadit(file="data/sf.pickle")
+        all_posts = list(pickled['$set']['Items'].values())
+        all_links = list(pickled['$set']['Urls'].values())
+        all_links = enumerate(all_links, start = 1)
+        return all_posts, all_links
+    except (IOError, KeyError, TypeError) as e:
+        Pmsg = "Even the file is erroring!: "
+        Pmsg += str(e)
+        logging.error(Pmsg)
+        #Sms/page out
+
+
 if __name__ == "__main__":
 
     import sys
@@ -124,7 +132,4 @@ if __name__ == "__main__":
         print(e, "Did you specify a zip?")
         sys.exit()
 
-    try:
-        print("Main: ", main(zip))
-    except MemoryError as e:
-        print("Main e:", e)
+    print("Main: ", main(zip))
