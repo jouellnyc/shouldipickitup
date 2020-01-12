@@ -18,8 +18,8 @@ functions:
 
     * main - the main function of the script
 
-TBD: Input validation.
-     If MondoDB is downself don't load a file every time ...
+TBD: If MondoDB is down don't load a file every time ...
+
 """
 
 import logging
