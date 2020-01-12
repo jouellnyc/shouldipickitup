@@ -15,6 +15,7 @@ app.py - Main Flask application file
 - Credit:
 https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
 
+TBD: Add js input validation
 """
 
 
@@ -36,19 +37,25 @@ app.debug = True
 
 @app.route('/forms/', methods=['POST', 'GET'])
 def get_data():
+
     try:
-        zip                                 = str(request.form.get('zip'))
-        if isinstance(zip, Number) and len(zip) == 5:
+        zip = int(request.form.get('zip'))
+        #if isinstance(zip, Number) and len(str(zip)) == 5:
+    except ValueError:
+        return render_template('nota5digitzip.html')
+    except Exception as e:
+        print(e)
+        flask.abort(500)
+    else:
+        if len(str(zip)) == 5:
             all_posts, all_links, city, state   = main.main(zip)
             len_items                           = list(range(0,len(all_posts)))
             return render_template('craig_list_local_items.html', zip = zip,
                 city = city, state = state, all_posts = all_posts,
                 len_items = len_items, all_links = all_links)
         else:
-             return render_template('nota5digitzip.html')
-    except Exception as e:
-        print(e)
-        flask.abort(500)
+            return render_template('nota5digitzip.html')
+
 
 if __name__ == "__main__":
     dir(app.run)
