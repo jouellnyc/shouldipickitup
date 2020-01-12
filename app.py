@@ -22,6 +22,7 @@ https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-re
 import os
 import sys
 import time
+from numbers import Number
 
 import flask
 from flask import Flask
@@ -37,11 +38,14 @@ app.debug = True
 def get_data():
     try:
         zip                                 = str(request.form.get('zip'))
-        all_posts, all_links, city, state   = main.main(zip)
-        len_items                           = list(range(0,len(all_posts)))
-        return render_template('craig_list_local_items.html', zip = zip,
-            city = city, state = state, all_posts = all_posts,
-            len_items = len_items, all_links = all_links)
+        if isinstance(zip, Number) and len(zip) == 5:
+            all_posts, all_links, city, state   = main.main(zip)
+            len_items                           = list(range(0,len(all_posts)))
+            return render_template('craig_list_local_items.html', zip = zip,
+                city = city, state = state, all_posts = all_posts,
+                len_items = len_items, all_links = all_links)
+        else:
+             return render_template('nota5digitzip.html')
     except Exception as e:
         print(e)
         flask.abort(500)
