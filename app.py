@@ -15,7 +15,8 @@ app.py - Main Flask application file
 - Credit:
 https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
 
-TBD: Add js input validation
+TBD: - Add js input validation
+     - Add cool look ahead form query
 """
 
 
