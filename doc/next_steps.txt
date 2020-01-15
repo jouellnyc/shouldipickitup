@@ -1,6 +1,8 @@
 
 - make site prettier
+
 - get ebay data again
+
 - implement timeout for item caching
 
 - update nuances like Brooklyn/Queens; get 'real' data for the 200+ CL links

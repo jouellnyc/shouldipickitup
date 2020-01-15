@@ -79,8 +79,8 @@ def main(zip):
 
     except (ValueError, KeyError) as e:
 
-        msg = f"No data for {zip} - Going to pickle data"
-        logging.warning(msg)
+        msg = f"Going to pickle data"
+        logging.exception(f"LEmsg=> {msg}, LEtext=>{e}, Type=> {e.__class__.__name__}")
         all_posts, all_links = fallback_to_pickle()
 
     except ConnectionFailure as e:
