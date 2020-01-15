@@ -36,12 +36,14 @@ def get_web_data(craigs_list_url):
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
 
-def format_mongodocs(soup_object, howmany=10):
+def format_mongodocs(soup_object, howmany=12):
     """ Return Formatted Mongdo Doc
     Parameters
     ----------
     soup_object
         beautiful soup_object - list of all free items crawled
+    howmany
+        number of items to return from CL page
 
     Returns
     -------
@@ -62,9 +64,7 @@ def format_mongodocs(soup_object, howmany=10):
 
                     }
                 }
-    - Set 'howmany' to one more than how many items wanted
     """
-    howmany = howmany +1 
     mongo_filter = {"craigs_url": craigs_list_url}
     mongo_doc = {"$set": {"Items": {}, "Urls": {}}}
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         craigs_list_url = sys.argv[1]
         noindex         = sys.argv[2]
         craig_posts     = get_web_data(craigs_list_url)
-        mongo_doc       = format_mongodocs(craig_posts, howmany=8)
+        mongo_doc       = format_mongodocs(craig_posts, howmany=5)
         mongo_filter    = {'craigs_url': craigs_list_url }
         print(mongo_doc)
 

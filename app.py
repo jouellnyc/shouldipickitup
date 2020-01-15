@@ -56,7 +56,7 @@ def get_data():
         zip = str(zip)
         if len(zip) == 5:
             all_posts, all_links, city, state   = main.main(zip)
-            len_items                           = list(range(0,len(all_posts)))
+            len_items                           = len(all_posts)
             return render_template('craig_list_local_items.html', zip = zip,
                 city = city, state = state, all_posts = all_posts,
                 len_items = len_items, all_links = all_links)

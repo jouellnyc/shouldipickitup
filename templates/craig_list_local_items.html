@@ -6,44 +6,85 @@
     <body>
 
       <table>
-              <tr>
-                      <td>
-                        <img src="{{ url_for('static', filename='cgeorge.png')}}"/>
-                      </td>
+        <tr>
 
-                      <td>    <font size=7>SHOULDIPICKITUP.COM</font>
-                           <P><font size=3>See the top free items on Craigslist and how much you can
-                                   command on Ebay in one click!</font>
-                           <P><font size=3>Order a Lyft now!</font>
-                      </td>
-              </tr>
+            <font size=7 face = "Comic Sans MS">SHOULDIPICKITUP.COM</font>
+
+          <td>
+              <img src="{{ url_for('static', filename='cgeorge.png')}}"/>
+          </td>
+
+          <td>
+              <P><font size=3 face = "Comic Sans MS">
+                See the top free items on Craigslist and how much you can
+                command on Ebay in one click!
+                </font>
+              <P><font size=3 face = "Comic Sans MS">
+                Order a Lyft now!
+                </font>
+          </td>
+
+       </tr>
       </table>
 
 <P>
 
+<font face = "Comic Sans MS">{{city}}, {{state}} - FREE items nearby: </font>
 
+<P>
 
+ <table class="comicGreen">
 
-      <table class="comicGreen">
+<!-- Is this ugly JINJA2? Yes tremendously for now -->
 
-        <tr>
-            {{city}}, {{state}} <P> FREE items nearby:
-           <P>
-            {% for result in all_links %}
-           <th><a href="{{result[1]}}" target=_"blank"> ITEM {{result[0]}} </a>
+<!--  0 - 4                                       -->
+{% if len_items > 0 %}
+         <tr>
+            {% for result in all_links[0:4] %}
+           <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index}} </a>
            {% endfor %}
         <tr>
 
         <tr>
-           {% for post in all_posts %}
+           {% for post in all_posts[0:4] %}
            <td> {{post}} </td>
            {% endfor %}
         </tr>
-
-      </table>
-
+{%endif%}
 
 
+<!--  4 - 8                                       -->
+{% if len_items > 4 %}
+        <tr>
+         {% for result in all_links[4:8] %}
+              <th><a href="{{result}}" target=_"blank">FREE Item {{loop.index + 4}} </a>
+        {% endfor %}
+       <tr>
 
-    </body>
+       <tr>
+          {% for post in all_posts[4:8] %}
+              <td> {{post}} </td>
+          {% endfor %}
+       </tr>
+{%endif%}
+
+
+<!--  8 - 12                                       -->
+{% if len_items > 8 %}
+       <tr>
+          {% for result in all_links[8:] %}
+         <th><a href="{{result}}" target=_"blank"> FREE Item {{loop.index + 8}} </a>
+         {% endfor %}
+      <tr>
+
+      <tr>
+         {% for post in all_posts[8:] %}
+         <td> {{post}} </td>
+         {% endfor %}
+      </tr>
+{%endif%}
+
+</table>
+
+</body>
 </html>

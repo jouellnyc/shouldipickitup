@@ -73,9 +73,9 @@ def main(zip):
         city, state, url, Items, Urls = \
             mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
         city, state = city.capitalize(), state.upper()
-        all_posts = Items.values()
-        all_links = Urls.values()
-        all_links = enumerate(all_links, start = 1)
+        all_posts = list(Items.values())
+        all_links = list(Urls.values())
+        #all_links = enumerate(all_links, start = 1)
 
     except (ValueError, KeyError) as e:
 
