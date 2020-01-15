@@ -49,7 +49,7 @@ def create_gov_city_state_mutlizips_map(zip_code_file):
         File at URL
     Returns:
         default dictionary - gov_city_state_zips
-    """"
+    """
     gov_city_state_zips = defaultdict(list)
     with open(zip_code_file) as csv_fh:
         csv_reader = csv.reader(csv_fh, delimiter=",")
@@ -74,7 +74,7 @@ def create_craigs_url_dict_from_local_file(craigs_links_file):
         Boston, MA : boston.craiglist.com
     Returns:
         {dictionary}
-    """"
+    """
     with open(craigs_links_file) as fh:
         contents = fh.readlines()
         craigs_city_links = {}
@@ -100,7 +100,7 @@ def lookup_craigs_url_with_city(citystate, craigs_city_links):
     Returns
     -------
         str - boston.craiglist.com
-    """"
+    """
     return craigs_city_links[citystate]
 
 
@@ -117,7 +117,7 @@ def create_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_zips):
     Returns
     -------
         {dictionary} - meanzip : Craiglist url
-    """"
+    """
     mean_zip2craigs_url = {}
 
     for citystate, ziplist in gov_city_state_zips.items():
