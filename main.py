@@ -64,7 +64,7 @@ def main(zip):
     fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zip"
     all_posts = ['Items Error'] * 3
     all_links = [fall_back_url] * 3
-    all_links = enumerate(all_links, start = 1)
+    #all_links = enumerate(all_links, start = 1)
     city, state = (f"Sorry didn't find data for {zip} "
                    f"here's items for San Francisco", "CA")
     try:
@@ -123,7 +123,7 @@ def fallback_to_pickle():
         pickled   = pickledata.loadit(file="data/sf.pickle")
         all_posts = list(pickled['$set']['Items'].values())
         all_links = list(pickled['$set']['Urls'].values())
-        all_links = enumerate(all_links, start = 1)
+        #all_links = enumerate(all_links, start = 1)
         return all_posts, all_links
     except (IOError, KeyError, TypeError) as e:
         Pmsg = "Even the file is erroring!: "

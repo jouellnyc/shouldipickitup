@@ -114,6 +114,7 @@ def lookup_city_state_given_zip(zip):
         [str] - the state associated with the zip (for display only)
     """
     dbh = ConnectToMongo()
+    dbh.find_one( {"$or": [ {"Zips":zip}, {"AltZips":zip} ] } )
     response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
     if response is None:
         raise ValueError("No data in Mongo for " + str(zip))
@@ -121,6 +122,14 @@ def lookup_city_state_given_zip(zip):
         city, state = response["CityState"].split(",")
         return (city, state)
 
+def lookup_craigs_url_given_zip(zip):
+    dbh = ConnectToMongo()
+    dbh.find_one( {"$or": [ {"Zips":zip}, {"AltZips":zip} ] } )
+    response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+    if response is None:
+        raise ValueError("No data in Mongo for " + str(zip))
+    else:
+        return response["craigs_url"]
 
 def lookup_craigs_posts(zip):
     """
@@ -213,3 +222,10 @@ def init_load_city_state_zip_map(master_mongo_city_state_zip_data):
     except BulkWriteError as bwe:
         print(bwe.details)
         raise
+
+
+if __name__ == "__main__":
+    import sys
+    zip = str(sys.argv[1])
+    print(lookup_city_state_given_zip(zip))
+    print(lookup_craigs_url_given_zip(zip))

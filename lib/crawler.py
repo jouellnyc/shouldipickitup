@@ -85,7 +85,7 @@ if __name__ == "__main__":
         craigs_list_url = sys.argv[1]
         noindex         = sys.argv[2]
         craig_posts     = get_web_data(craigs_list_url)
-        mongo_doc       = format_mongodocs(craig_posts, howmany=5)
+        mongo_doc       = format_mongodocs(craig_posts, howmany=12)
         mongo_filter    = {'craigs_url': craigs_list_url }
         print(mongo_doc)
 
