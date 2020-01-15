@@ -8,23 +8,22 @@ app.py - Main Flask application file
 - This script requires Flask to be installed.
 
 - It expects to be passed:
-    - zip  # from nginx html forms
+    - zip # from nginx html form
 
 - It sends all returnables to return flask's render_template
 
-- Credit:
+- Credit/Refs:
 https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
+https://stackoverflow.com/questions/12551526/cast-flask-form-value-to-int
 
 TBD: - Add js input validation
      - Add cool look ahead form query
 """
 
 
-
 import os
 import sys
 import time
-from numbers import Number
 
 import flask
 from flask import Flask
@@ -38,18 +37,25 @@ app.debug = True
 
 @app.route('/forms/', methods=['POST', 'GET'])
 def get_data():
+    """
+    Return a view to Flask with relevant details
 
+    zip comes in as a 'str' and most easily is tested by casting to 'int'
+    and checking len(str(zip)) at loss of some duplicated logic/code.
+
+    zip goes back to a 'str' to be queried by mongodb and printed in HTML
+    """
     try:
         zip = int(request.form.get('zip'))
-        #if isinstance(zip, Number) and len(str(zip)) == 5:
     except ValueError:
         return render_template('nota5digitzip.html')
     except Exception as e:
         print(e)
         flask.abort(500)
     else:
-        if len(str(zip)) == 5:
-            all_posts, all_links, city, state   = main.main(str(zip))
+        zip = str(zip)
+        if len(zip) == 5:
+            all_posts, all_links, city, state   = main.main(zip)
             len_items                           = list(range(0,len(all_posts)))
             return render_template('craig_list_local_items.html', zip = zip,
                 city = city, state = state, all_posts = all_posts,
