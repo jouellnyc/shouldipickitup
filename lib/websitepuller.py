@@ -88,7 +88,7 @@ def lookup_price_on_ebay(each_item):
     """
     Parameters
     ----------
-    each_item : BeautifulSoup object
+    each_item : BeautifulSoup object - bs4.element.Tag
         Pointer to each free item
 
     Returns
@@ -105,17 +105,20 @@ def lookup_price_on_ebay(each_item):
     )
     ebay_query_url = ebay_url + ebay_path
     ebay_resp = requestwrap.err_web(ebay_query_url)
+    print(ebay_resp)
     ebay_soup = BeautifulSoup(ebay_resp.text, "html.parser")
+
     try:
         item = ebay_soup.find("h3", {"class": "s-item__title"}).get_text(separator=" ")
+        print(item)
     except AttributeError:
         item = "no match"
         price = "no price"
-        return price
-    try:
-        price = ebay_soup.find("span", {"class": "s-item__price"}).get_text()
-    except AttributeError:
-        price = "no price"
+    else:
+        try:
+            price = ebay_soup.find("span", {"class": "s-item__price"}).get_text()
+        except AttributeError:
+            price = "no price"
         return price
 
 

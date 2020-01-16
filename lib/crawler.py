@@ -36,6 +36,17 @@ def get_web_data(craigs_list_url):
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
 
+def get_ebay_data(craigs_local_posts, howmany=4):
+    print('hi')
+    ebay_prices = []
+    for each in craigs_local_posts[:howmany]:
+        print('h2 ')
+        price = websitepuller.lookup_price_on_ebay(each)
+        print(price)
+        ebay_prices.append(price)
+        print('hi3')
+    return ebay_prices
+
 def format_mongodocs(soup_object, howmany=12):
     """ Return Formatted Mongdo Doc
     Parameters
@@ -85,6 +96,8 @@ if __name__ == "__main__":
         craigs_list_url = sys.argv[1]
         noindex         = sys.argv[2]
         craig_posts     = get_web_data(craigs_list_url)
+        ebay_prices     = get_ebay_data(craig_posts, howmany=2)
+        print("eb", ebay_prices)
         mongo_doc       = format_mongodocs(craig_posts, howmany=12)
         mongo_filter    = {'craigs_url': craigs_list_url }
         print(mongo_doc)
