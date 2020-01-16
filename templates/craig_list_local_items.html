@@ -57,7 +57,15 @@
 
         <tr>
            {% for price in all_prices[llimit:hlimit] %}
-           <td> {{price}} </td>
+
+				{% if 'to' in price %}
+				{% autoescape false %}
+					<td> &dollar;{{ price | replace("to ", "to &dollar;") }} </td>
+				{% endautoescape %}
+				{% else %}
+           			<td> &dollar;{{price}}                                  </td>
+				{%endif%}
+
            {% endfor %}
         </tr>
 
@@ -84,7 +92,7 @@
 
         <tr>
            {% for price in all_prices[llimit:hlimit] %}
-           <td> {{price}} </td>
+           <td> &dollar; {{price}} </td>
            {% endfor %}
         </tr>
 
@@ -111,7 +119,7 @@
 
         <tr>
            {% for price in all_prices[llimit:hlimit] %}
-           <td> {{price}} </td>
+           <td> &dollar; {{price}} </td>
            {% endfor %}
         </tr>
 
