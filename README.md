@@ -4,11 +4,9 @@
 NOTE: This project is intentionally "in progress".
 
 
-It serves currently for inspiration to learn Python and for future possibilities.
+It serves currently for inspiration for anyone learn Python and for future possibilities.
 
-And for fun. Light and breezy. Nothing serious going on here!
-
-Feedback or Collaborators Welcome.
+And for fun. Feedback or Collaborators Welcome.
 
 ![ShouldIpickItUp](non-app/version2.png)
 
