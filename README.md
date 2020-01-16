@@ -10,10 +10,10 @@ And for fun. Light and breezy. Nothing serious going on here!
 
 Feedback or Collaborators Welcome.
 
-![ShouldIpickItUp](static/cgeorge.png)
+![ShouldIpickItUp](non-app/version2.png)
 
 
-## Usage example
+## High Level Command line Usage example
 
 ```
 
