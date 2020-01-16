@@ -63,6 +63,8 @@ In [21]: %run craigs_lyft_ebay.py
 
 
 ## Release History
+* 0.4.3
+    * CHANGE: Added CSS and set default to 12 displayed items
 * 0.4.2
     * CHANGE: Update Docstrings (module code remains unchanged)
 * 0.4.1
