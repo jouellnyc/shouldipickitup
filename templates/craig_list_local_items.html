@@ -40,74 +40,83 @@
 <!--  0 - 4                                       -->
 {% if len_items > 0 %}
 
+  {% set llimit = 0 %}
+  {% set hlimit = 4 %}
 
         <tr>
-            {% for result in all_links[0:4] %}
-           <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index}} </a>
+            {% for result in all_links[llimit:hlimit] %}
+           <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index}}</a>
            {% endfor %}
         <tr>
 
         <tr>
-           {% for post in all_posts[0:4] %}
+           {% for post in all_posts[llimit:hlimit] %}
            <td> {{post}} </td>
            {% endfor %}
         </tr>
 
         <tr>
-           {% for price in all_prices[0:4] %}
+           {% for price in all_prices[llimit:hlimit] %}
            <td> {{price}} </td>
            {% endfor %}
         </tr>
 
 {%endif%}
-
 
 <!--  4 - 8                                       -->
+
 {% if len_items > 4 %}
 
-        <tr>
-         {% for result in all_links[4:8] %}
-              <th><a href="{{result}}" target=_"blank">FREE Item {{loop.index + 4}} </a>
-        {% endfor %}
-       <tr>
-
-       <tr>
-          {% for post in all_posts[4:8] %}
-              <td> {{post}} </td>
-          {% endfor %}
-       </tr>
+  {% set llimit = 4 %}
+  {% set hlimit = 8 %}
 
         <tr>
-           {% for price in all_prices[0:4] %}
+            {% for result in all_links[llimit:hlimit] %}
+           <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index + llimit}} </a>
+           {% endfor %}
+        <tr>
+
+        <tr>
+           {% for post in all_posts[llimit:hlimit] %}
+           <td> {{post}} </td>
+           {% endfor %}
+        </tr>
+
+        <tr>
+           {% for price in all_prices[llimit:hlimit] %}
            <td> {{price}} </td>
            {% endfor %}
         </tr>
 
 {%endif%}
 
-
 <!--  8 - 12                                       -->
+
 {% if len_items > 8 %}
 
-       <tr>
-          {% for result in all_links[8:] %}
-         <th><a href="{{result}}" target=_"blank"> FREE Item {{loop.index + 8}} </a>
-         {% endfor %}
-      <tr>
+  {% set llimit =  8 %}
+  {% set hlimit = 12 %}
 
-      <tr>
-         {% for post in all_posts[8:] %}
-         <td> {{post}} </td>
-         {% endfor %}
-      </tr>
+        <tr>
+            {% for result in all_links[llimit:hlimit] %}
+           <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index + llimit}} </a>
+           {% endfor %}
+        <tr>
 
-       <tr>
-           {% for price in all_prices[0:4] %}
+        <tr>
+           {% for post in all_posts[llimit:hlimit] %}
+           <td> {{post}} </td>
+           {% endfor %}
+        </tr>
+
+        <tr>
+           {% for price in all_prices[llimit:hlimit] %}
            <td> {{price}} </td>
            {% endfor %}
-       </tr>
+        </tr>
 
 {%endif%}
+
 
 </table>
 
