@@ -94,12 +94,13 @@ if __name__ == "__main__":
 
     try:
 
+        howmany = 12 
         craigs_list_url = sys.argv[1]
         noindex         = sys.argv[2]
         craig_posts     = get_web_data(craigs_list_url)
-        ebay_prices     = get_ebay_data(craig_posts, howmany=2)
+        ebay_prices     = get_ebay_data(craig_posts, howmany=howmany)
         #print("eb", ebay_prices)
-        mongo_doc       = format_mongodocs(craig_posts,ebay_prices,howmany=2)
+        mongo_doc       = format_mongodocs(craig_posts,ebay_prices, howmany=howmany)
         mongo_filter    = {'craigs_url': craigs_list_url }
         print(mongo_doc)
 
