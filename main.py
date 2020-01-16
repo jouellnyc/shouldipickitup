@@ -64,18 +64,17 @@ def main(zip):
     fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zip"
     all_posts = ['Items Error'] * 3
     all_links = [fall_back_url] * 3
-    #all_links = enumerate(all_links, start = 1)
     city, state = (f"Sorry didn't find data for {zip} "
                    f"here's items for San Francisco", "CA")
     try:
 
         """ Given a zip, find the Craigslist Url """
-        city, state, url, Items, Urls = \
+        city, state, url, Items, Urls, Prices = \
             mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
         city, state = city.capitalize(), state.upper()
-        all_posts = list(Items.values())
-        all_links = list(Urls.values())
-        #all_links = enumerate(all_links, start = 1)
+        all_posts   = list(Items.values())
+        all_links   = list(Urls.values())
+        all_prices  = list(Prices.values())
 
     except (ValueError, KeyError) as e:
 
@@ -99,7 +98,7 @@ def main(zip):
         print("Match:", craigs_list_url, city, state, items)
 
     finally:
-        return all_posts, all_links, city, state
+        return all_posts, all_links, all_prices, city, state
 
         """ Given the free items, see:                      """
         """ 1) How far away?                                """

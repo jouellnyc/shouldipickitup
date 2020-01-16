@@ -36,18 +36,15 @@ def get_web_data(craigs_list_url):
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
 
-def get_ebay_data(craigs_local_posts, howmany=4):
-    print('hi')
+def get_ebay_data(craigs_local_posts, howmany=12):
     ebay_prices = []
     for each in craigs_local_posts[:howmany]:
-        print('h2 ')
         price = websitepuller.lookup_price_on_ebay(each)
-        print(price)
+        price = price.replace("$", "")
         ebay_prices.append(price)
-        print('hi3')
     return ebay_prices
 
-def format_mongodocs(soup_object, howmany=12):
+def format_mongodocs(soup_object, ebay_prices, howmany=12):
     """ Return Formatted Mongdo Doc
     Parameters
     ----------
@@ -77,7 +74,7 @@ def format_mongodocs(soup_object, howmany=12):
                 }
     """
     mongo_filter = {"craigs_url": craigs_list_url}
-    mongo_doc = {"$set": {"Items": {}, "Urls": {}}}
+    mongo_doc = {"$set": {"Items": {}, "Urls": {}, "Prices": {} }}
 
     for num, each_item in enumerate(soup_object[0:howmany], start=1):
         each_link = each_item.attrs["href"]
@@ -86,6 +83,10 @@ def format_mongodocs(soup_object, howmany=12):
         url = f"Url{num}"
         mongo_doc["$set"]["Items"][item] = each_text
         mongo_doc["$set"]["Urls"][url] = each_link
+
+    for num, price in enumerate(ebay_prices[0:howmany], start=1):
+        price_num = f"Price{num}"
+        mongo_doc["$set"]["Prices"][price_num] = price 
 
     return mongo_doc
 
@@ -97,8 +98,8 @@ if __name__ == "__main__":
         noindex         = sys.argv[2]
         craig_posts     = get_web_data(craigs_list_url)
         ebay_prices     = get_ebay_data(craig_posts, howmany=2)
-        print("eb", ebay_prices)
-        mongo_doc       = format_mongodocs(craig_posts, howmany=12)
+        #print("eb", ebay_prices)
+        mongo_doc       = format_mongodocs(craig_posts,ebay_prices,howmany=2)
         mongo_filter    = {'craigs_url': craigs_list_url }
         print(mongo_doc)
 

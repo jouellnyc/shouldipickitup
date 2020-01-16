@@ -86,12 +86,13 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
         raise ValueError("No data in Mongo for " + str(zip))
     else:
         try:
-            citytext = response["CityState"]
+            citytext    = response["CityState"]
             city, state = response["CityState"].split(",")
-            url = response["craigs_url"]
-            Items = response["Items"]
-            Urls = response["Urls"]
-            return (city, state, url, Items, Urls)
+            url         = response["craigs_url"]
+            Items       = response["Items"]
+            Urls        = response["Urls"]
+            Prices      = response["Prices"]
+            return (city, state, url, Items, Urls, Prices)
         except KeyError as e:
             raise ValueError("No details in Mongo for " + str(zip))
         except Exception as e:
@@ -234,11 +235,18 @@ def init_load_city_state_zip_map(master_mongo_city_state_zip_data):
 
 
 if __name__ == "__main__":
+
     import sys
-    zip = str(sys.argv[1])
-    print(lookup_city_state_given_zip(zip))
-    url = lookup_craigs_url_given_zip(zip)
-    print(url)
-    zips, altzips = lookup_zips_given_craigs_url(url)
-    print("Zips", zips)
-    print("AltZips",altzips)
+    try:
+        argv1 = str(sys.argv[1])
+        if len(argv1) == 5:
+            print('hi')
+            print(lookup_craigs_url_citystate_and_items_given_zip(argv1))
+            print(lookup_city_state_given_zip(zip))
+            print(lookup_craigs_url_given_zip(zip))
+        else:
+            zips, altzips = lookup_zips_given_craigs_url(argv1)
+            print("Zips", zips)
+            print("AltZips", altzips)
+    except:
+        pass

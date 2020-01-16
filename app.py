@@ -24,6 +24,7 @@ TBD: - Add js input validation
 import os
 import sys
 import time
+import logging
 
 import flask
 from flask import Flask
@@ -50,16 +51,16 @@ def get_data():
     except ValueError:
         return render_template('nota5digitzip.html')
     except Exception as e:
-        print(e)
+        logging.exception("BUG") 
         flask.abort(500)
     else:
         zip = str(zip)
         if len(zip) == 5:
-            all_posts, all_links, city, state   = main.main(zip)
-            len_items                           = len(all_posts)
+            all_posts, all_links, all_prices, city, state = main.main(zip)
+            len_items                                     = len(all_posts)
             return render_template('craig_list_local_items.html', zip = zip,
                 city = city, state = state, all_posts = all_posts,
-                len_items = len_items, all_links = all_links)
+                len_items = len_items, all_links = all_links, all_prices = all_prices)
         else:
             return render_template('nota5digitzip.html')
 

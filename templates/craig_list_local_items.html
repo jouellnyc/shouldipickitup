@@ -39,7 +39,9 @@
 
 <!--  0 - 4                                       -->
 {% if len_items > 0 %}
-         <tr>
+
+
+        <tr>
             {% for result in all_links[0:4] %}
            <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index}} </a>
            {% endfor %}
@@ -50,6 +52,13 @@
            <td> {{post}} </td>
            {% endfor %}
         </tr>
+
+        <tr>
+           {% for price in all_prices[0:4] %}
+           <td> {{price}} </td>
+           {% endfor %}
+        </tr>
+
 {%endif%}
 
 
