@@ -131,6 +131,15 @@ def lookup_craigs_url_given_zip(zip):
     else:
         return response["craigs_url"]
 
+def lookup_zips_given_craigs_url(craigs_url):
+    dbh = ConnectToMongo()
+    response = dbh.find_one( {"craigs_url": craigs_url} )
+    if response is None:
+        raise ValueError("No data in Mongo for " + str(craigs_url))
+    else:
+        return (response["Zips"], response['AltZips'])
+
+
 def lookup_craigs_posts(zip):
     """
     Return only free items post to the caller
@@ -228,4 +237,8 @@ if __name__ == "__main__":
     import sys
     zip = str(sys.argv[1])
     print(lookup_city_state_given_zip(zip))
-    print(lookup_craigs_url_given_zip(zip))
+    url = lookup_craigs_url_given_zip(zip)
+    print(url)
+    zips, altzips = lookup_zips_given_craigs_url(url)
+    print("Zips", zips)
+    print("AltZips",altzips)
