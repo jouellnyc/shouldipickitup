@@ -92,7 +92,8 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
             Items       = response["Items"]
             Urls        = response["Urls"]
             Prices      = response["Prices"]
-            return (city, state, url, Items, Urls, Prices)
+            EBlinks     = response["EbayLinks"]
+            return (city, state, url, Items, Urls, Prices, EBlinks)
         except KeyError as e:
             raise ValueError("No details in Mongo for " + str(zip))
         except Exception as e:

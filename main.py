@@ -4,11 +4,11 @@
 """
 
 main.py - interface into flask and mongodb.
-- This script takes in a zip code from Flask/app.py or via cmd line, and then
+- This script takes in a zipcode code from Flask/app.py or via cmd line, and then
 determines the right Craiglist URL by qurying 'Zips' or 'AltZips' in MongoDB.
 It then returns the free items (see below) associated with that MongoDB doc.
 
-- If there is no data for the zip entered, S.F data will be returned
+- If there is no data for the zipcode entered, S.F data will be returned
 - If MongoDB is down S.F data will be returned (if data was crawled and loaded)
 
 -This script requires the mongodb helper module.
@@ -31,13 +31,13 @@ from lib import mongodb
 from lib import pickledata
 
 
-def main(zip):
+def main(zipcode):
     """Send data to flask template for display after querying MongoDB.
 
     Parameters
     ----------
-    zip : str
-        zip code the user entered - inbound from Flask or from cmd line.
+    zipcode : str
+        zipcode code the user entered - inbound from Flask or from cmd line.
 
     Returns
     -------
@@ -46,9 +46,9 @@ def main(zip):
     all_links
         A [list] of all the local posts in the free sections
     city
-        [str] - the city associated with the zip (for display only)
+        [str] - the city associated with the zipcode (for display only)
     state
-        [str] - the state associated with the zip (for display only)
+        [str] - the state associated with the zipcode (for display only)
 
     start_lat
     start_lng    to be used to calculate distance (disabled for now)
@@ -61,20 +61,22 @@ def main(zip):
     start_lng = "-82.2178"
 
     """ Defaults - Worst Case scenario """
-    fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zip"
+    fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zipcode"
     all_posts = ['Items Error'] * 3
     all_links = [fall_back_url] * 3
-    city, state = (f"Sorry didn't find data for {zip} "
+    city, state = (f"Sorry didn't find data for {zipcode} "
                    f"here's items for San Francisco", "CA")
     try:
 
-        """ Given a zip, find the Craigslist Url """
-        city, state, url, Items, Urls, Prices = \
-            mongodb.lookup_craigs_url_citystate_and_items_given_zip(zip)
+        """ Given a zipcode, find the Craigslist Url """
+        city, state, url, Items, Urls, Prices, EBlinks = \
+            mongodb.lookup_craigs_url_citystate_and_items_given_zip(zipcode)
         city, state = city.capitalize(), state.upper()
         all_posts   = list(Items.values())
         all_links   = list(Urls.values())
         all_prices  = list(Prices.values())
+        all_eblnks  = list(EBlinks.values())
+        all_cust    = list(zip(all_eblnks, all_prices))
 
     except (ValueError, KeyError) as e:
 
@@ -98,7 +100,7 @@ def main(zip):
         print("Match:", craigs_list_url, city, state, items)
 
     finally:
-        return all_posts, all_links, all_prices, city, state
+        return all_posts, all_links, all_cust, city, state
 
         """ Given the free items, see:                      """
         """ 1) How far away?                                """
@@ -136,9 +138,9 @@ if __name__ == "__main__":
     import sys
 
     try:
-        zip = sys.argv[1]
+        zipcode = sys.argv[1]
     except IndexError as e:
-        print(e, "Did you specify a zip?")
+        print(e, "Did you specify a zipcode?")
         sys.exit()
 
-    print("Main: ", main(zip))
+    print("Main: ", main(zipcode))
