@@ -7,6 +7,7 @@
 
 </minimum viable product>
 
+
 - implement timeout for item caching
 
 - update nuances like Brooklyn/Queens; get 'real' data for the 200+ CL links
@@ -16,3 +17,7 @@
 - use ebay developer program
 
 - get craigslist to say yes
+
+- set crawler schedule
+
+- set cl crawler schedule
