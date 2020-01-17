@@ -8,7 +8,7 @@ It serves currently for inspiration for anyone learn Python and for future possi
 
 And for fun. Feedback or Collaborators Welcome.
 
-![ShouldIpickItUp](non-app/version2.png)
+![ShouldIpickItUp](non-app/version3.png)
 
 
 ## High Level Command line Usage example
@@ -63,6 +63,8 @@ In [21]: %run craigs_lyft_ebay.py
 
 
 ## Release History
+* 0.4.4
+    * CHANGE: Crawl Ebay data and display it again
 * 0.4.3
     * CHANGE: Added CSS and set default to 12 displayed items
 * 0.4.2
