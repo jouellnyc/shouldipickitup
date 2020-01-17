@@ -105,21 +105,20 @@ def lookup_price_on_ebay(each_item):
     )
     ebay_query_url = ebay_url + ebay_path
     ebay_resp = requestwrap.err_web(ebay_query_url)
-    print(ebay_resp)
     ebay_soup = BeautifulSoup(ebay_resp.text, "html.parser")
 
     try:
         item = ebay_soup.find("h3", {"class": "s-item__title"}).get_text(separator=" ")
         print(item)
     except AttributeError:
-        item = "no match"
-        price = "no price"
+        raise ValueError("no match")
     else:
         try:
             price = ebay_soup.find("span", {"class": "s-item__price"}).get_text()
         except AttributeError:
-            price = "no price"
-        return price
+            raise ValueError("no price")
+        else:
+            return price
 
 
 def lookup_cost_lyft(start_lat, start_lng, end_lat, end_lng):

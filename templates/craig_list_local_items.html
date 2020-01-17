@@ -34,9 +34,6 @@
 <P>
 
  <table class="comicGreen">
-
-<!-- Is this ugly JINJA2? Yes tremendously for now -->
-
 <!--  0 - 4                                       -->
 {% if len_items > 0 %}
 
@@ -45,9 +42,10 @@
 
         <tr>
             {% for result in all_links[llimit:hlimit] %}
-           <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index}}</a>
-           {% endfor %}
-        <tr>
+            <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index}}</a>
+            {% endfor %}
+        </tr>
+
 
         <tr>
            {% for post in all_posts[llimit:hlimit] %}
@@ -55,17 +53,16 @@
            {% endfor %}
         </tr>
 
+
         <tr>
            {% for price in all_prices[llimit:hlimit] %}
-
-				{% if 'to' in price %}
-				{% autoescape false %}
+           {% if 'to' in price %}
+				   {% autoescape false %}
 					<td> &dollar;{{ price | replace("to ", "to &dollar;") }} </td>
-				{% endautoescape %}
-				{% else %}
-           			<td> &dollar;{{price}}                                  </td>
-				{%endif%}
-
+				   {% endautoescape %}
+				   {% else %}
+           <td> &dollar;{{price}}                                  </td>
+				   {%endif%}
            {% endfor %}
         </tr>
 
@@ -78,23 +75,33 @@
   {% set llimit = 4 %}
   {% set hlimit = 8 %}
 
-        <tr>
-            {% for result in all_links[llimit:hlimit] %}
-           <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index + llimit}} </a>
-           {% endfor %}
-        <tr>
 
-        <tr>
-           {% for post in all_posts[llimit:hlimit] %}
-           <td> {{post}} </td>
-           {% endfor %}
-        </tr>
 
-        <tr>
-           {% for price in all_prices[llimit:hlimit] %}
-           <td> &dollar; {{price}} </td>
-           {% endfor %}
-        </tr>
+          <tr>
+              {% for result in all_links[llimit:hlimit] %}
+             <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index + llimit}} </a>
+             {% endfor %}
+          </tr>
+
+          <tr>
+             {% for post in all_posts[llimit:hlimit] %}
+             <td> {{post}} </td>
+             {% endfor %}
+          </tr>
+
+          <tr>
+             {% for price in all_prices[llimit:hlimit] %}
+
+              {% if 'to' in price %}
+              {% autoescape false %}
+                <td> &dollar;{{ price | replace("to ", "to &dollar;") }} </td>
+              {% endautoescape %}
+              {% else %}
+                      <td> &dollar;{{price}}                                  </td>
+              {%endif%}
+
+             {% endfor %}
+          </tr>
 
 {%endif%}
 
@@ -105,28 +112,45 @@
   {% set llimit =  8 %}
   {% set hlimit = 12 %}
 
-        <tr>
+
+          <tr>
             {% for result in all_links[llimit:hlimit] %}
-           <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index + llimit}} </a>
-           {% endfor %}
-        <tr>
+              <th><a href="{{result}}" target=_"blank">FREE Item ITEM {{loop.index + llimit}} </a>
+            {% endfor %}
+          </tr>
 
-        <tr>
-           {% for post in all_posts[llimit:hlimit] %}
-           <td> {{post}} </td>
-           {% endfor %}
-        </tr>
+          <tr>
+             {% for post in all_posts[llimit:hlimit] %}
+              <td> {{post}} </td>
+             {% endfor %}
+          </tr>
 
-        <tr>
-           {% for price in all_prices[llimit:hlimit] %}
-           <td> &dollar; {{price}} </td>
-           {% endfor %}
-        </tr>
+          <tr>
+             {% for price in all_prices[llimit:hlimit] %}
+
+             {% if 'to' in price %}
+               {% autoescape false %}
+              <td> &dollar;{{ price | replace("to ", "to &dollar;") }} </td>
+               {% endautoescape %}
+             {% else %}
+              <td> &dollar;{{price}}                                  </td>
+             {%endif%}
+
+             {% endfor %}
+          </tr>
 
 {%endif%}
 
 
 </table>
+
+<P>
+
+<small>
+Data provided on this site is for education purposes only.
+No offer or guarantee of any financial outcome is being made of any kind.
+By using this site you agree to using the data as-is with no warranty of any kind.
+</small>
 
 </body>
 </html>

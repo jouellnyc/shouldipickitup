@@ -15,6 +15,7 @@
 """
 
 import sys
+import time
 
 import mongodb
 import websitepuller
@@ -37,11 +38,24 @@ def get_web_data(craigs_list_url):
     return craigs_local_posts
 
 def get_ebay_data(craigs_local_posts, howmany=12):
+    sleep = 1
     ebay_prices = []
-    for each in craigs_local_posts[:howmany]:
-        price = websitepuller.lookup_price_on_ebay(each)
-        price = price.replace("$", "")
-        ebay_prices.append(price)
+    for each in craigs_local_posts[0:howmany]:
+        try:
+            price = websitepuller.lookup_price_on_ebay(each)
+        except ValueError:
+            price = "No intere$t on Ebay$"
+            ebay_prices.append(price)
+        else:
+            price = price.replace("$", "")
+            try:
+                float(price)
+            except ValueError:
+                #ebay_prices.append("No interest on Ebay")
+                ebay_prices.append(price)
+            else:
+                ebay_prices.append(price)
+        time.sleep(sleep)
     return ebay_prices
 
 def format_mongodocs(soup_object, ebay_prices, howmany=12):
@@ -80,13 +94,13 @@ def format_mongodocs(soup_object, ebay_prices, howmany=12):
         each_link = each_item.attrs["href"]
         each_text = each_item.text
         item = f"Item{num}"
-        url = f"Url{num}"
+        url  = f"Url{num}"
         mongo_doc["$set"]["Items"][item] = each_text
         mongo_doc["$set"]["Urls"][url] = each_link
 
     for num, price in enumerate(ebay_prices[0:howmany], start=1):
         price_num = f"Price{num}"
-        mongo_doc["$set"]["Prices"][price_num] = price 
+        mongo_doc["$set"]["Prices"][price_num] = price
 
     return mongo_doc
 
@@ -94,12 +108,12 @@ if __name__ == "__main__":
 
     try:
 
-        howmany = 12 
+        howmany = 12
         craigs_list_url = sys.argv[1]
         noindex         = sys.argv[2]
         craig_posts     = get_web_data(craigs_list_url)
         ebay_prices     = get_ebay_data(craig_posts, howmany=howmany)
-        #print("eb", ebay_prices)
+        print("eb", ebay_prices)
         mongo_doc       = format_mongodocs(craig_posts,ebay_prices, howmany=howmany)
         mongo_filter    = {'craigs_url': craigs_list_url }
         print(mongo_doc)
