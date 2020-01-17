@@ -240,7 +240,6 @@ if __name__ == "__main__":
     try:
         argv1 = str(sys.argv[1])
         if len(argv1) == 5:
-            print('hi')
             print(lookup_craigs_url_citystate_and_items_given_zip(argv1))
             print(lookup_city_state_given_zip(zip))
             print(lookup_craigs_url_given_zip(zip))

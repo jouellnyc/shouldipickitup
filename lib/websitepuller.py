@@ -118,8 +118,14 @@ def lookup_price_on_ebay(each_item):
         except AttributeError:
             raise ValueError("no price")
         else:
-            return price
-
+            try:
+                link = ebay_soup.find("a", {"class": "s-item__link"})
+                link = link.attrs["href"]
+                link = link.partition('?')[0]
+                print(link)
+            except AttributeError:
+                raise ValueError("price, but no link")
+        return (price, link)
 
 def lookup_cost_lyft(start_lat, start_lng, end_lat, end_lng):
     """

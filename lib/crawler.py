@@ -16,10 +16,12 @@
 
 import sys
 import time
+import logging
 
 import mongodb
 import websitepuller
 import pickledata
+
 
 def get_web_data(craigs_list_url):
     """ Return SF data from local if Mongdb is down/server Timeout.
@@ -37,28 +39,33 @@ def get_web_data(craigs_list_url):
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
 
+
 def get_ebay_data(craigs_local_posts, howmany=12):
     sleep = 1
     ebay_prices = []
+    ebay_links = []
     for each in craigs_local_posts[0:howmany]:
         try:
-            price = websitepuller.lookup_price_on_ebay(each)
+            price, eb_link = websitepuller.lookup_price_on_ebay(each)
         except ValueError:
             price = "No intere$t on Ebay$"
-            ebay_prices.append(price)
+            link  = "No $$ data on Ebay$"
         else:
             price = price.replace("$", "")
             try:
                 float(price)
             except ValueError:
-                #ebay_prices.append("No interest on Ebay")
-                ebay_prices.append(price)
+                price = ("No $ data on Ebay$")
             else:
-                ebay_prices.append(price)
+                price = price
+        finally:
+            ebay_prices.append(price)
+            ebay_links.append(eb_link)
         time.sleep(sleep)
-    return ebay_prices
+    return ebay_prices, ebay_links
 
-def format_mongodocs(soup_object, ebay_prices, howmany=12):
+
+def format_mongodocs(soup_object, ebay_prices, ebay_links, howmany=12):
     """ Return Formatted Mongdo Doc
     Parameters
     ----------
@@ -88,13 +95,13 @@ def format_mongodocs(soup_object, ebay_prices, howmany=12):
                 }
     """
     mongo_filter = {"craigs_url": craigs_list_url}
-    mongo_doc = {"$set": {"Items": {}, "Urls": {}, "Prices": {} }}
+    mongo_doc = {"$set": {"Items": {}, "Urls": {}, "Prices": {}, "EbayLinks": {} }}
 
     for num, each_item in enumerate(soup_object[0:howmany], start=1):
         each_link = each_item.attrs["href"]
         each_text = each_item.text
         item = f"Item{num}"
-        url  = f"Url{num}"
+        url = f"Url{num}"
         mongo_doc["$set"]["Items"][item] = each_text
         mongo_doc["$set"]["Urls"][url] = each_link
 
@@ -102,7 +109,12 @@ def format_mongodocs(soup_object, ebay_prices, howmany=12):
         price_num = f"Price{num}"
         mongo_doc["$set"]["Prices"][price_num] = price
 
+    for num, link in enumerate(ebay_links[0:howmany], start=1):
+        link_num = f"EbayLink{num}"
+        mongo_doc["$set"]["EbayLinks"][link_num] = link
+
     return mongo_doc
+
 
 if __name__ == "__main__":
 
@@ -110,12 +122,11 @@ if __name__ == "__main__":
 
         howmany = 12
         craigs_list_url = sys.argv[1]
-        noindex         = sys.argv[2]
-        craig_posts     = get_web_data(craigs_list_url)
-        ebay_prices     = get_ebay_data(craig_posts, howmany=howmany)
-        print("eb", ebay_prices)
-        mongo_doc       = format_mongodocs(craig_posts,ebay_prices, howmany=howmany)
-        mongo_filter    = {'craigs_url': craigs_list_url }
+        noindex = sys.argv[2]
+        craig_posts = get_web_data(craigs_list_url)
+        ebay_prices, ebay_links = get_ebay_data(craig_posts, howmany=howmany)
+        mongo_doc = format_mongodocs(craig_posts, ebay_prices, ebay_links, howmany=12)
+        mongo_filter = {"craigs_url": craigs_list_url}
         print(mongo_doc)
 
     except IndexError as e:
@@ -123,7 +134,7 @@ if __name__ == "__main__":
         sys.exit()
 
     except (ValueError, NameError) as e:
-        print("Error: ", e)
+        logging.exception(e)
 
     else:
         if noindex == "noindex":
