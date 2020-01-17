@@ -1,8 +1,18 @@
 
-- make site prettier
 
-- get ebay data again
+<minimum viable product>
+
+- print ebay links
+- lyft affialte link
+
+</minimum viable product>
 
 - implement timeout for item caching
 
 - update nuances like Brooklyn/Queens; get 'real' data for the 200+ CL links
+
+- implement lyft / uber actual costs
+
+- use ebay developer program
+
+- get craigslist to say yes
