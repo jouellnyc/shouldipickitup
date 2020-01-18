@@ -8,6 +8,8 @@ It serves currently for inspiration for anyone to learn Python and for future po
 
 And for fun. Feedback or Collaborators Welcome.
 
+## High Level Web Site Mockup
+
 ![ShouldIpickItUp](non-app/version3.png)
 
 
