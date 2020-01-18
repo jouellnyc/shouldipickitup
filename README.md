@@ -4,7 +4,7 @@
 NOTE: This project is intentionally "in progress".
 
 
-It serves currently for inspiration for anyone learn Python and for future possibilities.
+It serves currently for inspiration for anyone to learn Python and for future possibilities.
 
 And for fun. Feedback or Collaborators Welcome.
 
