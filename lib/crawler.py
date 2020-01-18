@@ -17,6 +17,7 @@
 import sys
 import time
 import logging
+from   random import randrange
 
 import mongodb
 import websitepuller
@@ -41,7 +42,8 @@ def get_web_data(craigs_list_url):
 
 
 def get_ebay_data(craigs_local_posts, howmany=12):
-    sleep = 1
+
+    sleep = randrange(15,45)
     ebay_prices = []
     ebay_links = []
     for each in craigs_local_posts[0:howmany]:

@@ -2,7 +2,10 @@
 
 while read line; do 
 
-    ../lib/crawler.py $line index; sleep 10; 
+    echo == $line ==
+    date
+    SLEEP=$((1 + RANDOM % 30))
+    ../lib/crawler.py $line index; sleep $SLEEP; 
 
-done < <(head urls)
+done < <(head -n 25 urls)
 

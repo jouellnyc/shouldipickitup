@@ -1,16 +1,7 @@
-
 posts.find_one({'zip':'23286'})
-
-Out[122]:
-{'_id': ObjectId('5e082f35c020534f098fbda5'),
- 'zip': '23286',
- 'Details': {'City': 'richmond', 'State': 'VA'},
- 'craigs_local_url': 'https://richmond.craigslist.org'}
-
 db.posts.count_documents({})
 db.posts.drop( {} )
-db.posts.update(  { "zip":"94015" }, { $set: { 'Items.item1' : 'ji' } } )
-
+db.posts.update(  { "zip":"94015" }, { $set: { 'Items.item1' : 'hi' } } )
 
 =================
 
@@ -28,6 +19,7 @@ Out[156]:
   'item2': 'text2',
   'item3': 'text3'}}
 
+====
 
 In [211]: db.posts.update_one({'zip':'94015'}, {'$set': {'Items.item1':'ji3'}})
 Out[211]: <pymongo.results.UpdateResult at 0x7fbc8bfc4e60>
@@ -40,87 +32,19 @@ Out[212]:
  'craigs_local_url': 'https://santamaria.craigslist.org',
  'Items': {'item1': 'ji3'}}
 
-
- In [314]: db.posts.update_one({'zip': '43321'}, {"$set": {'Item5': 'FREE COOLER'}})
- Out[314]: <pymongo.results.UpdateResult at 0x7fbca86d2cd0>
-
- In [315]: db.posts.find_one({'zip':'43321'})
- Out[315]:
- {'_id': ObjectId('5e0aa309a51f2756c5222558'),
-  'zip': '43321',
-  'City': 'fulton',
-  'State': 'OH',
-  'craigs_url': 'https://columbus.craigslist.org',
-  'Item5': 'FREE COOLER'}
-
-
-===
+==
 db.posts.find({"craigs_local_url":{$eq:null}}).count()
 db.posts.find({"craigs_local_url":{$ne:null}}).count()
 use posts
 
-
 ==
-> db.data.findOne({'craigs_url':'https://albany.craigslist.org','zips':'test'})
-{
-	"_id" : ObjectId("5e111cee9bbd040a7ae150bb"),
-	"craigs_url" : "https://albany.craigslist.org",
-	"zips" : "test",
-	"CityState" : "bronx,NY"
-}
-> db.data.updateOne({'craigs_url':'https://albany.craigslist.org'},  {"$set":{'zips':'test2'} })
-{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
-> db.data.findOne({'craigs_url':'https://albany.craigslist.org','zips':'test'})
-null
-> db.data.findOne({'craigs_url':'https://albany.craigslist.org','zips':'test2'})
-{
-	"_id" : ObjectId("5e111cee9bbd040a7ae150bb"),
-	"craigs_url" : "https://albany.craigslist.org",
-	"zips" : "test2",
-	"CityState" : "bronx,NY"
-}
-
-
-==
-
-
-
-
-In [188]: dbh.insert_one({"craigs_url" : "https://eugene.craigslist.orgz", "zips" : zips })
-Out[188]: <pymongo.results.InsertOneResult at 0x7f0fcb2b66e0>
-
-In [189]: dbh.find_one({'craigs_url': 'https://eugene.craigslist.orgz'})
-Out[189]:
-{'_id': ObjectId('5e112d9e7b3bd11f58ff4e58'),
- 'craigs_url': 'https://eugene.craigslist.orgz',
- 'zips': ['12122', '32323']}
-
-
-
-> db.data.findOne({'craigs_url':'https://albany.craigslist.org','zips':'test2'})
-{
-	"_id" : ObjectId("5e111cee9bbd040a7ae150bb"),
-	"craigs_url" : "https://albany.craigslist.org",
-	"zips" : "test2",
-	"CityState" : "bronx,NY"
-}
-> db.data.updateOne({'craigs_url': 'https://eugene.craigslist.orgz'}, {"$push":{ "zips": "test3"} } )
-{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
-> db.data.findOne({'craigs_url':'https://eugene.craigslist.orgz'})
-{
-	"_id" : ObjectId("5e112d9e7b3bd11f58ff4e58"),
-	"craigs_url" : "https://eugene.craigslist.orgz",
-	"zips" : [
-		"12122",
-		"32323",
-		"test3"
-	]
-}
->
-
-==
-
 In [657]: dbh.find_one({"$or" : [{"zips" : '21538'}, {'AltZips' : '21538'}]}
-
-
 zip = '79697'; dbh.find_one({"$or" : [{"Zips" : zip }, {'AltZips' : zip}]})
+
+=========
+> db.data.count({"EbayLinks":{$ne:null}});
+25
+> db.data.count({"EbayLinks":{$eq:null}});
+801
+> db.data.count({});
+826
