@@ -41,9 +41,12 @@ def get_web_data(craigs_list_url):
     return craigs_local_posts
 
 
-def get_ebay_data(craigs_local_posts, howmany=12):
+def get_ebay_data(craigs_local_posts, random='yes', howmany=12):
 
-    sleep = randrange(15,45)
+    if random == 'yes':
+        sleep = randrange(15,45)
+    else:
+        sleep = 0
     ebay_prices = []
     ebay_links = []
     for each in craigs_local_posts[0:howmany]:
@@ -126,7 +129,7 @@ if __name__ == "__main__":
         craigs_list_url = sys.argv[1]
         noindex = sys.argv[2]
         craig_posts = get_web_data(craigs_list_url)
-        ebay_prices, ebay_links = get_ebay_data(craig_posts, howmany=howmany)
+        ebay_prices, ebay_links = get_ebay_data(craig_posts, random = 'no', howmany=howmany)
         mongo_doc = format_mongodocs(craig_posts, ebay_prices, ebay_links, howmany=12)
         mongo_filter = {"craigs_url": craigs_list_url}
         print(mongo_doc)

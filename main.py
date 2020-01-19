@@ -64,6 +64,7 @@ def main(zipcode):
     fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zipcode"
     all_posts = ['Items Error'] * 3
     all_links = [fall_back_url] * 3
+    all_cust  = list(zip(all_links, all_posts))
     city, state = (f"Sorry didn't find data for {zipcode} "
                    f"here's items for San Francisco", "CA")
     try:
