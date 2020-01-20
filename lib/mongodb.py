@@ -36,6 +36,15 @@ import logging
 database_name = "shouldipickitup"
 collection_name = "data"
 
+class AllData():
+    def __init__(self):
+        self.citytext         = ''
+        self.city, self.state = ('','')
+        self.url              = ''
+        self.Items            = {}
+        self.Urls             = {}
+        self.Prices           = {}
+        self.EBlinks          = {}
 
 def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
     """
@@ -58,7 +67,7 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
     return collection_handle
 
 
-def lookup_craigs_url_citystate_and_items_given_zip(zip):
+def lookup_all_data_given_zip(zip):
     """
     Return All free items post, Urls, city and state to the caller
 
@@ -86,18 +95,20 @@ def lookup_craigs_url_citystate_and_items_given_zip(zip):
         raise ValueError("No data in Mongo for " + str(zip))
     else:
         try:
-            citytext    = response["CityState"]
-            city, state = response["CityState"].split(",")
-            url         = response["craigs_url"]
-            Items       = response["Items"]
-            Urls        = response["Urls"]
-            Prices      = response["Prices"]
-            EBlinks     = response["EbayLinks"]
-            return (city, state, url, Items, Urls, Prices, EBlinks)
+            all_data = AllData()
+            all_data.citytext            = response["CityState"]
+            all_data.city,all_data.state = response["CityState"].split(",")
+            all_data.url                 = response["craigs_url"]
+            all_data.Items               = response["Items"]
+            all_data.Urls                = response["Urls"]
+            all_data.Prices              = response["Prices"]
+            all_data.EBlinks             = response["EbayLinks"]
         except KeyError as e:
             raise ValueError("No details in Mongo for " + str(zip))
         except Exception as e:
             raise
+        else:
+            return all_data
 
 def lookup_city_state_given_zip(zip):
     """

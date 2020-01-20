@@ -62,22 +62,22 @@ def main(zipcode):
 
     """ Defaults - Worst Case scenario """
     fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zipcode"
-    all_posts = ['Items Error'] * 3
-    all_links = [fall_back_url] * 3
+    all_posts = ['Items Error'] * 12
+    all_links = [fall_back_url] * 12
     all_cust  = list(zip(all_links, all_posts))
     city, state = (f"Sorry didn't find data for {zipcode} "
                    f"here's items for San Francisco", "CA")
     try:
 
         """ Given a zipcode, find the Craigslist Url """
-        city, state, url, Items, Urls, Prices, EBlinks = \
-            mongodb.lookup_craigs_url_citystate_and_items_given_zip(zipcode)
-        city, state = city.capitalize(), state.upper()
-        all_posts   = list(Items.values())
-        all_links   = list(Urls.values())
-        all_prices  = list(Prices.values())
-        all_eblnks  = list(EBlinks.values())
-        all_cust    = list(zip(all_eblnks, all_prices))
+        all_data         = mongodb.lookup_all_data_given_zip(zipcode)
+        city             = all_data.city.capitalize()
+        state            = all_data.state.capitalize()
+        all_posts        = list(all_data.Items.values())
+        all_links        = list(all_data.Urls.values())
+        all_prices       = list(all_data.Prices.values())
+        all_eblnks       = list(all_data.EBlinks.values())
+        all_cust         = list(zip(all_eblnks, all_prices))
 
     except (ValueError, KeyError) as e:
 
@@ -125,12 +125,10 @@ def fallback_to_pickle():
         pickled   = pickledata.loadit(file="data/sf.pickle")
         all_posts = list(pickled['$set']['Items'].values())
         all_links = list(pickled['$set']['Urls'].values())
-        #all_links = enumerate(all_links, start = 1)
         return all_posts, all_links
     except (IOError, KeyError, TypeError) as e:
         Pmsg = "Even the file is erroring!: "
-        Pmsg += str(e)
-        logging.error(Pmsg)
+        logging.exception(f"{Pmsg}Text:{e} Type:{e.__class__.__name__}")
         #Sms/page out
 
 
