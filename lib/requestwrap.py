@@ -17,6 +17,7 @@
 
 import sys
 import requests
+import random
 
 
 def err_web(url):
@@ -33,15 +34,25 @@ def err_web(url):
     -------
     httprequest :  A  Beautiful Soup object
     """
+        #Windows 10-based PC using Edge browser
+        #Mac OS X-based computer using a Safari browser
+    user_agents = [
+
+                {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+                "AppleWebKit/537.36 (KHTML, like Gecko)" 
+                "Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"},
+
+                {"User-Agent": "Mozilla/5.0 "
+                "(Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 "
+                "(KHTML, like Gecko) Version/9.0.2 Safari/601.3.9"}
+
+                ]
+
+    print(random.choice(user_agents))
 
     try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1)"
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 "
-            "Safari/537.36"
-        }
         httprequest = requests.get(
-            url, timeout=10, allow_redirects=True, headers=headers
+            url, timeout=10, allow_redirects=True, headers=random.choice(user_agents)
         )
         # raise_for_status() never execs if requests.get above has connect error/timeouts
         httprequest.raise_for_status()
@@ -59,3 +70,5 @@ def err_web(url):
         sys.exit(1)
     else:
         return httprequest
+
+err_web('http://www.google.com')
