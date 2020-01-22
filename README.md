@@ -3,7 +3,7 @@
 
 NOTES:
  - This project is intentionally "in progress".
- - Shout out to Gary V https://www.instagram.com/p/B5ghkSqAduP/ 
+ - Shout out to [Gary V](https://www.instagram.com/p/B5ghkSqAduP/)
 
 
 It serves currently for inspiration for anyone to learn Python and for future possibilities.
