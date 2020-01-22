@@ -1,7 +1,9 @@
 # shouldipickitup
 > Given a free listing on Craiglist, should I pick it up?
 
-NOTE: This project is intentionally "in progress".
+NOTES:
+ - This project is intentionally "in progress".
+ - Shout out to Gary V https://www.instagram.com/p/B5ghkSqAduP/ 
 
 
 It serves currently for inspiration for anyone to learn Python and for future possibilities.
