@@ -42,17 +42,16 @@ def err_web(url):
                 """
                 From:
                 https://deviceatlas.com/blog/list-of-user-agent-strings#desktop
-                """
-                #Windows 10-based PC using Edge browser
+                
                 {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
                 "AppleWebKit/537.36 (KHTML, like Gecko)"
                 "Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"},
 
-                #Mac OS X-based computer using a Safari browser
+  
                 {"User-Agent" : "Mozilla/5.0 "
                 "(Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9"
                 "(KHTML, like Gecko) Version/9.0.2 Safari/601.3.9"},
-
+                """
                 #Samsung Galaxy S9
                 {"User-Agent" : "Mozilla/5.0 (Linux; Android 8.0.0; "
                 "SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko)"

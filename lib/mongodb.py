@@ -37,6 +37,7 @@ database_name = "shouldipickitup"
 collection_name = "data"
 
 class AllData:
+    
     def __init__(self):
         self.citytext         = ''
         self.city, self.state = ('','')
