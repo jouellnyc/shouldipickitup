@@ -3,12 +3,9 @@
 
 NOTES:
  - This project is intentionally "in progress".
+ - It serves currently for inspiration for anyone to learn Python and for future possibilities.
+ - And for fun. Feedback or Collaborators Welcome.
  - Shout out to [Gary V](https://www.instagram.com/p/B5ghkSqAduP/)
-
-
-It serves currently for inspiration for anyone to learn Python and for future possibilities.
-
-And for fun. Feedback or Collaborators Welcome.
 
 ## High Level Web Site Mockup
 
