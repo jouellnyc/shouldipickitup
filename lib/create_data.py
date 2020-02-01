@@ -35,8 +35,8 @@ from collections import defaultdict
 
 URL = "http://federalgovernmentzipcodes.us/download.html"  # not used
 my_file_name = os.path.basename(__file__)
-zip_code_file = "/home/john/gitrepos/shouldipickitup/data/free-zipcode-database-Primary.no.header.csv"
-craigs_links_file = "/home/john/gitrepos/shouldipickitup/data/craigs_links.txt"
+zip_code_file = "../data/free-zipcode-database-Primary.no.header.csv"
+craigs_links_file = "../data/craigs_links.txt"
 
 def create_gov_city_state_mutlizips_map(zip_code_file):
     """
