@@ -64,6 +64,8 @@ In [21]: %run craigs_lyft_ebay.py
 
 
 ## Release History
+* 0.4.5
+    * CHANGE: Use Gunicorn 20.0.4 as WSGI server and Nginx as Website with proxy_pass
 * 0.4.4
     * CHANGE: Crawl Ebay data and display it again
 * 0.4.3
@@ -89,3 +91,4 @@ John Ouellette – [@jjouell](https://twitter.com/jjouell) – twitter[1:]@gmail
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
+
