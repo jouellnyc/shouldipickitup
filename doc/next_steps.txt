@@ -1,12 +1,6 @@
 
 
-<minimum viable product>
-
-- print ebay links
-- lyft affialte link
-
-</minimum viable product>
-
+-- Later
 
 - implement timeout for item caching
 
