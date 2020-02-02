@@ -47,23 +47,26 @@ def get_data():
     zip goes back to a 'str' to be queried by mongodb and printed in HTML
     """
     try:
-        zip = int(request.form.get('zip'))
-    except ValueError:
-        return render_template('nota5digitzip.html')
+        zip = request.form.get('zip')
+        if zip[0] == '0':
+            try:
+                int(zip[1:])
+            except ValueError:
+                return render_template('nota5digitzip.html')
+            else:
+                zip = str(zip)
+                if len(zip) == 5:
+                    all_posts, all_links, all_cust, city, state   = main.main(zip)
+                    len_items                                     = len(all_posts)
+                    return render_template('craig_list_local_items.html',
+                        zip = zip, city = city, state = state, all_posts = all_posts,
+                        len_items = len_items, all_links = all_links,
+                        all_cust = all_cust)
+                else:
+                    return render_template('nota5digitzip.html')
     except Exception as e:
         logging.exception("BUG")
         flask.abort(500)
-    else:
-        zip = str(zip)
-        if len(zip) == 5:
-            all_posts, all_links, all_cust, city, state   = main.main(zip)
-            len_items                                     = len(all_posts)
-            return render_template('craig_list_local_items.html',
-                zip = zip, city = city, state = state, all_posts = all_posts,
-                len_items = len_items, all_links = all_links,
-                all_cust = all_cust)
-        else:
-            return render_template('nota5digitzip.html')
 
 
 if __name__ == "__main__":
