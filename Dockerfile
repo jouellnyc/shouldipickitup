@@ -1,5 +1,6 @@
 FROM python:3
 RUN apt-get update -y &&  apt-get install
+RUN apt-get install vim -y
 RUN pip install --upgrade pip
 RUN mkdir /shouldipickitup
 COPY . /shouldipickitup
