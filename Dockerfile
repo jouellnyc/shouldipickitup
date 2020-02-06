@@ -5,5 +5,5 @@ RUN mkdir /shouldipickitup
 COPY . /shouldipickitup
 WORKDIR /shouldipickitup
 RUN pip install -r requirements.txt
-EXPOSE 5000
-CMD /usr/local/bin/gunicorn -b 127.0.0.1:8001 -w 4 app:app
+EXPOSE 5001
+CMD /usr/local/bin/gunicorn  -w 4 app:app
