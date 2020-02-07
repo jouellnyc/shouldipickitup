@@ -34,9 +34,10 @@ from flask import jsonify
 
 import main
 
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
-log = logging.getLogger('root')
-logging.basicConfig(filename='file.log', level='INFO',format = \
+logging.basicConfig(filename='app.log', level='INFO',format = \
             '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s')
 
 app = Flask(__name__)
@@ -76,7 +77,6 @@ def get_data():
         logging.exception(msg)
         flask.abort(500)
     else:
-        logging.info(post_data)
         zip = str(zip)
         all_posts, all_links, all_cust, city, state   = main.main(zip)
         len_items                                     = len(all_posts)
