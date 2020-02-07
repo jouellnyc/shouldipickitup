@@ -36,7 +36,9 @@ from flask import jsonify
 
 import main
 logname ='shouldipickit.app.log'
-logging.basicConfig(filename=logname, level='INFO',format = '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s')
+logging.basicConfig(filename=logname, level='INFO',format = \
+                    '%(levelname)s %(asctime)s %(module)s   \
+                     %(process)d   %(message)s')
 
 app = Flask(__name__)
 app.debug = False
