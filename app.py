@@ -48,27 +48,26 @@ def get_data():
     """
     try:
         zip = request.form.get('zip')
-        if len(str(zip)) == 5:
-            try:
-                if zip[0] == 0:
-                    int(zip[1:])
-                else:
-                    int(zip)
-            except ValueError:
-                return render_template('nota5digitzip.html')
+        try:
+            if zip[0] == 0:
+                int(zip[1:])
             else:
-                zip = str(zip)
-                all_posts, all_links, all_cust, city, state   = main.main(zip)
-                len_items                                     = len(all_posts)
-                return render_template('craig_list_local_items.html',
-                    zip = zip, city = city, state = state, all_posts = all_posts,
-                    len_items = len_items, all_links = all_links,
-                    all_cust = all_cust)
-        else:
-             return render_template('nota5digitzip.html')
+                int(zip)
+            if len(str(zip)) != 5:
+                raise ValueError
+        except ValueError:
+            return render_template('nota5digitzip.html')
     except Exception as e:
         logging.exception("BUG")
         flask.abort(500)
+    else:
+        zip = str(zip)
+        all_posts, all_links, all_cust, city, state   = main.main(zip)
+        len_items                                     = len(all_posts)
+        return render_template('craig_list_local_items.html',
+            zip = zip, city = city, state = state, all_posts = all_posts,
+            len_items = len_items, all_links = all_links,
+            all_cust = all_cust)
 
 
 if __name__ == "__main__":
