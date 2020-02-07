@@ -30,14 +30,22 @@ import flask
 from flask import Flask
 from flask import request
 from flask import render_template
+from flask import jsonify
 
 import main
 
 
-app = Flask(__name__)
-app.debug = False 
-logging.basicConfig(filename='file.log', level='WARNING',format = \
+log = logging.getLogger('root')
+logging.basicConfig(filename='file.log', level='INFO',format = \
             '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s')
+
+app = Flask(__name__)
+app.debug = False
+
+@app.before_request
+def log_request_info():
+    app.logger.info('Headers: %s', request.headers)
+    app.logger.info('Body: %s', request.get_data())
 
 @app.route('/forms/', methods=['POST', 'GET'])
 def get_data():
@@ -48,6 +56,7 @@ def get_data():
     by casting to 'int'. zip is then queried @mongodb and returns HTML
     """
     try:
+        post_data = request.form
         zip = request.form.get('zip')
         try:
             if zip[0] == 0:
@@ -58,10 +67,16 @@ def get_data():
                 raise ValueError
         except ValueError:
             return render_template('nota5digitzip.html')
+    except TypeError as e:
+        msg       = f"Invalid POST data: {post_data}"
+        logging.error(msg)
+        return render_template('nota5digitzip.html')
     except Exception as e:
-        logging.exception("BUG")
+        msg = f"Bug: POST data:{post_data}, Error: {str(e)}"
+        logging.exception(msg)
         flask.abort(500)
     else:
+        logging.info(post_data)
         zip = str(zip)
         all_posts, all_links, all_cust, city, state   = main.main(zip)
         len_items                                     = len(all_posts)
