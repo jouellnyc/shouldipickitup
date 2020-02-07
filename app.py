@@ -23,16 +23,12 @@ TBD: - Add js input validation
 """
 
 
-import os
-import sys
-import time
 import logging
 
 import flask
 from flask import Flask
 from flask import request
 from flask import render_template
-from flask import jsonify
 
 import main
 logname ='shouldipickit.app.log'
