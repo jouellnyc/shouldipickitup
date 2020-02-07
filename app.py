@@ -15,6 +15,8 @@ app.py - Main Flask application file
 - Credit/Refs:
 https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
 https://stackoverflow.com/questions/12551526/cast-flask-form-value-to-int
+https://docs.gunicorn.org/en/stable/settings.html#logger-class
+https://medium.com/@trstringer/logging-flask-and-gunicorn-the-manageable-way-2e6f0b8beb2f
 
 TBD: - Add js input validation
      - Add cool look ahead form query
@@ -33,20 +35,12 @@ from flask import render_template
 from flask import jsonify
 
 import main
-
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
-
-logging.basicConfig(filename='app.log', level='INFO',format = \
-            '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s')
+logname ='shouldipickit.app.log'
+logging.basicConfig(filename=logname, level='INFO',format = '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s')
 
 app = Flask(__name__)
 app.debug = False
-
-@app.before_request
-def log_request_info():
-    app.logger.info('Headers: %s', request.headers)
-    app.logger.info('Body: %s', request.get_data())
+verbose = False
 
 @app.route('/forms/', methods=['POST', 'GET'])
 def get_data():
@@ -67,10 +61,13 @@ def get_data():
             if len(str(zip)) != 5:
                 raise ValueError
         except ValueError:
+            if verbose:
+                logging.info(f"Invalid POST data: {post_data} : nota5digitzip")
             return render_template('nota5digitzip.html')
     except TypeError as e:
         msg       = f"Invalid POST data: {post_data}"
-        logging.error(msg)
+        if verbose:
+            logging.error(msg)
         return render_template('nota5digitzip.html')
     except Exception as e:
         msg = f"Bug: POST data:{post_data}, Error: {str(e)}"
@@ -84,7 +81,6 @@ def get_data():
             zip = zip, city = city, state = state, all_posts = all_posts,
             len_items = len_items, all_links = all_links,
             all_cust = all_cust)
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=8000)
