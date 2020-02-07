@@ -41,10 +41,8 @@ def get_data():
     """
     Return a view to Flask with relevant details
 
-    zip comes in as a 'str' and most easily is tested by casting to 'int'
-    and checking len(str(zip)) at loss of some duplicated logic/code.
-
-    zip goes back to a 'str' to be queried by mongodb and printed in HTML
+    zip comes in as a 'str' from the Flash HTML form  and most easily is tested
+    by casting to 'int'. zip is then queried @mongodb and returns HTML
     """
     try:
         zip = request.form.get('zip')
