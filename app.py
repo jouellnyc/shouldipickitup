@@ -33,8 +33,11 @@ from flask import render_template
 
 import main
 
+
 app = Flask(__name__)
-app.debug = True
+app.debug = False 
+logging.basicConfig(filename='file.log', level='WARNING',format = \
+            '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s')
 
 @app.route('/forms/', methods=['POST', 'GET'])
 def get_data():

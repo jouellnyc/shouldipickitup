@@ -89,7 +89,7 @@ def main(zipcode):
 
     except ConnectionFailure as e:
 
-        msg = "MondoDB Connection Errors - DB down? "
+        msg = "MongoDB Connection Errors - DB down? "
         all_posts, all_links = fallback_to_pickle()
         local_log.app_system_logger(f"{msg} => {str(e)}","error")
 
