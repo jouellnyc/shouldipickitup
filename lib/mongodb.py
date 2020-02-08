@@ -36,16 +36,17 @@ import logging
 database_name = "shouldipickitup"
 collection_name = "data"
 
+
 class AllData:
-    
     def __init__(self):
-        self.citytext         = ''
-        self.city, self.state = ('','')
-        self.url              = ''
-        self.Items            = {}
-        self.Urls             = {}
-        self.Prices           = {}
-        self.EBlinks          = {}
+        self.citytext = ""
+        self.city, self.state = ("", "")
+        self.url = ""
+        self.Items = {}
+        self.Urls = {}
+        self.Prices = {}
+        self.EBlinks = {}
+
 
 def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
     """
@@ -97,19 +98,20 @@ def lookup_all_data_given_zip(zip):
     else:
         try:
             all_data = AllData()
-            all_data.citytext            = response["CityState"]
-            all_data.city,all_data.state = response["CityState"].split(",")
-            all_data.url                 = response["craigs_url"]
-            all_data.Items               = response["Items"]
-            all_data.Urls                = response["Urls"]
-            all_data.Prices              = response["Prices"]
-            all_data.EBlinks             = response["EbayLinks"]
+            all_data.citytext = response["CityState"]
+            all_data.city, all_data.state = response["CityState"].split(",")
+            all_data.url = response["craigs_url"]
+            all_data.Items = response["Items"]
+            all_data.Urls = response["Urls"]
+            all_data.Prices = response["Prices"]
+            all_data.EBlinks = response["EbayLinks"]
         except KeyError as e:
             raise ValueError("No details in Mongo for " + str(zip))
         except Exception as e:
             raise
         else:
             return all_data
+
 
 def lookup_city_state_given_zip(zip):
     """
@@ -128,7 +130,7 @@ def lookup_city_state_given_zip(zip):
         [str] - the state associated with the zip (for display only)
     """
     dbh = ConnectToMongo()
-    dbh.find_one( {"$or": [ {"Zips":zip}, {"AltZips":zip} ] } )
+    dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
     response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
     if response is None:
         raise ValueError("No data in Mongo for " + str(zip))
@@ -136,22 +138,24 @@ def lookup_city_state_given_zip(zip):
         city, state = response["CityState"].split(",")
         return (city, state)
 
+
 def lookup_craigs_url_given_zip(zip):
     dbh = ConnectToMongo()
-    dbh.find_one( {"$or": [ {"Zips":zip}, {"AltZips":zip} ] } )
+    dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
     response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
     if response is None:
         raise ValueError("No data in Mongo for " + str(zip))
     else:
         return response["craigs_url"]
 
+
 def lookup_zips_given_craigs_url(craigs_url):
     dbh = ConnectToMongo()
-    response = dbh.find_one( {"craigs_url": craigs_url} )
+    response = dbh.find_one({"craigs_url": craigs_url})
     if response is None:
         raise ValueError("No data in Mongo for " + str(craigs_url))
     else:
-        return (response["Zips"], response['AltZips'])
+        return (response["Zips"], response["AltZips"])
 
 
 def lookup_craigs_posts(zip):
@@ -250,6 +254,7 @@ def init_load_city_state_zip_map(master_mongo_city_state_zip_data):
 if __name__ == "__main__":
 
     import sys
+
     try:
         argv1 = str(sys.argv[1])
         if len(argv1) == 5:

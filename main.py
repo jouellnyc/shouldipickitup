@@ -31,7 +31,8 @@ from lib import mongodb
 from lib import pickledata
 from lib.app_logger import AppLog
 
-local_log =  AppLog()
+local_log = AppLog()
+
 
 def main(zipcode):
     """Send data to flask template for display after querying MongoDB.
@@ -64,39 +65,41 @@ def main(zipcode):
 
     """ Defaults - Worst Case scenario """
     fall_back_url = "https://sfbay.craigslist.org/d/free-stuff/search/zipcode"
-    all_posts = ['Items Error'] * 12
+    all_posts = ["Items Error"] * 12
     all_links = [fall_back_url] * 12
-    all_cust  = list(zip(all_links, all_posts))
-    city, state = (f"Sorry didn't find data for {zipcode} "
-                   f"here's items for San Francisco", "CA")
+    all_cust = list(zip(all_links, all_posts))
+    city, state = (
+        f"Sorry didn't find data for {zipcode} " f"here's items for San Francisco",
+        "CA",
+    )
     try:
 
         """ Given a zipcode, find the Craigslist Url """
-        all_data         = mongodb.lookup_all_data_given_zip(zipcode)
-        city             = all_data.city.capitalize()
-        state            = all_data.state.capitalize()
-        all_posts        = list(all_data.Items.values())
-        all_links        = list(all_data.Urls.values())
-        all_prices       = list(all_data.Prices.values())
-        all_eblnks       = list(all_data.EBlinks.values())
-        all_cust         = list(zip(all_eblnks, all_prices))
+        all_data = mongodb.lookup_all_data_given_zip(zipcode)
+        city = all_data.city.capitalize()
+        state = all_data.state.capitalize()
+        all_posts = list(all_data.Items.values())
+        all_links = list(all_data.Urls.values())
+        all_prices = list(all_data.Prices.values())
+        all_eblnks = list(all_data.EBlinks.values())
+        all_cust = list(zip(all_eblnks, all_prices))
 
     except (ValueError, KeyError) as e:
 
         msg = f"Going to retrieve pickle data"
         all_posts, all_links = fallback_to_pickle()
-        local_log.app_system_logger(f"{msg} => {str(e)}","error")
+        local_log.app_system_logger(f"{msg} => {str(e)}", "error")
 
     except ConnectionFailure as e:
 
         msg = "MongoDB Connection Errors - DB down? "
         all_posts, all_links = fallback_to_pickle()
-        local_log.app_system_logger(f"{msg} => {str(e)}","error")
+        local_log.app_system_logger(f"{msg} => {str(e)}", "error")
 
     except Exception as e:
 
         msg = "Unexpected Error=> "
-        local_log.app_system_logger(f"{msg} => {str(e)}","exception")
+        local_log.app_system_logger(f"{msg} => {str(e)}", "exception")
 
     else:
 
@@ -109,6 +112,7 @@ def main(zipcode):
         """ 1) How far away?                                """
         """ 2) How much on Ebay                             """
         """ 3) How much for a Lyft                          """
+
 
 def fallback_to_pickle():
     """ Return SF data from local if Mongdb is down/server Timeout.
@@ -124,14 +128,15 @@ def fallback_to_pickle():
         A [list] of all the local posts in the free sections
     """
     try:
-        pickled   = pickledata.loadit(file="data/sf.pickle")
-        all_posts = list(pickled['$set']['Items'].values())
-        all_links = list(pickled['$set']['Urls'].values())
+        pickled = pickledata.loadit(file="data/sf.pickle")
+        all_posts = list(pickled["$set"]["Items"].values())
+        all_links = list(pickled["$set"]["Urls"].values())
         return all_posts, all_links
     except (IOError, KeyError, TypeError) as e:
         msg = "Even the file is erroring!: "
-        local_log.app_system_logger(f"{msg} => {str(e)}","exception")
-        #Sms/page out
+        local_log.app_system_logger(f"{msg} => {str(e)}", "exception")
+        # Sms/page out
+
 
 if __name__ == "__main__":
 
@@ -145,7 +150,7 @@ if __name__ == "__main__":
         err += f" : {msg}"
         print(err)
         local_log = AppLog()
-        local_log.app_system_logger(err,"error")
+        local_log.app_system_logger(err, "error")
         sys.exit()
     else:
         print("Main: ", main(zipcode))

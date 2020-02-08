@@ -20,6 +20,7 @@ import pickle
 
 datafile = "../data/sf.pickle"
 
+
 def save(mongodoc, file=datafile):
     """
     Write pickle data to file
@@ -36,8 +37,9 @@ def save(mongodoc, file=datafile):
     Nothing if successful
     Errors pass to caller
     """
-    with open(file,'wb') as fh:
-        pickle.dump(mongodoc,fh)
+    with open(file, "wb") as fh:
+        pickle.dump(mongodoc, fh)
+
 
 def loadit(file=datafile):
     """
@@ -54,11 +56,11 @@ def loadit(file=datafile):
         MongoDB specific doc
     """
     try:
-        with open(file,'rb') as fh:
+        with open(file, "rb") as fh:
             mongodoc = pickle.load(fh)
     except IOError as e:
         raise
     except Exception as e:
-        raise ValueError('Bad pickle data')
+        raise ValueError("Bad pickle data")
     else:
         return mongodoc

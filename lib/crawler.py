@@ -17,7 +17,7 @@
 import sys
 import time
 import logging
-from   random import randrange
+from random import randrange
 
 import mongodb
 import websitepuller
@@ -41,10 +41,10 @@ def get_web_data(craigs_list_url):
     return craigs_local_posts
 
 
-def get_ebay_data(craigs_local_posts, random='yes', howmany=12):
+def get_ebay_data(craigs_local_posts, random="yes", howmany=12):
 
-    if random == 'yes':
-        sleep = randrange(15,45)
+    if random == "yes":
+        sleep = randrange(15, 45)
     else:
         sleep = 0
     ebay_prices = []
@@ -54,13 +54,13 @@ def get_ebay_data(craigs_local_posts, random='yes', howmany=12):
             price, eb_link = websitepuller.lookup_price_on_ebay(each)
         except ValueError:
             price = "No intere$t on Ebay$"
-            link  = "No $$ data on Ebay$"
+            link = "No $$ data on Ebay$"
         else:
             price = price.replace("$", "")
             try:
                 float(price)
             except ValueError:
-                price = ("No $ data on Ebay$")
+                price = "No $ data on Ebay$"
             else:
                 price = price
         finally:
@@ -100,7 +100,7 @@ def format_mongodocs(soup_object, ebay_prices, ebay_links, howmany=12):
                 }
     """
     mongo_filter = {"craigs_url": craigs_list_url}
-    mongo_doc = {"$set": {"Items": {}, "Urls": {}, "Prices": {}, "EbayLinks": {} }}
+    mongo_doc = {"$set": {"Items": {}, "Urls": {}, "Prices": {}, "EbayLinks": {}}}
 
     for num, each_item in enumerate(soup_object[0:howmany], start=1):
         each_link = each_item.attrs["href"]
@@ -129,7 +129,9 @@ if __name__ == "__main__":
         craigs_list_url = sys.argv[1]
         noindex = sys.argv[2]
         craig_posts = get_web_data(craigs_list_url)
-        ebay_prices, ebay_links = get_ebay_data(craig_posts, random = 'no', howmany=howmany)
+        ebay_prices, ebay_links = get_ebay_data(
+            craig_posts, random="no", howmany=howmany
+        )
         mongo_doc = format_mongodocs(craig_posts, ebay_prices, ebay_links, howmany=12)
         mongo_filter = {"craigs_url": craigs_list_url}
         print(mongo_doc)

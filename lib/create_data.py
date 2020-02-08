@@ -38,6 +38,7 @@ my_file_name = os.path.basename(__file__)
 zip_code_file = "../data/free-zipcode-database-Primary.no.header.csv"
 craigs_links_file = "../data/craigs_links.txt"
 
+
 def create_gov_city_state_mutlizips_map(zip_code_file):
     """
     Return a default dictionary with (city,state) as key and
@@ -63,6 +64,7 @@ def create_gov_city_state_mutlizips_map(zip_code_file):
             state = state.upper()
             gov_city_state_zips[f"{city},{state}"].append(zipc)
         return gov_city_state_zips
+
 
 def create_craigs_url_dict_from_local_file(craigs_links_file):
     """

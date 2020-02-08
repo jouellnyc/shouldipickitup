@@ -1,4 +1,5 @@
-#!/home/john/anaconda3/bin/python3
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 """
 app.py - Main Flask application file
@@ -31,16 +32,21 @@ from flask import request
 from flask import render_template
 
 import main
-logname ='shouldipickit.app.log'
-logging.basicConfig(filename=logname, level='INFO',format = \
-                    '%(levelname)s %(asctime)s %(module)s   \
-                     %(process)d   %(message)s')
+
+logname = "shouldipickit.app.log"
+logging.basicConfig(
+    filename=logname,
+    level="INFO",
+    format="%(levelname)s %(asctime)s %(module)s   \
+                     %(process)d   %(message)s",
+)
 
 app = Flask(__name__)
 app.debug = False
 verbose = False
 
-@app.route('/forms/', methods=['POST', 'GET'])
+
+@app.route("/forms/", methods=["POST", "GET"])
 def get_data():
     """
     Return a view to Flask with relevant details
@@ -50,7 +56,7 @@ def get_data():
     """
     try:
         post_data = request.form
-        zip = request.form.get('zip')
+        zip = request.form.get("zip")
         try:
             if zip[0] == 0:
                 int(zip[1:])
@@ -61,24 +67,31 @@ def get_data():
         except ValueError:
             if verbose:
                 logging.info(f"Invalid POST data: {post_data} : nota5digitzip")
-            return render_template('nota5digitzip.html')
+            return render_template("nota5digitzip.html")
     except TypeError as e:
-        msg       = f"Invalid POST data: {post_data}"
+        msg = f"Invalid POST data: {post_data}"
         if verbose:
             logging.error(msg)
-        return render_template('nota5digitzip.html')
+        return render_template("nota5digitzip.html")
     except Exception as e:
         msg = f"Bug: POST data:{post_data}, Error: {str(e)}"
         logging.exception(msg)
         flask.abort(500)
     else:
         zip = str(zip)
-        all_posts, all_links, all_cust, city, state   = main.main(zip)
-        len_items                                     = len(all_posts)
-        return render_template('craig_list_local_items.html',
-            zip = zip, city = city, state = state, all_posts = all_posts,
-            len_items = len_items, all_links = all_links,
-            all_cust = all_cust)
+        all_posts, all_links, all_cust, city, state = main.main(zip)
+        len_items = len(all_posts)
+        return render_template(
+            "craig_list_local_items.html",
+            zip=zip,
+            city=city,
+            state=state,
+            all_posts=all_posts,
+            len_items=len_items,
+            all_links=all_links,
+            all_cust=all_cust,
+        )
+
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1',port=8000)
+    app.run(host="127.0.0.1", port=8000)
