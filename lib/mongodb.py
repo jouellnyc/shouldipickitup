@@ -38,6 +38,7 @@ collection_name = "data"
 
 
 class AllData:
+    """ The usual suspect here, initialized to bare/default """
     def __init__(self):
         self.citytext = ""
         self.city, self.state = ("", "")
