@@ -21,6 +21,8 @@ https://medium.com/@trstringer/logging-flask-and-gunicorn-the-manageable-way-2e6
 
 TBD: - Add js input validation
      - Add cool look ahead form query
+
+REM - https://stackoverflow.com/questions/58464052/request-to-flask-application-does-not-get-through-to-docker-container
 """
 
 
