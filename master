@@ -6,7 +6,8 @@ docker build -f Dockerfile.nginx  . -t "${NGINX}"
 docker build -f Dockerfile.flask  . -t "${FLASK}"
 docker build -f Dockerfile.mongod . -t "${MONGO}"
 
+docker run --name my_flask  -d -p 8000:8000  "${FLASK}" 
+
 docker run --name my_nginx  -d -p 80:80      -v /usr/share/nginx/html:/usr/share/nginx/html:ro "${NGINX}" 
-docker run --name my_flask  -d -p 8000:8000  -v /home/ubuntu/gitrepos/shouldipickitup/:/app:ro "${FLASK}" 
 docker run --name my_mongod -d -p 27017:27017                                                  "${MONGO}" 
 netstat -lnat | grep -iE "80|8000|27017"
