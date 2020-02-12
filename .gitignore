@@ -1,3 +1,4 @@
 __pycache__/
 *.py[cod]
-
+access.log
+shouldipickit.app.log
