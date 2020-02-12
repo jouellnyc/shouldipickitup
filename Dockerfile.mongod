@@ -6,5 +6,4 @@ RUN apt-get update
 RUN apt-get install -y mongodb
 RUN mkdir -p /data/db
 EXPOSE 27017
-CMD ["--port 27017"]
-ENTRYPOINT usr/bin/mongodb
+CMD [ "/usr/bin/mongod"]
