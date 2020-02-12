@@ -30,8 +30,10 @@ TBD: Reuse the MongoDB handles.
 """
 
 from pymongo import MongoClient
+from pymongo.errors import BulkWriteError
 from pymongo.errors import ConnectionFailure
 from pymongo.errors import ServerSelectionTimeoutError
+
 import logging
 
 database_name = "shouldipickitup"
@@ -48,7 +50,6 @@ class AllData:
         self.Urls = {}
         self.Prices = {}
         self.EBlinks = {}
-
 
 def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
     """
@@ -71,6 +72,7 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
         collection_handle = database_handle[collection_name]
     except ConnectionFailure:
         print ("Mongo ConnectionFailure")
+        raise GenMongoErr
     else:
         return collection_handle
 
@@ -248,14 +250,19 @@ def init_load_city_state_zip_map(master_mongo_city_state_zip_data):
     ----------
     Invalid Docs return BulkWriteError
     """
-    dbh = ConnectToMongo()
     try:
+        dbh = ConnectToMongo()
         new_result = dbh.insert_many(master_mongo_city_state_zip_data)
-        print("Multiple posts: {0}".format(new_result.inserted_ids))
-        return new_result
+    except ConnectionFailure as e:
+        raise
     except BulkWriteError as bwe:
         print(bwe.details)
         raise
+    except Exception as e:
+        logging.exception(e)
+    else:
+        print("Multiple posts: {0}".format(new_result.inserted_ids))
+        return new_result
 
 
 if __name__ == "__main__":

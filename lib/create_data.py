@@ -31,6 +31,7 @@ import csv
 import statistics
 
 from collections import defaultdict
+from pymongo.errors import ConnectionFailure
 
 
 URL = "http://federalgovernmentzipcodes.us/download.html"  # not used
@@ -163,7 +164,7 @@ def find_closest_craigs_url_for_other_cities(zip, mean_zip2craigs_url):
 
 
 def generate_master_documents_import_to_mongodb(
-    craigs_city_links, gov_city_state_zips, mean_zip2craigs_url
+    craigs_city_links, gov_city_state_zips, mean_zip2craigs_url, verbose=False
 ):
     """ Format MongoDB documents and return a list of 400+ of them
 
@@ -219,7 +220,8 @@ def generate_master_documents_import_to_mongodb(
 
     # If we print out or iterate here,  life is good:
     for url in craigs_city_links.values():
-        print(master_mongo_city_state_zip_map[url])
+        if verbose:
+            print(master_mongo_city_state_zip_map[url])
         master_mongo_city_state_zip_data.append(master_mongo_city_state_zip_map[url])
 
     return master_mongo_city_state_zip_data
@@ -242,5 +244,11 @@ if __name__ == "__main__":
             craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url
         )
         mongodb.init_load_city_state_zip_map(master_mongo_city_state_zip_data)
+    except GenMongoErr as e:
+        print(e)
+    except ConnectionFailure as e:
+        print("C ConnectionFailure: ", e)
+    except BulkWriteError as e:
+        print(e)
     except Exception as e:
         print("Error: ", e)
