@@ -30,7 +30,8 @@ TBD: Reuse the MongoDB handles.
 """
 
 from pymongo import MongoClient
-from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
+from pymongo.errors import ServerSelectionTimeoutError
 import logging
 
 database_name = "shouldipickitup"
@@ -64,10 +65,14 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
     -------
         collection_handle :  pymongo connect object
     """
-    client = MongoClient(serverSelectionTimeoutMS=2000)
-    database_handle = client[database_name]
-    collection_handle = database_handle[collection_name]
-    return collection_handle
+    try:
+        client = MongoClient(serverSelectionTimeoutMS=2000)
+        database_handle = client[database_name]
+        collection_handle = database_handle[collection_name]
+    except ConnectionFailure:
+        print ("Mongo ConnectionFailure")
+    else:
+        return collection_handle
 
 
 def lookup_all_data_given_zip(zip):
@@ -181,7 +186,7 @@ def lookup_craigs_posts(zip):
         return response["Items"]
 
 
-def update_one_document(mongo_filter, mongo_doc):
+def update_one_document(mongo_filter, mongo_doc, verbose=False):
     """
     Update only one document in MongoDB, create it if it does not exist.
     Parameters
@@ -198,7 +203,8 @@ def update_one_document(mongo_filter, mongo_doc):
     """
     dbh = ConnectToMongo()
     new_result = dbh.update_one(mongo_filter, mongo_doc, upsert=True)
-    print(new_result.raw_result)
+    if verbose:
+        print(new_result.raw_result)
     return new_result
 
 
@@ -259,12 +265,13 @@ if __name__ == "__main__":
     try:
         argv1 = str(sys.argv[1])
         if len(argv1) == 5:
-            print(lookup_craigs_url_citystate_and_items_given_zip(argv1))
             print(lookup_city_state_given_zip(zip))
             print(lookup_craigs_url_given_zip(zip))
         else:
             zips, altzips = lookup_zips_given_craigs_url(argv1)
             print("Zips", zips)
             print("AltZips", altzips)
-    except:
-        pass
+    except ConnectionFailure as e:
+        print("ConnectionFailure: ", e) 
+    except Exception as e:
+        logging.exception(e)

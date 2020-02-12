@@ -14,6 +14,7 @@
 
 """
 
+import os
 import sys
 import time
 import logging
@@ -23,6 +24,16 @@ import mongodb
 import websitepuller
 import pickledata
 
+verbose = False
+
+#"crawler.log"
+logname = os.path.splitext(os.path.basename(__file__))[0] + ".log"
+
+logging.basicConfig(
+    filename=logname,
+    level="INFO",
+    format="%(levelname)s %(asctime)s %(module)s %(process)d  %(message)s"
+)
 
 def get_web_data(craigs_list_url):
     """ Return SF data from local if Mongdb is down/server Timeout.
@@ -125,7 +136,7 @@ if __name__ == "__main__":
 
     try:
 
-        howmany = 12
+        howmany = 1
         craigs_list_url = sys.argv[1]
         noindex = sys.argv[2]
         craig_posts = get_web_data(craigs_list_url)
@@ -149,4 +160,9 @@ if __name__ == "__main__":
             pickledata.save(mongo_doc)
         else:
             print("Sending to Mongo")
-            mongodb.update_one_document(mongo_filter, mongo_doc)
+            try:
+                mongodb.update_one_document(mongo_filter, mongo_doc)
+            except Exception as e:
+                logging.error(e)
+                if verbose:
+                    print(e)
