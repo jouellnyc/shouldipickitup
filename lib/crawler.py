@@ -26,14 +26,15 @@ import pickledata
 from pymongo.errors import ConnectionFailure
 
 
-#"crawler.log"
+# "crawler.log"
 logname = os.path.splitext(os.path.basename(__file__))[0] + ".log"
 
 logging.basicConfig(
     filename=logname,
     level="INFO",
-    format="%(levelname)s %(asctime)s %(module)s %(process)d  %(message)s"
+    format="%(levelname)s %(asctime)s %(module)s %(process)d  %(message)s",
 )
+
 
 def get_web_data(craigs_list_url):
     """ Return SF data from local if Mongdb is down/server Timeout.
@@ -134,18 +135,19 @@ def format_mongodocs(soup_object, ebay_prices, ebay_links, howmany=12):
 
 if __name__ == "__main__":
 
-
     try:
 
-        verbose = True 
+        verbose = True
         howmany = 12
         craigs_list_url = sys.argv[1]
         noindex = sys.argv[2]
         craig_posts = get_web_data(craigs_list_url)
         ebay_prices, ebay_links = get_ebay_data(
-            craig_posts, random = "no", howmany = howmany
+            craig_posts, random="no", howmany=howmany
         )
-        mongo_doc = format_mongodocs(craig_posts, ebay_prices, ebay_links, howmany = howmany )
+        mongo_doc = format_mongodocs(
+            craig_posts, ebay_prices, ebay_links, howmany=howmany
+        )
         mongo_filter = {"craigs_url": craigs_list_url}
         if verbose:
             print(mongo_doc)

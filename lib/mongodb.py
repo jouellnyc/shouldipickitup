@@ -42,6 +42,7 @@ collection_name = "data"
 
 class AllData:
     """ The usual suspect here, initialized to bare/default """
+
     def __init__(self):
         self.citytext = ""
         self.city, self.state = ("", "")
@@ -50,6 +51,7 @@ class AllData:
         self.Urls = {}
         self.Prices = {}
         self.EBlinks = {}
+
 
 def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
     """
@@ -71,7 +73,7 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
         database_handle = client[database_name]
         collection_handle = database_handle[collection_name]
     except ConnectionFailure:
-        print ("Mongo ConnectionFailure")
+        print("Mongo ConnectionFailure")
         raise GenMongoErr
     else:
         return collection_handle
@@ -232,7 +234,7 @@ def insert_one_document(mongo_filter, mongo_doc):
     return new_result
 
 
-def init_load_city_state_zip_map(master_mongo_city_state_zip_data,verbose=False):
+def init_load_city_state_zip_map(master_mongo_city_state_zip_data, verbose=False):
     """
     Init bulk load of all the data created in MongoDBself.
 
@@ -280,6 +282,6 @@ if __name__ == "__main__":
             print("Zips", zips)
             print("AltZips", altzips)
     except ConnectionFailure as e:
-        print("ConnectionFailure: ", e) 
+        print("ConnectionFailure: ", e)
     except Exception as e:
         logging.exception(e)

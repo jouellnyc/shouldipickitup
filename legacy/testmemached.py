@@ -11,5 +11,5 @@ except IndexError as e:
     print("tell me some citytext")
     sys.exit(1)
 
-client = base.Client(('localhost', 11211))
-print (client.get(sys.argv[1]))
+client = base.Client(("localhost", 11211))
+print(client.get(sys.argv[1]))

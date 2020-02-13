@@ -47,6 +47,7 @@ app = Flask(__name__)
 app.debug = False
 verbose = False
 
+
 @app.route("/forms/", methods=["POST", "GET"])
 def get_data():
     """
@@ -96,4 +97,3 @@ def get_data():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
-
