@@ -32,6 +32,7 @@ import statistics
 
 from collections import defaultdict
 from pymongo.errors import ConnectionFailure
+from pymongo.errors import BulkWriteError
 
 
 URL = "http://federalgovernmentzipcodes.us/download.html"  # not used
@@ -244,11 +245,13 @@ if __name__ == "__main__":
             craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url
         )
         mongodb.init_load_city_state_zip_map(master_mongo_city_state_zip_data)
-    except GenMongoErr as e:
-        print(e)
+    except FileNotFoundError as e:
+        print("File Not Found", e)
     except ConnectionFailure as e:
-        print("C ConnectionFailure: ", e)
+        print("ConnectionFailure: ", e)
     except BulkWriteError as e:
-        print(e)
+        print("BulkWriteError: ", e)
     except Exception as e:
-        print("Error: ", e)
+        logging.exception(f"Unhandled Error: {e}")
+    else:
+        print("Successfully entered into Mongodb")

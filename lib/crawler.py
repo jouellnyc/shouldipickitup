@@ -23,8 +23,8 @@ from random import randrange
 import mongodb
 import websitepuller
 import pickledata
+from pymongo.errors import ConnectionFailure
 
-verbose = False
 
 #"crawler.log"
 logname = os.path.splitext(os.path.basename(__file__))[0] + ".log"
@@ -134,8 +134,10 @@ def format_mongodocs(soup_object, ebay_prices, ebay_links, howmany=12):
 
 if __name__ == "__main__":
 
+
     try:
 
+        verbose = True 
         howmany = 1
         craigs_list_url = sys.argv[1]
         noindex = sys.argv[2]
@@ -162,7 +164,14 @@ if __name__ == "__main__":
             print("Sending to Mongo")
             try:
                 mongodb.update_one_document(mongo_filter, mongo_doc)
-            except Exception as e:
+            except ConnectionFailure as e:
                 logging.error(e)
                 if verbose:
                     print(e)
+            except Exception as e:
+                msg = "Uncaught Error"
+                if verbose:
+                    print(f"{msg}: Check crawl log")
+                logging.exception(f"{msg}: {e}")
+            else:
+                print("Sent to Mongo Success")

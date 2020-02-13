@@ -232,7 +232,7 @@ def insert_one_document(mongo_filter, mongo_doc):
     return new_result
 
 
-def init_load_city_state_zip_map(master_mongo_city_state_zip_data):
+def init_load_city_state_zip_map(master_mongo_city_state_zip_data,verbose=False):
     """
     Init bulk load of all the data created in MongoDBself.
 
@@ -261,7 +261,8 @@ def init_load_city_state_zip_map(master_mongo_city_state_zip_data):
     except Exception as e:
         logging.exception(e)
     else:
-        print("Multiple posts: {0}".format(new_result.inserted_ids))
+        if verbose:
+            print("Multiple posts: {0}".format(new_result.inserted_ids))
         return new_result
 
 
