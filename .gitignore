@@ -2,3 +2,7 @@ __pycache__/
 *.py[cod]
 access.log
 shouldipickit.app.log
+Dockerfile.inp
+app.log
+crawler.log
+notes.txt
