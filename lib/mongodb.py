@@ -69,7 +69,7 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
         collection_handle :  pymongo connect object
     """
     try:
-        client = MongoClient(serverSelectionTimeoutMS=2000)
+        client = MongoClient(host="172.18.0.2,"serverSelectionTimeoutMS=2000)
         database_handle = client[database_name]
         collection_handle = database_handle[collection_name]
     except ConnectionFailure:
