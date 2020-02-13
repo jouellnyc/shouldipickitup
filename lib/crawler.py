@@ -138,16 +138,17 @@ if __name__ == "__main__":
     try:
 
         verbose = True 
-        howmany = 1
+        howmany = 12
         craigs_list_url = sys.argv[1]
         noindex = sys.argv[2]
         craig_posts = get_web_data(craigs_list_url)
         ebay_prices, ebay_links = get_ebay_data(
-            craig_posts, random="no", howmany=howmany
+            craig_posts, random = "no", howmany = howmany
         )
-        mongo_doc = format_mongodocs(craig_posts, ebay_prices, ebay_links, howmany=12)
+        mongo_doc = format_mongodocs(craig_posts, ebay_prices, ebay_links, howmany = howmany )
         mongo_filter = {"craigs_url": craigs_list_url}
-        print(mongo_doc)
+        if verbose:
+            print(mongo_doc)
 
     except IndexError as e:
         print("URL or Indexing?")
