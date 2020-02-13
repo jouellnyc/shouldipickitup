@@ -6,4 +6,4 @@ RUN apt-get update
 RUN apt-get install -y mongodb
 RUN mkdir -p /data/db
 EXPOSE 27017
-CMD [ "/usr/bin/mongod"]
+CMD [ "/usr/bin/mongod","--bind_ip_all"]

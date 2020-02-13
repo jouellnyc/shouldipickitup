@@ -1,12 +1,13 @@
 NGINX="my_nginx:latest"
 MONGO="my_mongo:latest"
 FLASK="my_flask:latest"
+NETWORK="shouldinetwork"
 
 docker build -f Dockerfile.nginx  . -t "${NGINX}" 
 docker build -f Dockerfile.flask  . -t "${FLASK}"
 docker build -f Dockerfile.mongod . -t "${MONGO}"
 
-docker run -d -p 8000:8000   "${FLASK}" 
-docker run -d -p 80:80       "${NGINX}" 
-docker run -d -p 27017:27017 "${MONGO}" 
+docker run -d -p 8000:8000   --network "${NETWORK}"  "${FLASK}" 
+docker run -d -p 80:80       --network "${NETWORK}"  "${NGINX}" 
+docker run -d -p 27017:27017 --network "${NETWORK}"  "${MONGO}" 
 netstat -lnat | grep -iE "80|8000|27017"
