@@ -1,19 +1,33 @@
-NGINX="my_nginx:latest"
-MONGO="my_mongo:latest"
-FLASK="my_flask:latest"
+#!/bin/sh
+
+set -e
+set -u
+
 NETWORK="shouldinetwork"
 
+docker network rm "${NETWORK}" 
 docker network create --driver=bridge \
 --subnet=172.18.0.0/16 \
 --ip-range=172.18.0.0/24 \
 --gateway=172.18.0.1 "${NETWORK}" 
 
-docker build -f Dockerfile.nginx  . -t "${NGINX}" 
-docker build -f Dockerfile.flask  . -t "${FLASK}"
-docker build -f Dockerfile.mongod . -t "${MONGO}"
+APP=nginx
+APP_IP="172.18.0.2"
+echo "Building $APP at $APP_IP"
+docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
+docker run   -d -p 80:80   --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
 
-docker run -d          --network "${NETWORK}" --ip 172.18.0.2 "${FLASK}" 
-docker run -d -p 80:80 --network "${NETWORK}" --ip 172.18.0.3 "${NGINX}" 
-docker run -d          --network "${NETWORK}" --ip 172.18.0.4 "${MONGO}" 
+APP=flask
+APP_IP="172.18.0.3"
+echo "Building $APP at $APP_IP"
+docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
+docker run   -d             --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
+
+APP=mongod
+APP_IP="172.18.0.4"
+echo "Building $APP at $APP_IP"
+docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
+docker run   -d             --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
 
 netstat -lnat | grep -iE "80|8000|27017"
+docker ps 

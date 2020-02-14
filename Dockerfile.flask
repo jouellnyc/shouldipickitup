@@ -12,8 +12,10 @@ RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
-COPY ./docker-entrypoint.sh /usr/local/bin/
-RUN chmod 755  /usr/local/bin/docker-entrypoint.sh
+ENV SCRIPT flask-docker-entrypoint.sh
+ENV SCRIPT_PATH /usr/local/bin
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD [ "/usr/local/bin/gunicorn", "-b", "0.0.0.0:8000", "app:app", "-w", "4", "--access-logfile", "access.log" ]
+COPY ${SCRIPT} ${SCRIPT_PATH}
+RUN chmod 755 ${SCRIPT_PATH}/${SCRIPT}
+
+ENTRYPOINT ["/usr/local/bin/flask-docker-entrypoint.sh"]
