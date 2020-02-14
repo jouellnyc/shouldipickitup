@@ -31,3 +31,4 @@ docker run   -d             --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:
 
 netstat -lnat | grep -iE "80|8000|27017"
 docker ps 
+
