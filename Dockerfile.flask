@@ -1,0 +1,21 @@
+FROM python:3.7
+
+RUN apt-get update -y &&  apt-get install
+RUN apt-get install vim -y
+RUN apt-get install net-tools telnet curl -y
+RUN pip install --upgrade pip
+
+RUN mkdir /shouldipickitup
+COPY . /shouldipickitup
+WORKDIR /shouldipickitup
+RUN pip install -r requirements.txt
+
+EXPOSE 8000
+
+ENV SCRIPT flask-docker-entrypoint.sh
+ENV SCRIPT_PATH /usr/local/bin
+
+COPY ${SCRIPT} ${SCRIPT_PATH}
+RUN chmod 755 ${SCRIPT_PATH}/${SCRIPT}
+
+ENTRYPOINT ["/usr/local/bin/flask-docker-entrypoint.sh"]
