@@ -64,6 +64,8 @@ In [21]: %run craigs_lyft_ebay.py
 
 
 ## Release History
+* 0.4.7
+    * Dockerized locally; 'DevOps it with Docker Networking' 
 * 0.4.6
     * http://dev.shouldipickitup.com/ has launched (no uptime guarantee; still testing)
 * 0.4.5
