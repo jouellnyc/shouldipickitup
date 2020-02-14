@@ -11,6 +11,7 @@ RUN apt-get update
 RUN apt-get install -y ca-certificates nginx=${NGINX_VERSION} 
 RUN apt-get install -y telnet 
 RUN apt-get install -y net-tools
+RUN apt-get install -y curl 
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log
