@@ -7,6 +7,6 @@ while read line; do
     SLEEP=$((1 + RANDOM % 30))
     ../lib/crawler.py $line index; sleep $SLEEP; 
 
-#done < <(tail -n 25 urls)
-done < urls 
+done < <(head -n 5 urls)
+#done < urls 
 
