@@ -285,8 +285,8 @@ if __name__ == "__main__":
         zip = str(sys.argv[1])
         if len(zip) == 5:
             #print(lookup_all_data_given_zip(zip))
-            #print(lookup_craigs_url_given_zip(zip))
             print(lookup_city_state_given_zip(zip))
+            print(lookup_craigs_url_given_zip(zip))
         else:
             zips, altzips = lookup_zips_given_craigs_url(argv1)
             print("Zips", zips)
