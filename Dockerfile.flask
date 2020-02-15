@@ -1,9 +1,9 @@
 FROM python:3.7
 
-RUN apt-get update -y &&  apt-get install
-RUN apt-get install vim -y
-RUN apt-get install net-tools telnet curl -y
-RUN pip install --upgrade pip
+RUN apt-get update -y &&  apt-get install && \
+    apt-get install vim -y && \
+    apt-get install net-tools telnet curl -y && \
+    pip install --upgrade pip & \
 
 RUN mkdir /shouldipickitup
 COPY . /shouldipickitup
