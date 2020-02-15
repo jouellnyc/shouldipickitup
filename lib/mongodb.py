@@ -74,7 +74,7 @@ def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
         collection_handle = database_handle[collection_name]
     except ConnectionFailure:
         print("Mongo ConnectionFailure")
-        raise GenMongoErr
+        return None
     else:
         return collection_handle
 
@@ -140,32 +140,41 @@ def lookup_city_state_given_zip(zip):
         [str] - the state associated with the zip (for display only)
     """
     dbh = ConnectToMongo()
-    dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
-    response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
-    if response is None:
-        raise ValueError("No data in Mongo for " + str(zip))
+    if dbh is None:
+        return None
     else:
-        city, state = response["CityState"].split(",")
-        return (city, state)
+        dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+        response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+        if response is None:
+            raise ValueError("No data in Mongo for " + str(zip))
+        else:
+            city, state = response["CityState"].split(",")
+            return (city, state)
 
 
 def lookup_craigs_url_given_zip(zip):
     dbh = ConnectToMongo()
-    dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
-    response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
-    if response is None:
-        raise ValueError("No data in Mongo for " + str(zip))
+    if dbh is None:
+        return None
     else:
-        return response["craigs_url"]
+        dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+        response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+        if response is None:
+            raise ValueError("No data in Mongo for " + str(zip))
+        else:
+            return response["craigs_url"]
 
 
 def lookup_zips_given_craigs_url(craigs_url):
     dbh = ConnectToMongo()
-    response = dbh.find_one({"craigs_url": craigs_url})
-    if response is None:
-        raise ValueError("No data in Mongo for " + str(craigs_url))
+    if dbh is None:
+        return None
     else:
-        return (response["Zips"], response["AltZips"])
+        response = dbh.find_one({"craigs_url": craigs_url})
+        if response is None:
+            raise ValueError("No data in Mongo for " + str(craigs_url))
+        else:
+            return (response["Zips"], response["AltZips"])
 
 
 def lookup_craigs_posts(zip):
@@ -273,10 +282,11 @@ if __name__ == "__main__":
     import sys
 
     try:
-        argv1 = str(sys.argv[1])
-        if len(argv1) == 5:
+        zip = str(sys.argv[1])
+        if len(zip) == 5:
+            #print(lookup_all_data_given_zip(zip))
+            #print(lookup_craigs_url_given_zip(zip))
             print(lookup_city_state_given_zip(zip))
-            print(lookup_craigs_url_given_zip(zip))
         else:
             zips, altzips = lookup_zips_given_craigs_url(argv1)
             print("Zips", zips)
