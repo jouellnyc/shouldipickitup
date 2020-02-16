@@ -9,7 +9,7 @@
 - This file:
 
     - is intended as a loadable module only.
-    - contains the following functions:
+    - contains the following methods:
 
      ConnectToMongo
         Connect to MongoDB and return DB handle
@@ -36,12 +36,8 @@ from pymongo.errors import ServerSelectionTimeoutError
 
 import logging
 
-database_name = "shouldipickitup"
-collection_name = "data"
-
-
 class AllData:
-    """ The usual suspect here, initialized to bare/default """
+    """ The usual suspects here, initialized to bare/default """
 
     def __init__(self):
         self.citytext = ""
@@ -52,244 +48,231 @@ class AllData:
         self.Prices = {}
         self.EBlinks = {}
 
+class MongoCli:
 
-def ConnectToMongo(database_name="shouldipickitup", collection_name="data"):
-    """
-    Return a database_handle to the caller
+    database_name = "shouldipickitup"
+    collection_name = "data"
 
-    Parameters
-    ----------
-    database_name : str
-        The Default db name
-    collection_name : str
-        The Default collection name
-
-    Returns
-    -------
-        collection_handle :  pymongo connect object
-    """
-    try:
-        client = MongoClient(host="172.18.0.4", serverSelectionTimeoutMS=2000)
-        database_handle = client[database_name]
-        collection_handle = database_handle[collection_name]
-    except ConnectionFailure:
-        print("Mongo ConnectionFailure")
-        return None
-    else:
-        return collection_handle
-
-
-def lookup_all_data_given_zip(zip):
-    """
-    Return All free items post, Urls, city and state to the caller
-
-    Parameters
-    ----------
-    zip : str
-        zipcode
-
-    Returns
-    -------
-    Items
-        {dictionary} of all the local posts in the free section
-    Url
-        [str] - The local craigslist url
-    Urls
-        {dictionary} of all the urls of the free items
-    city
-        [str] - the city associated with the zip (for display only)
-    state
-        [str] - the state associated with the zip (for display only)
-    """
-    dbh = ConnectToMongo()
-    response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
-    if response is None:
-        raise ValueError("No data in Mongo for " + str(zip))
-    else:
-        try:
-            all_data = AllData()
-            all_data.citytext = response["CityState"]
-            all_data.city, all_data.state = response["CityState"].split(",")
-            all_data.url = response["craigs_url"]
-            all_data.Items = response["Items"]
-            all_data.Urls = response["Urls"]
-            all_data.Prices = response["Prices"]
-            all_data.EBlinks = response["EbayLinks"]
-        except KeyError as e:
-            raise ValueError("No details in Mongo for " + str(zip))
-        except Exception as e:
-            raise
+    def __init__(self):
+        dbh = self.ConnectToMongo()
+        if dbh is None:
+            raise ConnectionFailure
         else:
-            return all_data
+            self.dbh = dbh
+
+    def ConnectToMongo(self, database_name="shouldipickitup", collection_name="data"):
+        """
+        Return a database_handle to the caller
+
+        Parameters
+        ----------
+        database_name : str
+            The Default db name
+        collection_name : str
+            The Default collection name
+
+        Returns
+        -------
+            collection_handle :  pymongo connect object
+        """
+        try:
+            client = MongoClient(host="172.18.0.4", serverSelectionTimeoutMS=2000)
+            database_handle = client[database_name]
+            collection_handle = database_handle[collection_name]
+        except ConnectionFailure:
+            print("MongoCli ConnectionFailure")
+            return None
+        else:
+            return collection_handle
 
 
-def lookup_city_state_given_zip(zip):
-    """
-    Return just the city and state to the caller given a zipcode.
+    def lookup_all_data_given_zip(self, zip):
+        """
+        Return All free items post, Urls, city and state to the caller
 
-    Parameters
-    ----------
-    zip : str
-        zipcode
+        Parameters
+        ----------
+        zip : str
+            zipcode
 
-    Returns
-    ----------
-    city
-        [str] - the city associated with the zip (for display only)
-    state
-        [str] - the state associated with the zip (for display only)
-    """
-    dbh = ConnectToMongo()
-    if dbh is None:
-        return None
-    else:
-        dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
-        response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+        Returns
+        -------
+        Items
+            {dictionary} of all the local posts in the free section
+        Url
+            [str] - The local craigslist url
+        Urls
+            {dictionary} of all the urls of the free items
+        city
+            [str] - the city associated with the zip (for display only)
+        state
+            [str] - the state associated with the zip (for display only)
+        """
+        response = self.dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
         if response is None:
-            raise ValueError("No data in Mongo for " + str(zip))
+            raise ValueError("No data in MongoDB for " + str(zip))
+        else:
+            try:
+                all_data = AllData()
+                all_data.citytext = response["CityState"]
+                all_data.city, all_data.state = response["CityState"].split(",")
+                all_data.url = response["craigs_url"]
+                all_data.Items = response["Items"]
+                all_data.Urls = response["Urls"]
+                all_data.Prices = response["Prices"]
+                all_data.EBlinks = response["EbayLinks"]
+            except KeyError as e:
+                raise ValueError("No details in MongoDB:" + str(zip))
+            except Exception as e:
+                raise
+            else:
+                return all_data
+
+
+    def lookup_city_state_given_zip(self, zip):
+        """
+        Return just the city and state to the caller given a zipcode.
+
+        Parameters
+        ----------
+        zip : str
+            zipcode
+
+        Returns
+        ----------
+        city
+            [str] - the city associated with the zip (for display only)
+        state
+            [str] - the state associated with the zip (for display only)
+        """
+        response = self.dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+        if response is None:
+            raise ValueError("No data in MongoCli for " + str(zip))
         else:
             city, state = response["CityState"].split(",")
             return (city, state)
 
 
-def lookup_craigs_url_given_zip(zip):
-    dbh = ConnectToMongo()
-    if dbh is None:
-        return None
-    else:
-        dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
-        response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+    def lookup_craigs_url_given_zip(self, zip):
+        response = self.dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
         if response is None:
-            raise ValueError("No data in Mongo for " + str(zip))
+            raise ValueError("No data in MongoCli for " + str(zip))
         else:
             return response["craigs_url"]
 
 
-def lookup_zips_given_craigs_url(craigs_url):
-    dbh = ConnectToMongo()
-    if dbh is None:
-        return None
-    else:
-        response = dbh.find_one({"craigs_url": craigs_url})
+    def lookup_zips_given_craigs_url(self, craigs_url):
+        response = self.dbh.find_one({"craigs_url": craigs_url})
         if response is None:
-            raise ValueError("No data in Mongo for " + str(craigs_url))
+            raise ValueError("No data in MongoCli for " + str(craigs_url))
         else:
             return (response["Zips"], response["AltZips"])
 
+    def lookup_craigs_posts(self, zip):
+        """
+        Return only free items post to the caller
 
-def lookup_craigs_posts(zip):
-    """
-    Return only free items post to the caller
+        Parameters
+        ----------
+        zip : str
+            zipcode
 
-    Parameters
-    ----------
-    zip : str
-        zipcode
+        Returns
+        -------
+        Items
+            {dictionary} of all the local posts in the free section
+        """
+        response = self.dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
+        if response is None:
+            raise ValueError
+        else:
+            return response["Items"]
 
-    Returns
-    -------
-    Items
-        {dictionary} of all the local posts in the free section
-    """
-    dbh = ConnectToMongo()
-    response = dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
-    if response is None:
-        raise ValueError
-    else:
-        return response["Items"]
+    def update_one_document(self, mongo_filter, mongo_doc, verbose=False):
+        """
+        Update only one document in MongoDB, create it if it does not exist.
+        Parameters
+        ----------
+        mongo_filter
+            - hash to specify mongo restriction
+        mongo_doc
+            - key : value pairs making up the document
 
-
-def update_one_document(mongo_filter, mongo_doc, verbose=False):
-    """
-    Update only one document in MongoDB, create it if it does not exist.
-    Parameters
-    ----------
-    mongo_filter
-        - hash to specify mongo restriction
-    mongo_doc
-        - key : value pairs making up the document
-
-    Returns
-    -------
-    Items
-        {Mongo object}  of all the local posts in the free section
-    """
-    dbh = ConnectToMongo()
-    new_result = dbh.update_one(mongo_filter, mongo_doc, upsert=True)
-    if verbose:
-        print(new_result.raw_result)
-    return new_result
-
-
-def insert_one_document(mongo_filter, mongo_doc):
-    """
-    Insert  only one document in MongoDB; do not create it if it does not exist.
-
-    Parameters
-    ----------
-    mongo_filter
-        - hash to specify mongo restriction
-    mongo_doc
-        - key : value pairs making up the document
-
-    Returns
-    -------
-    Items
-        {Mongo object}  of all the local posts in the free section
-    """
-    dbh = ConnectToMongo()
-    new_result = dbh.insert_one(mongo_filter, mongo_doc)
-    print(new_result.inserted_id)
-    return new_result
-
-
-def init_load_city_state_zip_map(master_mongo_city_state_zip_data, verbose=False):
-    """
-    Init bulk load of all the data created in MongoDBself.
-
-    Parameters
-    ----------
-    master_mongo_city_state_zip_data
-        - dictionary of dictionaries with all 400+ Mongo documents.
-
-    Returns
-    -------
-    new_result
-        {Mongo object} - success of data loadself.
-
-    Exceptions
-    ----------
-    Invalid Docs return BulkWriteError
-    """
-    try:
-        dbh = ConnectToMongo()
-        new_result = dbh.insert_many(master_mongo_city_state_zip_data)
-    except ConnectionFailure as e:
-        raise
-    except BulkWriteError as bwe:
-        print(bwe.details)
-        raise
-    except Exception as e:
-        logging.exception(e)
-    else:
+        Returns
+        -------
+        Items
+            {MongoCli object}  of all the local posts in the free section
+        """
+        new_result = self.dbh.update_one(mongo_filter, mongo_doc, upsert=True)
         if verbose:
-            print("Multiple posts: {0}".format(new_result.inserted_ids))
+            print(new_result.raw_result)
         return new_result
 
+    def insert_one_document(self, mongo_filter, mongo_doc):
+        """
+        Insert  only one document in MongoDB; do not create it if it does not exist.
+
+        Parameters
+        ----------
+        mongo_filter
+            - hash to specify mongo restriction
+        mongo_doc
+            - key : value pairs making up the document
+
+        Returns
+        -------
+        Items
+            {MongoCli object}  of all the local posts in the free section
+        """
+        new_result = self.dbh.insert_one(mongo_filter, mongo_doc)
+        print(new_result.inserted_id)
+        return new_result
+
+    def init_load_city_state_zip_map(self, master_mongo_city_state_zip_data, verbose=False):
+        """
+        Init bulk load of all the data created in MongoDBself.
+
+        Parameters
+        ----------
+        master_mongo_city_state_zip_data
+            - dictionary of dictionaries with all 400+ MongoCli documents.
+
+        Returns
+        -------
+        new_result
+            {MongoCli object} - success of data loadself.
+
+        Exceptions
+        ----------
+        Invalid Docs return BulkWriteError
+        """
+        try:
+            new_result = self.dbh.insert_many(master_mongo_city_state_zip_data)
+        except BulkWriteError as bwe:
+            print(bwe.details)
+            raise
+        except Exception as e:
+            logging.exception(e)
+        else:
+            if verbose:
+                print("Multiple posts: {0}".format(new_result.inserted_ids))
+            return new_result
 
 if __name__ == "__main__":
 
     import sys
 
     try:
+        mg = MongoCli()
         zip = str(sys.argv[1])
         if len(zip) == 5:
-            #print(lookup_all_data_given_zip(zip))
-            print(lookup_city_state_given_zip(zip))
-            print(lookup_craigs_url_given_zip(zip))
+            print(mg.lookup_city_state_given_zip(zip))
+            print(mg.lookup_craigs_url_given_zip(zip))
+            print(mg.lookup_craigs_posts(zip))
+            print(mg.lookup_all_data_given_zip(zip))
         else:
-            zips, altzips = lookup_zips_given_craigs_url(argv1)
-            print("Zips", zips)
+            zips, altzips = mg.lookup_zips_given_craigs_url(sys.argv[1])
+            print("Zips", zips, "\n")
             print("AltZips", altzips)
     except ConnectionFailure as e:
         print("ConnectionFailure: ", e)

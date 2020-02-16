@@ -166,7 +166,8 @@ if __name__ == "__main__":
         else:
             print("Sending to Mongo")
             try:
-                mongodb.update_one_document(mongo_filter, mongo_doc)
+                mongo_cli = mongodb.MongoCli()
+                mongo_cli.update_one_document(mongo_filter, mongo_doc)
             except ConnectionFailure as e:
                 logging.error(e)
                 if verbose:
