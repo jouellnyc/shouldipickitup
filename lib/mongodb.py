@@ -26,7 +26,7 @@
      init_load_city_state_zip_map
         Write all the key/values to mongodb
 
-TBD: Reuse the MongoDB handles.
+TBD: Reuse the MongoDB handles once per app vs per instance.
 """
 
 from pymongo import MongoClient
