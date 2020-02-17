@@ -266,10 +266,13 @@ if __name__ == "__main__":
         mg = MongoCli()
         zip = str(sys.argv[1])
         if len(zip) == 5:
-            print(mg.lookup_city_state_given_zip(zip))
-            print(mg.lookup_craigs_url_given_zip(zip))
-            print(mg.lookup_craigs_posts(zip))
-            print(mg.lookup_all_data_given_zip(zip))
+            try:
+                print(mg.lookup_city_state_given_zip(zip))
+                print(mg.lookup_craigs_url_given_zip(zip))
+                print(mg.lookup_craigs_posts(zip))
+                print(mg.lookup_all_data_given_zip(zip))
+            except (ValueError, KeyError) as e:
+                print("Data missing from Mongo: ", e)
         else:
             zips, altzips = mg.lookup_zips_given_craigs_url(sys.argv[1])
             print("Zips", zips, "\n")
