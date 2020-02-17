@@ -75,7 +75,8 @@ def main(zipcode):
     try:
 
         """ Given a zipcode, find the Craigslist Url """
-        all_data = mongodb.lookup_all_data_given_zip(zipcode)
+        mongocli = mongodb.MongoCli()
+        all_data = mongocli.lookup_all_data_given_zip(zipcode)
         city = all_data.city.capitalize()
         state = all_data.state.capitalize()
         all_posts = list(all_data.Items.values())
