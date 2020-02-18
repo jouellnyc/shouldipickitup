@@ -12,8 +12,8 @@ COPY . /shouldipickitup
 WORKDIR /shouldipickitup
 RUN pip install -r requirements.txt
 
+COPY ./flask-docker-entrypoint.sh /usr/local/bin/ 
 RUN chmod 755 /usr/local/bin/flask-docker-entrypoint.sh 
-COPY /usr/local/bin/flask-docker-entrypoint.sh . 
 ENTRYPOINT ["/usr/local/bin/flask-docker-entrypoint.sh"]
 
 EXPOSE 8000
