@@ -5,7 +5,10 @@ set -u
 
 NETWORK="shouldinetwork"
 
-docker network rm "${NETWORK}" 
+if docker network ls | grep -i "${NETWORK}";then
+	docker network rm "${NETWORK}" 
+fi
+
 docker network create --driver=bridge \
 --subnet=172.18.0.0/16 \
 --ip-range=172.18.0.0/24 \
