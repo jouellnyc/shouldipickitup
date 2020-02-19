@@ -6,13 +6,25 @@ RUN apt-get update  -y && \
     net-tools \
     telnet && pip install --upgrade pip
 
-RUN mkdir /shouldipickitup
-WORKDIR /shouldipickitup
+RUN mkdir /shouldipickitup/
+WORKDIR /shouldipickitup/
 
-COPY requirements.txt /shouldipickitup
+COPY requirements.txt /shouldipickitup/
 RUN pip install -r requirements.txt
 
-COPY non-app/ static/ templates/ lib/ data/ app.py ./
+RUN mkdir /shouldipickitup/non-app/
+RUN mkdir /shouldipickitup/static/
+RUN mkdir /shouldipickitup/templates/
+RUN mkdir /shouldipickitup/lib/
+RUN mkdir /shouldipickitup/data/
+
+COPY static/    /shouldipickitup/static/
+COPY non-app/   /shouldipickitup/non-app/
+COPY templates/ /shouldipickitup/templates/
+COPY data/      /shouldipickitup/data/
+COPY main.py    /shouldipickitup/
+COPY app.py     /shouldipickitup/
+COPY lib/       /shouldipickitup/lib/
 
 COPY ./flask-docker-entrypoint.sh /usr/sbin/
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
