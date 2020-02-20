@@ -14,6 +14,12 @@ docker network create --driver=bridge \
 --ip-range=172.18.0.0/24 \
 --gateway=172.18.0.1 "${NETWORK}" 
 
+APP=mongod
+APP_IP="172.18.0.4"
+echo "Building $APP at $APP_IP"
+docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
+docker run   -d --cap-drop=all             --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
+
 APP=nginx
 APP_IP="172.18.0.2"
 echo "Building $APP at $APP_IP"
@@ -27,11 +33,6 @@ echo "Building $APP at $APP_IP"
 docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
 docker run   -d --cap-drop=all             --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
 
-APP=mongod
-APP_IP="172.18.0.4"
-echo "Building $APP at $APP_IP"
-docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
-docker run   -d --cap-drop=all             --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
 
 netstat -lnat | grep -iE "80|8000|27017"
 docker ps 
