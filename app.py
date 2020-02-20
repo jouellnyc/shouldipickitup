@@ -45,7 +45,7 @@ logging.basicConfig(
 
 app = Flask(__name__)
 app.debug = False
-verbose = False
+verbose = True
 
 
 @app.route("/forms/", methods=["POST", "GET"])
@@ -66,21 +66,19 @@ def get_data():
                 int(zip)
             if len(str(zip)) != 5:
                 raise ValueError
-        except ValueError:
+        except (TypeError, ValueError):
+        #Not Numeric/Didn't send "zip="
             if verbose:
-                logging.info(f"Invalid POST data: {post_data} : nota5digitzip")
+                logging.error(f"Invalid POST data: {post_data} : nota5digitzip")
             return render_template("nota5digitzip.html")
-    except TypeError as e:
-        msg = f"Invalid POST data: {post_data}"
-        if verbose:
-            logging.error(msg)
-        return render_template("nota5digitzip.html")
     except Exception as e:
         msg = f"Bug: POST data:{post_data}, Error: {str(e)}"
         logging.exception(msg)
         flask.abort(500)
     else:
         zip = str(zip)
+        if verbose:
+            logging.info(f"POST data: {post_data}")
         all_posts, all_links, all_cust, city, state = main.main(zip)
         len_items = len(all_posts)
         return render_template(
