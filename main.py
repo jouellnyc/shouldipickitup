@@ -23,16 +23,13 @@ TBD: If MondoDB is down don't load a file every time ...
 """
 
 import logging
+logger = logging.getLogger(__name__)
 
 import pymongo
 from pymongo.errors import ConnectionFailure
 
 from lib import mongodb
 from lib import pickledata
-from lib.app_logger import AppLog
-
-local_log = AppLog()
-
 
 def main(zipcode):
     """Send data to flask template for display after querying MongoDB.
@@ -89,18 +86,18 @@ def main(zipcode):
 
         msg = f"Going to retrieve pickle data"
         all_posts, all_links = fallback_to_pickle()
-        local_log.app_system_logger(f"{msg} => {str(e)}", "error")
+        logger.error(f"{msg} => {str(e)}")
 
     except ConnectionFailure as e:
 
         msg = "MongoDB Connection Errors - DB down? "
         all_posts, all_links = fallback_to_pickle()
-        local_log.app_system_logger(f"{msg} => {str(e)}", "error")
+        logger.error(f"{msg} => {str(e)}")
 
     except Exception as e:
 
         msg = "Unexpected Error=> "
-        local_log.app_system_logger(f"{msg} => {str(e)}", "exception")
+        logger.error(f"{msg} => {str(e)}")
 
     else:
 
@@ -135,9 +132,8 @@ def fallback_to_pickle():
         return all_posts, all_links
     except (IOError, KeyError, TypeError) as e:
         msg = "Even the file is erroring!: "
-        local_log.app_system_logger(f"{msg} => {str(e)}", "exception")
+        logger.error(f"{msg} => {str(e)}")
         # Sms/page out
-
 
 if __name__ == "__main__":
 
@@ -151,7 +147,7 @@ if __name__ == "__main__":
         err += f" : {msg}"
         print(err)
         local_log = AppLog()
-        local_log.app_system_logger(err, "error")
+        logger.error(f"{err} => {str(e)}")
         sys.exit()
     else:
         print("Main: ", main(zipcode))

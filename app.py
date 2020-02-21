@@ -42,7 +42,7 @@ logging.basicConfig(
 )
 
 app = Flask(__name__)
-app.debug = False
+app.debug = True 
 verbose = True
 
 
