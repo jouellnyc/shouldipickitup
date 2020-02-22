@@ -53,6 +53,7 @@ def get_data():
 
     zip comes in as a 'str' from the Flash HTML form  and most easily is tested
     by casting to 'int'. zip is then queried @mongodb and returns HTML
+    Done this way it catches zip='' and if zip is None with explictly checking.
     """
     try:
         post_data = request.form
