@@ -58,12 +58,12 @@ def get_data():
         post_data = request.form
         zip = request.form.get("zip")
         try:
-            if zip[0] == 0:
+            if len(str(zip)) != 5:
+                raise ValueError
+            elif zip[0] == 0:
                 int(zip[1:])
             else:
                 int(zip)
-            if len(str(zip)) != 5:
-                raise ValueError
         except (TypeError, ValueError):
         #Not Numeric/Didn't send "zip="
             if verbose:
