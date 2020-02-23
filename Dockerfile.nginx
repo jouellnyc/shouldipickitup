@@ -11,7 +11,10 @@ RUN set -x \
     && addgroup --system --gid 101 nginx \
     && adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos "nginx user" --shell /bin/false --uid 101 nginx \
     && apt-get update \
-    && apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates \
+    #
+    #JO 
+    #
+    && apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates procps \
     && \
     NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
     found=''; \
@@ -101,7 +104,6 @@ EXPOSE 80
 STOPSIGNAL SIGTERM
 
 # JO 
-RUN apt-get install -y procps
 RUN chown -R nginx /usr/share/nginx/ && \
     chgrp -R nginx /usr/share/nginx/
 COPY ./external/nginx/nginx.conf /etc/nginx/nginx.conf
