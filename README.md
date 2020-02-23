@@ -3,7 +3,7 @@
 
 NOTES:
  - This project is intentionally "in progress".
- - It serves currently for inspiration for anyone to learn Python and for future possibilities.
+ - It serves for inspiration for anyone to learn Python, Flask, MongoDB, Devops principles.
  - And for fun. Feedback or Collaborators Welcome.
  - Shout out to [Gary V](https://www.instagram.com/p/B5ghkSqAduP/)
 
