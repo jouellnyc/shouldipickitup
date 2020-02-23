@@ -64,6 +64,8 @@ In [21]: %run craigs_lyft_ebay.py
 
 
 ## Release History
+* 0.4.8
+    * CHANGE: passed Nessus Web Scans; Locked down nginx configs; use non-root users in all containers
 * 0.4.7
     * CHANGE: Dockerized - 3 containers using  Docker Networking'
 * 0.4.6
