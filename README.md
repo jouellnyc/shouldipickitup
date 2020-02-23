@@ -1,4 +1,4 @@
-# shouldipickitup
+# shouldipickitup(.com)
 > Given a free listing on Craiglist, should I pick it up?
 
 NOTES:
