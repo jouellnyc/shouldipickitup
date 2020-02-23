@@ -50,7 +50,7 @@ case $1 in
     "flask") flask ;;
     "nginx") nginx ;;
     "mongodb") mongodb ;;
-    "") flask ; nginx; mongodb ;;
+    "") nginx; flask; mongodb ;;
 esac
 
 netstat -lnat | grep -iE "80|8000|27017"
