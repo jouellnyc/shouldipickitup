@@ -23,7 +23,7 @@ docker run   -d --cap-drop=all             --network "${NETWORK}" --ip "${APP_IP
 APP=nginx
 APP_IP="172.18.0.2"
 echo "Building $APP at $APP_IP"
-docker build -f Dockerfile."${APP}"2 . -t "my_${APP}:latest" 
+docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
 #TBD:get --cap-drop tuned 
 docker run   -d                  -p 80:80   --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
 
