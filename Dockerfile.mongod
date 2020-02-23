@@ -6,6 +6,9 @@ RUN apt-get update && apt-get install -y gnupg2 && \
     apt-get install -y --no-install-recommends mongodb \ 
     telnet \
     vim
-RUN mkdir -p /data/db
+
+RUN mkdir -p /data/db 
+RUN chown -R mongodb:mongodb /data/db
+USER mongodb
 EXPOSE 27017
 CMD [ "/usr/bin/mongod","--bind_ip_all"]
