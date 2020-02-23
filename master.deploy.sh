@@ -25,7 +25,7 @@ APP_IP="172.18.0.2"
 echo "Building $APP at $APP_IP"
 docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
 #TBD:get --cap-drop tuned 
-docker run   -d                  -p 80:80   --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
+docker run   -d               -p 80:8080   --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
 
 APP=flask
 APP_IP="172.18.0.3"
