@@ -101,7 +101,7 @@ EXPOSE 80
 STOPSIGNAL SIGTERM
 
 # JO 
-apt-get install -y procps
+RUN apt-get install -y procps
 RUN chown -R nginx /usr/share/nginx/ && \
     chgrp -R nginx /usr/share/nginx/
 COPY ./external/nginx/nginx.conf /etc/nginx/nginx.conf
