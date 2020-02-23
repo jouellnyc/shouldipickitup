@@ -1,8 +1,5 @@
 #!/bin/bash
 
-set -e
-set -u
-
 NETWORK="shouldinetwork"
 
 if docker network ls | grep -i "${NETWORK}";then
@@ -53,6 +50,7 @@ case $1 in
     "flask") flask ;;
     "nginx") nginx ;;
     "mongodb") mongodb ;;
+    "") flask ; nginx; mongodb ;;
 esac
 
 netstat -lnat | grep -iE "80|8000|27017"

@@ -6,7 +6,7 @@ RUN apt-get update  -y && \
     net-tools \
     telnet && pip install --upgrade pip
 
-RUN mkdir /shouldipickitup/
+RUN mkdir /shouldipickitup/ && chown -R nobody:  /shouldipickitup/
 WORKDIR /shouldipickitup/
 
 COPY requirements.txt /shouldipickitup/
@@ -29,5 +29,6 @@ COPY lib/       /shouldipickitup/lib/
 COPY ./flask-docker-entrypoint.sh /usr/sbin/
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
 
+USER nobody
 ENTRYPOINT ["/usr/sbin/flask-docker-entrypoint.sh"]
 EXPOSE 8000
