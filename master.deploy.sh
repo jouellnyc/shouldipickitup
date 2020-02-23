@@ -17,8 +17,9 @@ docker network create --driver=bridge \
 APP=mongod
 APP_IP="172.18.0.4"
 echo "Building $APP at $APP_IP"
+docker volume create mongodbdata && \
 docker build -f Dockerfile."${APP}" . -t "my_${APP}:latest" 
-docker run   -d --cap-drop=all             --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
+docker run   -d --cap-drop=all --mount source=mongodbdata,target=/data/db  --network "${NETWORK}" --ip "${APP_IP}"  "my_${APP}:latest" 
 
 APP=nginx
 APP_IP="172.18.0.2"
