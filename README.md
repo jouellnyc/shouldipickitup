@@ -64,13 +64,15 @@ In [21]: %run craigs_lyft_ebay.py
 
 
 ## Release History
-* 0.4.8
+* 0.5.4
+    * CHANGE: Docker-compose used with docker names (one 'click' deploy)
+* 0.5.3
     * CHANGE: passed Nessus Web Scans; Locked down nginx configs; use non-root users in all containers
-* 0.4.7
+* 0.5.2
     * CHANGE: Dockerized - 3 containers using  Docker Networking'
-* 0.4.6
+* 0.5.1
     * http://dev.shouldipickitup.com/ has launched (no uptime guarantee; still testing)
-* 0.4.5
+* 0.5.0
     * CHANGE: Use Gunicorn 20.0.4 as WSGI server and Nginx as Website with proxy_pass
 * 0.4.4
     * CHANGE: Crawl Ebay data and display it again
@@ -86,13 +88,16 @@ In [21]: %run craigs_lyft_ebay.py
     * CHANGE: Incorporate Flask
 * 0.1.X
     * Testing MemCached and Basic Setup
+
 ## Installing
 ```
 git clone https://github.com/jouellnyc/shouldipickitup.git
 docker-compose  up -d
 ```
-#Note: Nginx will listen on the local hosts port 80; flask and mongodb will be on the same bridged docker network
-#reachable by docker names
+
+##Architechure
+Nginx will listen on the local hosts port 80
+Flask and Mongodb will be on the same bridged docker network reachable by docker names
 
 ## Requirements
 git/docker/docker-compose
