@@ -92,6 +92,7 @@ In [21]: %run craigs_lyft_ebay.py
 ## Installing
 ```
 git clone https://github.com/jouellnyc/shouldipickitup.git
+cd shouldipickitup
 docker-compose  up -d
 ```
 
