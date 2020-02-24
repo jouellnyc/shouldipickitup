@@ -76,7 +76,7 @@ class MongoCli:
             collection_handle :  pymongo connect object
         """
         try:
-            client = MongoClient(host="172.18.0.4", serverSelectionTimeoutMS=2000)
+            client = MongoClient(host="shouldipickitup_db_1", serverSelectionTimeoutMS=2000)
             database_handle = client[database_name]
             collection_handle = database_handle[collection_name]
         except ConnectionFailure:
