@@ -87,8 +87,10 @@ In [21]: %run craigs_lyft_ebay.py
 * 0.1.X
     * Testing MemCached and Basic Setup
 ## Installing
+```
 git clone https://github.com/jouellnyc/shouldipickitup.git
 docker-compose  up -d
+```
 #Note: Nginx will listen on the local hosts port 80; flask and mongodb will be on the same bridged docker network
 #reachable by docker names
 
