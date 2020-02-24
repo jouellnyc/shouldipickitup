@@ -2,7 +2,7 @@ version: "3"
 services:
   db:
      build:
-       context: .
+       context: ./Docker/
        dockerfile: Dockerfile.mongod
      volumes:
        - data:/data/db
@@ -10,7 +10,7 @@ services:
        - shouldinetwork
   app:
       build:
-        context: .
+        context: ./Docker/
         dockerfile: Dockerfile.flask
       depends_on:
         - db
@@ -18,7 +18,7 @@ services:
         - shouldinetwork
   web:
       build:
-        context: .
+        context: ./Docker/
         dockerfile: Dockerfile.nginx
       depends_on:
         - app 
