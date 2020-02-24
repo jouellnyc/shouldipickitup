@@ -249,9 +249,9 @@ if __name__ == "__main__":
     except FileNotFoundError as e:
         print("File Not Found", e)
     except ConnectionFailure as e:
-        print("ConnectionFailure: ", e)
+        print("Connection Failure: ", e)
     except BulkWriteError as e:
-        print("BulkWriteError: ", e)
+        print("BulkWrite Error: ", e)
     except Exception as e:
         logging.exception(f"Unhandled Error: {e}")
     else:

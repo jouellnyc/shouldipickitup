@@ -76,11 +76,11 @@ class MongoCli:
             collection_handle :  pymongo connect object
         """
         try:
-            client = MongoClient(host="shouldipickitup_db_1", serverSelectionTimeoutMS=2000)
+            client = MongoClient(host="127.0.0.1", serverSelectionTimeoutMS=2000)
+            client.server_info()
             database_handle = client[database_name]
             collection_handle = database_handle[collection_name]
         except ConnectionFailure:
-            print("MongoCli ConnectionFailure")
             return None
         else:
             return collection_handle
@@ -107,7 +107,7 @@ class MongoCli:
             [str] - the city associated with the zip (for display only)
         state
             [str] - the state associated with the zip (for display only)
-        """
+      """
         response = self.dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
         if response is None:
             raise ValueError("No data in MongoDB for " + str(zip))
@@ -278,6 +278,6 @@ if __name__ == "__main__":
             print("Zips", zips, "\n")
             print("AltZips", altzips)
     except ConnectionFailure as e:
-        print("ConnectionFailure: ", e)
+        print("MongoDB ConnectionFailure: ", e)
     except Exception as e:
         logging.exception(e)
