@@ -33,7 +33,7 @@ Out[212]:
  'Items': {'item1': 'ji3'}}
 
 ==
-db.posts.find({"craigs_local_url":{$eq:null}}).count()
+db.data.find({"craigs_local_url":{$eq:null}}).count()
 db.posts.find({"craigs_local_url":{$ne:null}}).count()
 use posts
 

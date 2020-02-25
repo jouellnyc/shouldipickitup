@@ -13,12 +13,12 @@
     #city, state to craigslist url
     boston,ma -> link.craig.com
 
-Then  munges the data to create the 400+ MongoDB document for initial loadself.
+Then  munges the data to create the 400+ MongoDB document for initial load.
 
 This is still imperfect data, but at least all of the zip in the government
 file will have relevant data from somewhere 'somewhat' close.
 
-This also means Brooklyn could be considered close to Albany...(well, kind of, for now)
+This also means Brooklyn could be considered 'close' to Albany...
 
 TBD: Fine tune the other 200 craiglist surls
 """
