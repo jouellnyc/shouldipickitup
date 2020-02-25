@@ -20,6 +20,10 @@ file will have relevant data from somewhere 'somewhat' close.
 
 This also means Brooklyn could be considered 'close' to Albany...
 
+To avoid duplicate docs, create_data.py must be run before crawler.py runs.
+The latter does upserts where the former just does inserts (it is run as
+entrypoint to the docker image - so should never be a problem).
+
 TBD: Fine tune the other 200 craiglist surls
 """
 

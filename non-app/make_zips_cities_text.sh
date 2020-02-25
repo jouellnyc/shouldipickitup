@@ -1,11 +1,17 @@
 #!/bin/bash
 
-
+#Given this site: https://geo.craigslist.org/iso/us
+#find the city, state pairs with commas (not shown)
 FILE1="cities.txt"
-FILE2="free-zipcode-database-Primary.no.header.csv"
+#also see cities_commas.txt
+
+#Govt file with zips and city/states names
+FILE2="../data/free-zipcode-database-Primary.no.header.csv"
+
+#Match output file
 FILE3="zips2cities.txt"
 
-
+#Massage FILE3 to get 'cities.txt'
 while IFS=, read -r CITY STATE
 do
 
