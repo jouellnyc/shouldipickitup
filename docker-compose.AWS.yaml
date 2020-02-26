@@ -1,0 +1,40 @@
+version: "3"
+services:
+  db:
+     build:
+       context: .
+       dockerfile: ./Docker/Dockerfile.mongod
+     volumes:
+       - data:/data/db
+     networks:
+       - shouldinetwork
+  app:
+      build:
+        context: .
+        dockerfile: ./Docker/Dockerfile.flask
+      depends_on:
+        - db
+      networks:
+        - shouldinetwork
+  web:
+      build:
+        context: .
+        dockerfile: ./Docker/Dockerfile.nginx
+      depends_on:
+        - app 
+      ports: 
+        - "80:8080"
+      networks:
+        - shouldinetwork
+      logging:
+        driver: awslogs
+        options:
+          awslogs-region: us-west-2
+          awslogs-group: flask 
+
+
+volumes:
+  data:
+networks:
+  shouldinetwork:
+    driver: bridge
