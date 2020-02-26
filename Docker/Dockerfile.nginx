@@ -114,4 +114,4 @@ COPY ./static/style.css          /usr/share/nginx/html/static/
 # JO 
 
 USER nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
