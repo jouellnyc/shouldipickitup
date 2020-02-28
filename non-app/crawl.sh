@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CITIES=known_cities.txt
+CITIES=urls_with_known_cities.txt
 
 while read line; do
 
