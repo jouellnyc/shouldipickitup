@@ -1,0 +1,2 @@
+https://stackoverflow.com/questions/38618550/amazon-aws-elb-without-public-address-on-servers-behind-it
+https://www.justdocloud.com/2019/03/24/send-docker-logs-aws-cloudwatch/
