@@ -19,5 +19,11 @@ BDIR="/gitrepos/"
 mkdir -p $BDIR 
 cd $BDIR/
 git clone https://github.com/jouellnyc/shouldipickitup.git 
+git clone https://github.com/jouellnyc/AWS.git 
+cd AWS
+chmod 755 getSecret.py
+SECRET=$(./getSecret.py)
+sed -i s"/MONGOUSER/${SECRET}/" lib/mongodb.py 
+cd ..
 cd shouldipickitup
 docker-compose -f docker-compose.AWS.yaml up -d

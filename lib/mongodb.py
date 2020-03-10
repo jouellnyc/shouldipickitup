@@ -36,6 +36,7 @@ from pymongo.errors import ServerSelectionTimeoutError
 
 import logging
 
+
 class AllData:
     """ The usual suspects here, initialized to bare/default """
 
@@ -47,6 +48,7 @@ class AllData:
         self.Urls = {}
         self.Prices = {}
         self.EBlinks = {}
+
 
 class MongoCli:
 
@@ -76,7 +78,10 @@ class MongoCli:
             collection_handle :  pymongo connect object
         """
         try:
-            client = MongoClient(host="shouldipickitup_db_1", serverSelectionTimeoutMS=2000)
+            client = MongoClient(
+                host="mongodb+srv://shouldiuser:FtK6VBIsvsTduRSN@shouldipickitup-w94wx.mongodb.net/test?retryWrites=true&w=majority",
+                serverSelectionTimeoutMS=2000,
+            )
             client.server_info()
             database_handle = client[database_name]
             collection_handle = database_handle[collection_name]
@@ -84,7 +89,6 @@ class MongoCli:
             return None
         else:
             return collection_handle
-
 
     def lookup_all_data_given_zip(self, zip):
         """
@@ -128,7 +132,6 @@ class MongoCli:
             else:
                 return all_data
 
-
     def lookup_city_state_given_zip(self, zip):
         """
         Return just the city and state to the caller given a zipcode.
@@ -152,14 +155,12 @@ class MongoCli:
             city, state = response["CityState"].split(",")
             return (city, state)
 
-
     def lookup_craigs_url_given_zip(self, zip):
         response = self.dbh.find_one({"$or": [{"Zips": zip}, {"AltZips": zip}]})
         if response is None:
             raise ValueError("No data in MongoCli for " + str(zip))
         else:
             return response["craigs_url"]
-
 
     def lookup_zips_given_craigs_url(self, craigs_url):
         response = self.dbh.find_one({"craigs_url": craigs_url})
@@ -228,7 +229,9 @@ class MongoCli:
         print(new_result.inserted_id)
         return new_result
 
-    def init_load_city_state_zip_map(self, master_mongo_city_state_zip_data, verbose=False):
+    def init_load_city_state_zip_map(
+        self, master_mongo_city_state_zip_data, verbose=False
+    ):
         """
         Init bulk load of all the data created in MongoDBself.
 
@@ -252,11 +255,13 @@ class MongoCli:
             print(bwe.details)
             raise
         except Exception as e:
-            logging.exception(e)
+            #logging.exception(e)
+            raise
         else:
             if verbose:
                 print("Multiple posts: {0}".format(new_result.inserted_ids))
             return new_result
+
 
 if __name__ == "__main__":
 

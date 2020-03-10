@@ -37,6 +37,7 @@ import statistics
 from collections import defaultdict
 from pymongo.errors import ConnectionFailure
 from pymongo.errors import BulkWriteError
+from pymongo.errors import OperationFailure
 
 
 URL = "http://federalgovernmentzipcodes.us/download.html"  # not used
@@ -256,6 +257,8 @@ if __name__ == "__main__":
         print("Connection Failure: ", e)
     except BulkWriteError as e:
         print("BulkWrite Error: ", e)
+    except OperationFailure as e:
+        print("Unanticipated Mongo Error: ", e)
     except Exception as e:
         logging.exception(f"Unhandled Error: {e}")
     else:
