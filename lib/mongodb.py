@@ -79,7 +79,7 @@ class MongoCli:
         """
         try:
             client = MongoClient(
-                host="mongodb+srv://shouldiuser:FtK6VBIsvsTduRSN@shouldipickitup-w94wx.mongodb.net/test?retryWrites=true&w=majority",
+                    host="mongodb+srv://$USER:$PASS@$HOST/test?retryWrites=true&w=majority",
                 serverSelectionTimeoutMS=2000,
             )
             client.server_info()
