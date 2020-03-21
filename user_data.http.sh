@@ -15,12 +15,13 @@ chkconfig docker on
 service awslogsd start
 chkconfig awslogsd on
 
-BDIR="/gitrepos/"
-mkdir -p $BDIR 
-cd $BDIR/
+GIT_DIR="/gitrepos/"
+mkdir -p $GIT_DIR
+cd $GIT_DIR/
 git clone https://github.com/jouellnyc/shouldipickitup.git 
 git clone https://github.com/jouellnyc/AWS.git 
 cd AWS
+source shared_vars.txt
 chmod 755 getSecret.py
 SECRET=$(./getSecret.py)
 sed -i s"/MONGOUSER/${SECRET}/" lib/mongodb.py 
