@@ -22,9 +22,10 @@ git clone https://github.com/jouellnyc/shouldipickitup.git
 git clone https://github.com/jouellnyc/AWS.git 
 cd AWS
 source shared_vars.txt
+cd boto3
 chmod 755 getSecret.py
 SECRET=$(./getSecret.py)
-sed -i s"/MONGOUSER/${SECRET}/" lib/mongodb.py 
-cd ..
+cd ../..
 cd shouldipickitup
+sed -i s"/MONGOUSER/${SECRET}/" lib/mongodb.py 
 docker-compose -f docker-compose.AWS.yaml up -d
