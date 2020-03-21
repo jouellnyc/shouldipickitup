@@ -28,4 +28,4 @@ SECRET=$(./getSecret.py)
 cd ../..
 cd shouldipickitup
 sed -i s"/MONGOUSER/${SECRET}/" lib/mongodb.py 
-docker-compose -f docker-compose.AWS.yaml up -d
+docker-compose -f docker-compose.AWS.hosted.MongoDb.yaml up -d
