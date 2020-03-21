@@ -64,6 +64,12 @@ In [21]: %run craigs_lyft_ebay.py
 
 
 ## Release History
+* 0.5.7
+    * CHANGE: http://beta.shouldipickitup.com/ has launched with the intent to be stable/up %100
+* 0.5.6
+    * CHANGE: Integrate PAAS - hosted  MongoDB Atlas
+* 0.5.5
+    * CHANGE: Automate ALL the IAM Role Creation Task. (From New AWS Account to full Deploy in one command)
 * 0.5.4
     * CHANGE: Docker-compose used with docker names (one 'click' deploy)
 * 0.5.3
