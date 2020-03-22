@@ -24,8 +24,12 @@ cd AWS
 source shared_vars.txt
 cd boto3
 chmod 755 getSecret.py
-SECRET=$(./getSecret.py)
+while read -r username password mongohost; do 
+    MONGOUSERNAME=$username MONGOPASSWORD=$password MONGOHOST=$mongohost
+done <   <(../AWS/boto3/getSecret.py)
 cd ../..
 cd shouldipickitup
-sed -i s"/MONGOUSER/${SECRET}/" lib/mongodb.py 
+sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py 
+sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py 
+sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py 
 docker-compose -f docker-compose.AWS.hosted.MongoDb.yaml up -d
