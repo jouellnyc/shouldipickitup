@@ -6,7 +6,7 @@ yum -y install awslogs
 
 amazon-linux-extras install docker
 amazon-linux-extras enable python3
-yum install python3 --disablerepo amzn2-core
+yum install python3 --disablerepo amzn2-core -y
 pip3 install boto3
 
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
