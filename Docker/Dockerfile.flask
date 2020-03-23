@@ -26,8 +26,14 @@ COPY main.py    /shouldipickitup/
 COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
 
-RUN chown -R nobody:  /shouldipickitup/
+RUN git clone https://github.com/jouellnyc/AWS.git 
+RUN while read -r mongousername mongopassword mongohost; do  export MONGOUSERNAME=$mongousername export MONGOPASSWORD=$mongopassword export MONGOHOST=$mongohost; done <   <(python3 ./AWS/boto3/getSecret.py)
+RUN \
+sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py && \
+sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py && \
+sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py 
 
+RUN chown -R nobody:  /shouldipickitup/
 COPY ./flask-docker-entrypoint.sh /usr/sbin/
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
 
