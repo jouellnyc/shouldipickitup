@@ -284,5 +284,6 @@ if __name__ == "__main__":
             print("AltZips", altzips)
     except ConnectionFailure as e:
         print("MongoDB ConnectionFailure: ", e)
+        print("For Host MongoDB is the IP whitelisted?")
     except Exception as e:
         logging.exception(e)
