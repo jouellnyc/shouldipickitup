@@ -3,8 +3,8 @@
 yum update -y
 
 amazon-linux-extras install docker
-yum -y install git 
-yum -y install awslogs 
+yum -y install git
+yum -y install awslogs
 yum -y install python3
 sleep 5
 pip3 install boto3
