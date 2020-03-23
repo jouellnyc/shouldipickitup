@@ -27,8 +27,8 @@ cd AWS
 source shared_vars.txt
 cd boto3
 chmod 755 getSecret.py
-while read -r username password mongohost; do 
-   export MONGOUSERNAME=$username export MONGOPASSWORD=$password export MONGOHOST=$mongohost
+while read -r mongousername mongopassword mongohost; do 
+   export MONGOUSERNAME=$mongousername export MONGOPASSWORD=$mongopassword export MONGOHOST=$mongohost
 done <   <(./getSecret.py)
 cd ../..
 cd shouldipickitup
