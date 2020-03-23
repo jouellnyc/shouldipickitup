@@ -1,14 +1,16 @@
 #!/bin/bash
 
 yum update -y
-
 amazon-linux-extras install docker
+sleep 120
+YF="/var/run/yum.pid"
+[ -f $YF] && sleep 120
+[ -f $YF] && rm -f $YF
+
 yum -y install python3 
 yum -y install git
 yum -y install awslogs
-sleep 5
 pip3 install boto3
-sleep 5
 
 curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
 chmod +x /usr/local/bin/docker-compose
