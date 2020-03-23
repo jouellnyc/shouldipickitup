@@ -5,6 +5,9 @@ yum update -y
 amazon-linux-extras install docker
 yum -y install git 
 yum -y install awslogs 
+yum -y install python3
+pip3 install boto3
+
 
 curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
 chmod +x /usr/local/bin/docker-compose
