@@ -29,7 +29,10 @@ COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
 
 RUN git clone https://github.com/jouellnyc/AWS.git 
-RUN while read -r mongousername mongopassword mongohost; do  export MONGOUSERNAME=$mongousername export MONGOPASSWORD=$mongopassword export MONGOHOST=$mongohost; done <   <(python3 ./AWS/boto3/getSecret.py)
+RUN export CREDS=$(python3 ./AWS/boto3/getSecret.py)
+RUN export MONGOUSERNAME=$(echo $CREDS | cut -d ' ' -f1)
+RUN export MONGOPASSWORD=$(echo $CREDS | cut -d ' ' -f2)
+RUN export     MONGOHOST=$(echo $CREDS | cut -d ' ' -f3)
 RUN \
 sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py && \
 sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py && \
