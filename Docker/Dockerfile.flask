@@ -29,14 +29,14 @@ COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
 
 RUN git clone https://github.com/jouellnyc/AWS.git 
-RUN export CREDS=$(python3 ./AWS/boto3/getSecret.py)
-RUN export MONGOUSERNAME=$(echo $CREDS | cut -d ' ' -f1)
-RUN export MONGOPASSWORD=$(echo $CREDS | cut -d ' ' -f2)
-RUN export     MONGOHOST=$(echo $CREDS | cut -d ' ' -f3)
+RUN export python3 ./AWS/boto3/getSecret.py > file1
+RUN export MONGOUSERNAME=$(cat file | cut -d ' ' -f1)
+RUN export MONGOPASSWORD=$(cat file | cut -d ' ' -f2)
+RUN export     MONGOHOST=$(cat file | cut -d ' ' -f3)
 RUN \
 sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py && \
 sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py && \
-sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py 
+sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py && rm file1
 
 RUN chown -R nobody:  /shouldipickitup/
 COPY ./flask-docker-entrypoint.sh /usr/sbin/
