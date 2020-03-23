@@ -29,7 +29,7 @@ COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
 
 RUN git clone https://github.com/jouellnyc/AWS.git 
-RUN export python3 ./AWS/boto3/getSecret.py > file1
+RUN python3 ./AWS/boto3/getSecret.py > file1
 RUN export MONGOUSERNAME=$(cat file | cut -d ' ' -f1)
 RUN export MONGOPASSWORD=$(cat file | cut -d ' ' -f2)
 RUN export     MONGOHOST=$(cat file | cut -d ' ' -f3)
