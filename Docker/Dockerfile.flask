@@ -6,6 +6,7 @@ RUN apt-get update  -y && \
     apt-get install -y --no-install-recommends vim \
     curl \
     net-tools \
+    git \
     telnet && pip install --upgrade pip
 
 RUN mkdir /shouldipickitup/ 
