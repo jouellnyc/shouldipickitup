@@ -257,7 +257,7 @@ if __name__ == "__main__":
         print("Connection Failure: ", e)
     except BulkWriteError as e:
         print("BulkWrite Error: ", e)
-    except OperationFailure as e:
+    except OperationFailure as e:                 #This included Bad Authentication
         print("Unanticipated Mongo Error: ", e)
     except Exception as e:
         logging.exception(f"Unhandled Error: {e}")
