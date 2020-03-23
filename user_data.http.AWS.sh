@@ -25,7 +25,7 @@ source shared_vars.txt
 cd boto3
 chmod 755 getSecret.py
 while read -r username password mongohost; do 
-    MONGOUSERNAME=$username MONGOPASSWORD=$password MONGOHOST=$mongohost
+   export MONGOUSERNAME=$username export MONGOPASSWORD=$password export MONGOHOST=$mongohost
 done <   <(../AWS/boto3/getSecret.py)
 cd ../..
 cd shouldipickitup
