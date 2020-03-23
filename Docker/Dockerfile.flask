@@ -5,9 +5,10 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update  -y && \ 
     apt-get install -y --no-install-recommends vim \
     curl \
-    net-tools \
     git \
-    telnet && pip install --upgrade pip
+    net-tools \
+    telnet && \
+    pip install --upgrade pip
 
 RUN mkdir /shouldipickitup/ 
 WORKDIR /shouldipickitup/
