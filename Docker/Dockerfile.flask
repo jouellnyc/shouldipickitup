@@ -14,9 +14,9 @@ WORKDIR /shouldipickitup/
 COPY requirements.txt /shouldipickitup/
 RUN pip install -r requirements.txt
 
-RUN mkdir /shouldipickitup/non-app/    && chown -R nobody:  /shouldipickitup/non-app/
-RUN mkdir /shouldipickitup/static/     && chown -R nobody:  /shouldipickitup/static/ 
-RUN mkdir /shouldipickitup/templates/  && chown -R nobody:  /shouldipickitup/templates/ 
+RUN mkdir /shouldipickitup/non-app/    
+RUN mkdir /shouldipickitup/static/      
+RUN mkdir /shouldipickitup/templates/   
 RUN mkdir /shouldipickitup/lib/
 RUN mkdir /shouldipickitup/data/
 
@@ -27,19 +27,9 @@ COPY data/      /shouldipickitup/data/
 COPY main.py    /shouldipickitup/
 COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
-
-RUN git clone https://github.com/jouellnyc/AWS.git 
-RUN python3 ./AWS/boto3/getSecret.py > file1
-RUN export MONGOUSERNAME=$(cat file1 | cut -d ' ' -f1)
-RUN export MONGOPASSWORD=$(cat file1 | cut -d ' ' -f2)
-RUN export     MONGOHOST=$(cat file1 | cut -d ' ' -f3)
-RUN \
-sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py && \
-sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py && \
-sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py && rm file1
+COPY ./flask-docker-entrypoint.sh /usr/sbin/
 
 RUN chown -R nobody:  /shouldipickitup/
-COPY ./flask-docker-entrypoint.sh /usr/sbin/
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
 
 USER nobody
