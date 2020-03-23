@@ -5,6 +5,11 @@ yum update -y
 yum -y install git
 yum -y install awslogs
 
+GIT_DIR="/gitrepos/"
+mkdir -p $GIT_DIR
+cd $GIT_DIR/
+git clone https://github.com/jouellnyc/shouldipickitup.git
+
 amazon-linux-extras install docker
 
 curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
