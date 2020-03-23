@@ -29,7 +29,7 @@ cd boto3
 chmod 755 getSecret.py
 while read -r username password mongohost; do 
    export MONGOUSERNAME=$username export MONGOPASSWORD=$password export MONGOHOST=$mongohost
-done <   <(../AWS/boto3/getSecret.py)
+done <   <(./getSecret.py)
 cd ../..
 cd shouldipickitup
 sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py 
