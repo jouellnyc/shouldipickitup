@@ -30,9 +30,9 @@ COPY lib/       /shouldipickitup/lib/
 
 RUN git clone https://github.com/jouellnyc/AWS.git 
 RUN python3 ./AWS/boto3/getSecret.py > file1
-RUN export MONGOUSERNAME=$(cat file | cut -d ' ' -f1)
-RUN export MONGOPASSWORD=$(cat file | cut -d ' ' -f2)
-RUN export     MONGOHOST=$(cat file | cut -d ' ' -f3)
+RUN export MONGOUSERNAME=$(cat file1 | cut -d ' ' -f1)
+RUN export MONGOPASSWORD=$(cat file1 | cut -d ' ' -f2)
+RUN export     MONGOHOST=$(cat file1 | cut -d ' ' -f3)
 RUN \
 sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py && \
 sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py && \
