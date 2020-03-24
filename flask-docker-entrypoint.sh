@@ -1,14 +1,9 @@
 #!/bin/bash
 
-cd /tmp/
-git clone https://github.com/jouellnyc/AWS.git
-cd AWS/boto3
-
-while read -r mongousername mongopassword mongohost; do
-   export MONGOUSERNAME=$mongousername  MONGOPASSWORD=$mongopassword MONGOHOST=$mongohost
-done <   <(/usr/local/bin/python3 ./getSecret.py)
-
+cd /tmp/ && git clone https://github.com/jouellnyc/AWS.git && cd AWS/boto3
+read -r  MONGOUSERNAME MONGOPASSWORD MONGOHOST <  <(/usr/local/bin/python3 ./getSecret.py)
 cd /shouldipickitup/lib/
+
 sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" mongodb.py
 sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" mongodb.py
 sed -i         s"/MONGOHOST/${MONGOHOST}/" mongodb.py
