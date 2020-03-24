@@ -11,7 +11,7 @@ done <   <(/usr/local/bin/python3 ./getSecret.py)
 cd /shouldipickitup/lib/
 sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" mongodb.py
 sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" mongodb.py
-sed -i         s"/MONGOHOST/${MONGOHOST}/" /mongodb.py
+sed -i         s"/MONGOHOST/${MONGOHOST}/" mongodb.py
 
 ./create_data.py && touch create_data.done
 
