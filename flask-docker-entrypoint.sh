@@ -8,12 +8,11 @@ while read -r mongousername mongopassword mongohost; do
    export MONGOUSERNAME=$mongousername  MONGOPASSWORD=$mongopassword MONGOHOST=$mongohost
 done <   <(/usr/local/bin/python3 ./getSecret.py)
 
-cd /shouldipickitup/
-sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py
-sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py
-sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py
+cd /shouldipickitup/lib/
+sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" mongodb.py
+sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" mongodb.py
+sed -i         s"/MONGOHOST/${MONGOHOST}/" /mongodb.py
 
-cd lib
 ./create_data.py && touch create_data.done
 
 cd /shouldipickitup/
