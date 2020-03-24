@@ -26,8 +26,8 @@ services:
         options:
           awslogs-region: $AWS_REGION 
           awslogs-group: nginx 
-volumes:
-  data:
+#volumes:
+#  data:
 networks:
   shouldinetwork:
     driver: bridge
