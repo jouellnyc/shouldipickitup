@@ -11,7 +11,7 @@ RUN apt-get update  -y && \
 RUN mkdir /shouldipickitup/ 
 WORKDIR /shouldipickitup/
 
-COPY requirements.txt /shouldipickitup/
+COPY Docker/requirements.txt /shouldipickitup/
 RUN pip install -r requirements.txt
 
 RUN mkdir /shouldipickitup/non-app/    
