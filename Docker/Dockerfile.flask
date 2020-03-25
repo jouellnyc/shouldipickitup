@@ -9,14 +9,13 @@ RUN apt-get update  -y && \
     pip install --upgrade pip
 
 RUN mkdir /shouldipickitup/ 
-WORKDIR /shouldipickitup/
-
-
 RUN mkdir /shouldipickitup/non-app/    
 RUN mkdir /shouldipickitup/static/      
 RUN mkdir /shouldipickitup/templates/   
 RUN mkdir /shouldipickitup/lib/
 RUN mkdir /shouldipickitup/data/
+
+WORKDIR /shouldipickitup/
 
 COPY static/    /shouldipickitup/static/
 COPY non-app/   /shouldipickitup/non-app/
@@ -27,8 +26,8 @@ COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
 
 COPY Docker/requirements.txt /shouldipickitup/Docker
-COPY Docker/flask-docker-entrypoint.sh /usr/sbin/
 RUN pip install -r Docker/requirements.txt
+COPY Docker/flask-docker-entrypoint.sh /usr/sbin/
 
 RUN chown -R nobody:  /shouldipickitup/
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
