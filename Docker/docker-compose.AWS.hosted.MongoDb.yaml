@@ -3,7 +3,7 @@ services:
   app:
       build:
         context: .
-        dockerfile: ./Docker/Dockerfile.flask
+        dockerfile: Dockerfile.flask
       networks:
         - shouldinetwork
       logging:
@@ -14,7 +14,7 @@ services:
   web:
       build:
         context: .
-        dockerfile: ./Docker/Dockerfile.nginx
+        dockerfile: Dockerfile.nginx
       depends_on:
         - app 
       ports: 

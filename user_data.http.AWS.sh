@@ -30,5 +30,7 @@ cd shouldipickitup
 sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py
 sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py
 sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py
+
 cd Docker
+source $GIT_DIR/AWS/shared_vars.txt
 docker-compose -f docker-compose.AWS.hosted.MongoDb.yaml up -d
