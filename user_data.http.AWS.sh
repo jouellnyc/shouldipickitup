@@ -1,15 +1,9 @@
 #!/bin/bash
 
-
-if ps -ef | grep yum | grep -iv grep; then
-  kill -9 $(ps -ef | grep yum | grep -iv grep | awk '{ print $2; }')
-  rm /var/run/yum.pid
-fi
-
 yum update -y
-wait
-yum -y install python3  git awslogs
-yum list >  /tmp/yum.txt
+yum -y install git 
+yum -y install python3 
+yum -y install awslogs
 
 amazon-linux-extras install docker
 
@@ -25,6 +19,15 @@ chkconfig awslogsd on
 GIT_DIR="/gitrepos/"
 mkdir -p $GIT_DIR
 cd $GIT_DIR/
+git clone https://github.com/jouellnyc/AWS.git
+cd AWS/boto
+read -r  export MONGOUSERNAME MONGOPASSWORD MONGOHOST <  <(/usr/local/bin/python3 ./getSecret.py)
+
 git clone https://github.com/jouellnyc/shouldipickitup.git
-cd shouldipickitup
+cd shouldipickitup/lib
+sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py
+sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py
+sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py
+
+cd ..
 docker-compose -f docker-compose.AWS.hosted.MongoDb.yaml up -d
