@@ -11,8 +11,6 @@ RUN apt-get update  -y && \
 RUN mkdir /shouldipickitup/ 
 WORKDIR /shouldipickitup/
 
-COPY Docker/requirements.txt /shouldipickitup/
-RUN pip install -r requirements.txt
 
 RUN mkdir /shouldipickitup/non-app/    
 RUN mkdir /shouldipickitup/static/      
@@ -27,7 +25,10 @@ COPY data/      /shouldipickitup/data/
 COPY main.py    /shouldipickitup/
 COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
+
+COPY Docker/requirements.txt /shouldipickitup/Docker
 COPY Docker/flask-docker-entrypoint.sh /usr/sbin/
+RUN pip install -r Docker/requirements.txt
 
 RUN chown -R nobody:  /shouldipickitup/
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
