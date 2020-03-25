@@ -7,7 +7,9 @@ if ps -ef | grep yum | grep -iv grep; then
 fi
 
 yum update -y
+wait
 yum -y install python3  git awslogs
+yum list >  /tmp/yum.txt
 
 amazon-linux-extras install docker
 
