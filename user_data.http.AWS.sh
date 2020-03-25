@@ -3,7 +3,7 @@
 yum update -y
 
 yum -y install git
-[[ -f /var/run/yum.pid ]] && rm /var/run/yum.pid
+[[ -f /var/run/yum.pid ]] && kill -9 $(ps -ef | grep yum | grep -iv grep | awk '{ print $2; }') ;  rm /var/run/yum.pid
 yum -y install python3
 yum -y install awslogs
 
