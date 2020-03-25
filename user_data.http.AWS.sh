@@ -31,4 +31,4 @@ sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py
 sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py
 sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py
 source $GIT_DIR/AWS/shared_vars.txt
-docker-compose -f Docker/docker-compose.AWS.hosted.MongoDb.yaml up -d
+docker-compose -f docker-compose.AWS.hosted.MongoDb.yaml up -d
