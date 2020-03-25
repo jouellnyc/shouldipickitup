@@ -1,10 +1,14 @@
 #!/bin/bash
 
-yum update -y
 
-yum -y install git
-[[ -f /var/run/yum.pid ]] && kill -9 $(ps -ef | grep yum | grep -iv grep | awk '{ print $2; }') ;  rm /var/run/yum.pid
+if ps -ef | grep yum | grep -iv grep; then
+  kill -9 $(ps -ef | grep yum | grep -iv grep | awk '{ print $2; }')
+  rm /var/run/yum.pid
+fi
+
+yum update -y
 yum -y install python3
+yum -y install git
 yum -y install awslogs
 
 amazon-linux-extras install docker
