@@ -22,7 +22,7 @@ mkdir -p $GIT_DIR
 cd $GIT_DIR/
 git clone https://github.com/jouellnyc/AWS.git
 cd AWS/boto3/
-read -r  export MONGOUSERNAME MONGOPASSWORD MONGOHOST <  <(/usr/bin/python3 ./getSecret.py)
+read -r  MONGOUSERNAME MONGOPASSWORD MONGOHOST <  <(/usr/bin/python3 ./getSecret.py)
 
 cd $GIT_DIR
 git clone https://github.com/jouellnyc/shouldipickitup.git
