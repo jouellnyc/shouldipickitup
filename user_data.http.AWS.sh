@@ -3,6 +3,7 @@
 yum update -y
 yum -y install git 
 yum -y install python3 
+pip3 install boto3
 yum -y install awslogs
 
 amazon-linux-extras install docker
@@ -21,7 +22,7 @@ mkdir -p $GIT_DIR
 cd $GIT_DIR/
 git clone https://github.com/jouellnyc/AWS.git
 cd AWS/boto
-read -r  export MONGOUSERNAME MONGOPASSWORD MONGOHOST <  <(/usr/local/bin/python3 ./getSecret.py)
+read -r  export MONGOUSERNAME MONGOPASSWORD MONGOHOST <  <(/usr/bin/python3 ./getSecret.py)
 
 git clone https://github.com/jouellnyc/shouldipickitup.git
 cd shouldipickitup/lib
