@@ -25,9 +25,9 @@ COPY main.py    /shouldipickitup/
 COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
 
-COPY Docker/requirements.txt /shouldipickitup/Docker
-RUN pip install -r Docker/requirements.txt
-COPY Docker/flask-docker-entrypoint.sh /usr/sbin/
+COPY requirements.txt /shouldipickitup/
+RUN pip install -r requirements.txt
+COPY flask-docker-entrypoint.sh /usr/sbin/
 
 RUN chown -R nobody:  /shouldipickitup/
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
