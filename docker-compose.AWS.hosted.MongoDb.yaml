@@ -3,29 +3,29 @@ services:
   app:
       build:
         context: .
-        dockerfile: Dockerfile.flask
+        dockerfile: Docker/Dockerfile.flask
       networks:
         - shouldinetwork
       logging:
         driver: awslogs
         options:
-          awslogs-region: $AWS_REGION 
-          awslogs-group: flask 
+          awslogs-region: $AWS_REGION
+          awslogs-group: flask
   web:
       build:
         context: .
-        dockerfile: Dockerfile.nginx
+        dockerfile: Docker/Dockerfile.nginx
       depends_on:
-        - app 
-      ports: 
+        - app
+      ports:
         - "80:8080"
       networks:
         - shouldinetwork
       logging:
         driver: awslogs
         options:
-          awslogs-region: $AWS_REGION 
-          awslogs-group: nginx 
+          awslogs-region: $AWS_REGION
+          awslogs-group: nginx
 networks:
   shouldinetwork:
     driver: bridge
