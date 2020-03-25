@@ -7,9 +7,7 @@ if ps -ef | grep yum | grep -iv grep; then
 fi
 
 yum update -y
-yum -y install python3
-yum -y install git
-yum -y install awslogs
+yum -y install python3  git awslogs
 
 amazon-linux-extras install docker
 
