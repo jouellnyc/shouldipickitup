@@ -27,7 +27,7 @@ COPY data/      /shouldipickitup/data/
 COPY main.py    /shouldipickitup/
 COPY app.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
-COPY ./flask-docker-entrypoint.sh /usr/sbin/
+COPY Docker/flask-docker-entrypoint.sh /usr/sbin/
 
 RUN chown -R nobody:  /shouldipickitup/
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
