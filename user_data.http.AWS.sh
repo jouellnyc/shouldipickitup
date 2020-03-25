@@ -3,6 +3,8 @@
 yum update -y
 
 yum -y install git
+[[ -f /var/run/yum.pid ]] && rm /var/run/yum.pid
+yum -y install python3
 yum -y install awslogs
 
 amazon-linux-extras install docker
