@@ -184,7 +184,7 @@ def generate_master_documents_import_to_mongodb(
         {dictionary} above
 
     Returns:
-        [list] - All mongodb documents. We want this format:
+        [list] - All mongodb documents will initially have this format:
 
     {
     'craigs_list_url': 'https://zanesville.craigslist.org',
