@@ -3,7 +3,7 @@ services:
   db:
      build:
        context: .
-       dockerfile: Dockerfile.mongod
+       dockerfile: Docker/Dockerfile.mongod
      volumes:
        - data:/data/db
      networks:
@@ -11,7 +11,7 @@ services:
   app:
       build:
         context: .
-        dockerfile: Dockerfile.flask
+        dockerfile: Docker/Dockerfile.flask
       depends_on:
         - db
       networks:
@@ -19,7 +19,7 @@ services:
   web:
       build:
         context: .
-        dockerfile: Dockerfile.nginx
+        dockerfile: Docker/Dockerfile.nginx
       depends_on:
         - app 
       ports: 
