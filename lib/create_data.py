@@ -5,14 +5,14 @@
 - This script takes 2 files:
 
     1)  free-zipcode-database-Primary.no.header.csv - government zip DB
+        (From http://federalgovernmentzipcodes.us/download.html)
 
 "02108","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2348,3312,388783474
 "02109","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2966,4145,284385612
 "02110","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2950,4313,231268950
 
    2) craigs_links.txt - City, State names gotten from  craigslist.org
-
-(https://geo.craigslist.org/iso/us/)
+     (From https://geo.craigslist.org/iso/us/)
 <li><a href="https://akroncanton.craigslist.org">akron / canton</a></li>
 <li><a href="https://albanyga.craigslist.org">albany, GA      </a></li>
 
