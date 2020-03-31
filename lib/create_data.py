@@ -3,30 +3,78 @@
 """ create_data.py -
 
 - This script takes 2 files:
-    - free-zipcode-database-Primary.no.header.csv - government zip DB
-    - craigs_links.txt - City, State names gotten from  craigslist.org
-      (https://geo.craigslist.org/iso/us/)
 
- Then creates 2 dictionaries:
-    #city state to multi - zip
-    boston ma : ['11218', '11234', etc...]
+    1)  free-zipcode-database-Primary.no.header.csv - government zip DB
+
+"02108","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2348,3312,388783474
+"02109","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2966,4145,284385612
+"02110","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2950,4313,231268950
+
+   2) craigs_links.txt - City, State names gotten from  craigslist.org
+
+(https://geo.craigslist.org/iso/us/)
+<li><a href="https://akroncanton.craigslist.org">akron / canton</a></li>
+<li><a href="https://albanyga.craigslist.org">albany, GA      </a></li>
+
+And creates 2 dictionaries from those 2 files:
+
+    1) Government City,State to MultiZip dict
+
+    which is a default dictionary with (city,state) as key
+    and list of zipcodes as values:
+
+    {'abilene,TX':   ['79604'],
+    'wiley,GA':      ['30581'],
+    'woodstock,GA':  ['30188', '30189']}
+
     and
-    #city, state to craigslist url
-    boston,ma -> link.craig.com
 
-Then  munges the data to create the 400+ MongoDB documents for initial load.
+    2) City,State to craigslist url dict - IE:
 
-This is still imperfect data, but at least all of the zips in the government
-file will have relevant data from somewhere 'somewhat' close.
+    {'abilene,TX':   'https://abilene.craigslist.org',
+     'akron/canton': 'https://akroncanton.craigslist.org',
+     'albany,NY': 'https://albany.craigslist.org'}
 
-This also means Brooklyn could be considered 'close' to Albany...
+ie
+craigs_city_links = create_craigs_url_dict_from_local_file(craigs_links_file)
+gov_city_state_mutlizips_map = create_gov_city_state_mutlizips_map(zip_code_file)
+
+- Then  creates another dictionary of mean/average zip code to craigurl:
+
+{ 28541: 'https://onslow.craigslist.org', 
+  28406: 'https://wilmington.craigslist.org', 
+  27154: 'https://winstonsalem.craigslist.org'}
+
+(These will all be KNOWN URLS in the craigslist url map)
+
+- Finally a list of 400+ Mongo formatted documents are prepared by creating a 
+Mongo Document for each Craigsurl.  
+
+Each city,state and zip code list from the government dictionary will try to be
+matched with a  Mongo Document by comparing city, state.
+
+If there's a match, the document will be populated with all the zip codes.
+If there's not a match, we try to find the closest zip code and craiglist url
+and populate that Document
+
+Once  done, there will be 400+ MongoDB documents for initial load. (There are
+~400 total craiglist urls). ~200 of the 400 are populated zip codes. 
+The other 200 do not have any  data at all (for now).
+
+However all ZIP CODES map to one of the first 200 urls. So given a given a query
+for any zip code, some data will be returned if the corresponding craigs url has
+been crawled and indexed.
+
+This is imperfect data, but at least all of the zips in the government file will 
+have relevant data from somewhere 'somewhat' close. This also means Brooklyn could 
+be considered 'close' to Albany...
 
 To avoid duplicate docs, create_data.py must be run before crawler.py runs.
 The latter does upserts where the former just does inserts (it is run as
 entrypoint to the docker image - so should never be a problem).
 
-TBD: Fine tune the other 200 craiglist surls
 """
+
 
 import os
 import sys
@@ -114,7 +162,7 @@ def lookup_craigs_url_with_city(citystate, craigs_city_links):
     return craigs_city_links[citystate]
 
 
-def create_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_zips):
+def create_mean_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_zips):
     """ Return the mean of the zips associated with a craigsurl
 
     Parameters
@@ -244,7 +292,7 @@ if __name__ == "__main__":
         gov_city_state_mutlizips_map = create_gov_city_state_mutlizips_map(
             zip_code_file
         )
-        mean_zip2craigs_url = create_zipcode_2_craigs_url_map(
+        mean_zip2craigs_url = create_mean_zipcode_2_craigs_url_map(
             craigs_city_links, gov_city_state_mutlizips_map
         )
         master_mongo_city_state_zip_data = generate_master_documents_import_to_mongodb(
