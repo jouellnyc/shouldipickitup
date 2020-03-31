@@ -201,7 +201,9 @@ def create_mean_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_zips)
                 mean = str(0) + str(mean)
             mean_zip2craigs_url[mean] = craigs_url
         except KeyError:
-            pass  # don't care about these at all
+            # We don't care about these at all because we KNOW these
+            # are cities that don't match, so we let it pass
+            pass
 
     return mean_zip2craigs_url
 
