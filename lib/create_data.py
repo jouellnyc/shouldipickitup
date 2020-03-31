@@ -48,9 +48,13 @@ gov_city_state_mutlizips_map = create_gov_city_state_mutlizips_map(zip_code_file
 
 (These will all be KNOWN URLS in the craigslist url map)
 
+i.e
+mean_zip2craigs_url = create_mean_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_mutlizips_map)
+
 
 - Finally a list of 400+ Mongo formatted documents are prepared by creating a 
 Mongo Document for each Craigsurl.  
+
 
 Each city,state and zip code list from the government dictionary will try to be
 matched into one of the 400+  Mongo Documents by comparing city,state.
@@ -61,6 +65,11 @@ mark these as 'Zips' in the list as they are primary.
 If there's not a match, we find the closest zip code and craiglist url known
 using the mean/average zip code dictionary and populate that Document with the
 zip code data. We markthese as 'ALtZips' in the list as they are not primary zips.
+
+i.e
+master_mongo_city_state_zip_data = generate_master_documents_import_to_mongodb(
+craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url)
+
 
 Once  done, there will be 400+ MongoDB documents for initial load. (There are
 ~400 total craiglist urls). ~200 of the 400 are populated with zip code data. 
