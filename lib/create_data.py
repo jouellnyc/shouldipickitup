@@ -64,7 +64,7 @@ mark these as 'Zips' in the list as they are primary.
 
 If there's not a match, we find the closest zip code and craiglist url known
 using the mean/average zip code dictionary and populate that Document with the
-zip code data. We markthese as 'ALtZips' in the list as they are not primary zips.
+zip code data. We mark these as 'ALtZips' in the list as they are not primary zips.
 
 i.e
 master_mongo_city_state_zip_data = generate_master_documents_import_to_mongodb(
