@@ -4,18 +4,19 @@
 
 - This script takes 2 files:
     - free-zipcode-database-Primary.no.header.csv - government zip DB
-    - craigs_links.txt - City, State names to Craigslist
+    - craigs_links.txt - City, State names gotten from  craigslist.org
+      (https://geo.craigslist.org/iso/us/)
 
  Then creates 2 dictionaries:
     #city state to multi - zip
-    boston ma : ['11218', '11234']
+    boston ma : ['11218', '11234', etc...]
     and
     #city, state to craigslist url
     boston,ma -> link.craig.com
 
-Then  munges the data to create the 400+ MongoDB document for initial load.
+Then  munges the data to create the 400+ MongoDB documents for initial load.
 
-This is still imperfect data, but at least all of the zip in the government
+This is still imperfect data, but at least all of the zips in the government
 file will have relevant data from somewhere 'somewhat' close.
 
 This also means Brooklyn could be considered 'close' to Albany...
