@@ -42,18 +42,18 @@ gov_city_state_mutlizips_map = create_gov_city_state_mutlizips_map(zip_code_file
 
 - Then  creates another dictionary of mean/average zip code to craigurl:
 
-{ 28541: 'https://onslow.craigslist.org', 
-  28406: 'https://wilmington.craigslist.org', 
+{ 28541: 'https://onslow.craigslist.org',
+  28406: 'https://wilmington.craigslist.org',
   27154: 'https://winstonsalem.craigslist.org'}
 
-(These will all be KNOWN URLS in the craigslist url map)
+(These will all be KNOWN URLS in the craigslist url map - used below)
 
 i.e
 mean_zip2craigs_url = create_mean_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_mutlizips_map)
 
 
-- Finally a list of 400+ Mongo formatted documents are prepared by creating a 
-Mongo Document for each Craigsurl.  
+- Finally a list of 400+ Mongo formatted documents are prepared by creating a
+Mongo Document for each Craigsurl.
 
 
 Each city,state and zip code list from the government dictionary will try to be
@@ -72,15 +72,15 @@ craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url)
 
 
 Once  done, there will be 400+ MongoDB documents for initial load. (There are
-~400 total craiglist urls). ~200 of the 400 are populated with zip code data. 
+~400 total craiglist urls). ~200 of the 400 are populated with zip code data.
 The other 200 do not have any  data at all (for now).
 
 However all ZIP CODES map to one of the first 200 urls. So given a given a query
 for any zip code, some data will be returned if the corresponding craigs url has
 been crawled and indexed.
 
-This is imperfect data, but at least all of the zips in the government file will 
-have relevant data from somewhere 'somewhat' close. This also means Brooklyn could 
+This is imperfect data, but at least all of the zips in the government file will
+have relevant data from somewhere 'somewhat' close. This also means Brooklyn could
 be considered 'close' to Albany...
 
 To avoid duplicate docs, create_data.py must be run before crawler.py runs.
