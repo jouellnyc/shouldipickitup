@@ -9,6 +9,11 @@
 
 "02108","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2348,3312,388783474
 "02109","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2966,4145,284385612
+
+
+
+
+
 "02110","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2950,4313,231268950
 
    2) craigs_links.txt - City, State names gotten from  craigslist.org
@@ -193,6 +198,7 @@ def create_mean_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_zips)
     mean_zip2craigs_url = {}
 
     for citystate, ziplist in gov_city_state_zips.items():
+        citystate = ''.join(citystate.split())
         try:
             ziplist = [int(x) for x in ziplist]
             craigs_url = lookup_craigs_url_with_city(citystate, craigs_city_links)
