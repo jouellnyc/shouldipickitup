@@ -49,4 +49,4 @@ zip = '79697'; dbh.find_one({"$or" : [{"Zips" : zip }, {'AltZips' : zip}]})
 > db.data.count({});
 826
 
-db.data.find({"craigs_url":"https://newyork.craigslist.org"})
+> db.data.find({"craigs_url":"https://newyork.craigslist.org/mnh/"})
