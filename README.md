@@ -102,7 +102,7 @@ cd shouldipickitup
 docker-compose  up -d
 ```
 
-##Architechure
+## Architechure
 Nginx will listen on the local hosts port 80
 Flask and Mongodb will be on the same bridged docker network reachable by docker names
 
