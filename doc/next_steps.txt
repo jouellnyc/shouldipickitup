@@ -1,16 +1,13 @@
-
--- Later
-
 - implement timeout for item caching
 
-- update nuances like Brooklyn/Queens; get 'real' data for the 200+ CL links
+- update Queens, NY for it's many nuances of town names
+
+- get 'real' data for the other 200+ CL links
+
+- get craigslist to say yes
 
 - implement lyft / uber actual costs
 
 - use ebay developer program
 
-- get craigslist to say yes
-
 - set crawler schedule
-
-- set cl crawler schedule
