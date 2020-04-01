@@ -1,3 +1,7 @@
+brooklyn,NY=https://newyork.craigslist.org/brk/
+newyork,NY=https://newyork.craigslist.org/brk/
+bronx,ny=https://newyork.craigslist.org/brx/
+statenisland,ny=https://newyork.craigslist.org/stn/
 abilene,TX=https://abilene.craigslist.org
 akron/canton=https://akroncanton.craigslist.org
 albany,GA=https://albanyga.craigslist.org
@@ -239,7 +243,6 @@ newhampshire=https://nh.craigslist.org
 newhaven,CT=https://newhaven.craigslist.org
 neworleans=https://neworleans.craigslist.org
 newrivervalley=https://blacksburg.craigslist.org
-newyorkcity=https://newyork.craigslist.org
 norfolk/hamptonroads=https://norfolk.craigslist.org
 northcentralFL=https://lakecity.craigslist.org
 northdakota=https://nd.craigslist.org
