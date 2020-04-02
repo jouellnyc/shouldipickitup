@@ -9,23 +9,19 @@
 
 "02108","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2348,3312,388783474
 "02109","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2966,4145,284385612
-
-
-
-
-
 "02110","STANDARD","BOSTON","MA","PRIMARY",42.35,-71.06,"NA-US-MA-BOSTON","false",2950,4313,231268950
 
    2) craigs_links.txt - City, State names gotten from  craigslist.org
      (From https://geo.craigslist.org/iso/us/)
+
 <li><a href="https://akroncanton.craigslist.org">akron / canton</a></li>
 <li><a href="https://albanyga.craigslist.org">albany, GA      </a></li>
 
 And creates 2 dictionaries from those 2 files:
 
-    1) Government City,State to MultiZip dict
+    1) Government File -  City,State to MultiZip dict
 
-    which is a default dictionary with (city,state) as key
+    which is a default dictionary with (city,STATE) as key
     and list of zipcodes as values:
 
     {'abilene,TX':   ['79604'],
@@ -53,28 +49,26 @@ gov_city_state_mutlizips_map = create_gov_city_state_mutlizips_map(zip_code_file
 
 (These will all be KNOWN URLS in the craigslist url map - used below)
 
+
 i.e
 mean_zip2craigs_url = create_mean_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_mutlizips_map)
 
+- Finally a list of 400+ documents are prepared by creating a Mongo Fomatted
+Document for each Craigsurl.
 
-- Finally a list of 400+ Mongo formatted documents are prepared by creating a
-Mongo Document for each Craigsurl.
-
-
-Each city,state and zip code list from the government dictionary will try to be
+  Then, each city,state and zip code list from the government dictionary will try to be
 matched into one of the 400+  Mongo Documents by comparing city,state.
 
 If there's a match, the document will be populated with all the zip codes. We
 mark these as 'Zips' in the list as they are primary.
 
 If there's not a match, we find the closest zip code and craiglist url known
-using the mean/average zip code dictionary and populate that Document with the
+using the mean/average zip code dictionary and populate that document with the
 zip code data. We mark these as 'ALtZips' in the list as they are not primary zips.
 
 i.e
 master_mongo_city_state_zip_data = generate_master_documents_import_to_mongodb(
 craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url)
-
 
 Once  done, there will be 400+ MongoDB documents for initial load. (There are
 ~400 total craiglist urls). ~200 of the 400 are populated with zip code data.
@@ -85,10 +79,11 @@ for any zip code, some data will be returned if the corresponding craigs url has
 been crawled and indexed.
 
 This is imperfect data, but at least all of the zips in the government file will
-have relevant data from somewhere 'somewhat' close. This also means Brooklyn could
-be considered 'close' to Albany...
+have relevant data from somewhere 'somewhat' close. This also means a zip codes
+be considered 'close' to city that is a decent distance away as the crow flies.
 
 To avoid duplicate docs, create_data.py must be run before crawler.py runs.
+
 The latter does upserts where the former just does inserts (it is run as
 entrypoint to the docker image - so should never be a problem).
 
