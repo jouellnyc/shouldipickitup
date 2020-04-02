@@ -275,6 +275,7 @@ def generate_master_documents_import_to_mongodb(
     for citystate, ziplist in gov_city_state_zips.items():
 
         try:
+            citystate = ''.join(citystate.split())
             url = lookup_craigs_url_with_city(citystate, craigs_city_links)
             master_mongo_city_state_zip_map[url]["CityState"] = citystate
             master_mongo_city_state_zip_map[url]["Zips"] = ziplist
