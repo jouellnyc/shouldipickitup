@@ -1,7 +1,8 @@
+queensvillage,NY=https://newyork.craigslist.org/que/
 brooklyn,NY=https://newyork.craigslist.org/brk/
 newyork,NY=https://newyork.craigslist.org/mnh/
-bronx,ny=https://newyork.craigslist.org/brx/
-statenisland,ny=https://newyork.craigslist.org/stn/
+bronx,NY=https://newyork.craigslist.org/brx/
+statenisland,NY=https://newyork.craigslist.org/stn/
 abilene,TX=https://abilene.craigslist.org
 akron/canton=https://akroncanton.craigslist.org
 albany,GA=https://albanyga.craigslist.org
