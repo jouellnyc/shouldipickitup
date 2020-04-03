@@ -277,7 +277,6 @@ class MongoCli:
         """
 
         new_result = self.dbh.drop()
-        print(new_result)
         return new_result
 
 
