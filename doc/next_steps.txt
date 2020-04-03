@@ -1,7 +1,5 @@
 - implement timeout for item caching
 
-- update Queens, NY for it's many nuances of town names
-
 - get 'real' data for the other 200+ CL links
 
 - get craigslist to say yes
