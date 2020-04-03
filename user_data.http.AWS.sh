@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 yum update -y
 yum -y install git 
