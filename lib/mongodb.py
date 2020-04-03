@@ -78,11 +78,7 @@ class MongoCli:
             collection_handle :  pymongo connect object
         """
         try:
-            #client = MongoClient(host="shouldipickitup_db_1", serverSelectionTimeoutMS=2000)
-            client = MongoClient(
-                    host="mongodb+srv://MONGOUSERNAME:MONGOPASSWORD@MONGOHOST/test?retryWrites=true&w=majority",
-                serverSelectionTimeoutMS=2000,
-            )
+            client = MongoClient(host="shouldipickitup_db_1", serverSelectionTimeoutMS=2000)
             client.server_info()
             database_handle = client[database_name]
             collection_handle = database_handle[collection_name]
@@ -306,6 +302,6 @@ if __name__ == "__main__":
             print("AltZips", altzips)
     except ConnectionFailure as e:
         print("MongoDB ConnectionFailure: ", e)
-        print("For Host MongoDB is the IP whitelisted?")
+        print("Is your IP whitelisted?")
     except Exception as e:
         logging.exception(e)
