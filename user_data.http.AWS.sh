@@ -27,8 +27,10 @@ read -r  MONGOUSERNAME MONGOPASSWORD MONGOHOST <  <(/usr/bin/python3 ./getSecret
 cd $GIT_DIR
 git clone https://github.com/jouellnyc/shouldipickitup.git
 cd shouldipickitup
+sleep 2
 sed -i -r  's#MONGOCLIENTLINE#client = MongoClient("mongodb+srv://MONGOUSERNAME:MONGOPASSWORD@MONGOHOST/test?retryWrites=true\&w=majority", serverSelectionTimeoutMS=2000)#' lib/mongodb.py
 
+sleep 2
 sed -i s"/MONGOUSERNAME/${MONGOUSERNAME}/" lib/mongodb.py
 sed -i s"/MONGOPASSWORD/${MONGOPASSWORD}/" lib/mongodb.py
 sed -i         s"/MONGOHOST/${MONGOHOST}/" lib/mongodb.py
