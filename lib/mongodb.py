@@ -78,7 +78,7 @@ class MongoCli:
             collection_handle :  pymongo connect object
         """
         try:
-            client = MongoClient(host="shouldipickitup_db_1", serverSelectionTimeoutMS=2000)
+            MONGOCLIENTLINE
             client.server_info()
             database_handle = client[database_name]
             collection_handle = database_handle[collection_name]

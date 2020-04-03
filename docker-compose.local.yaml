@@ -11,7 +11,7 @@ services:
   app:
       build:
         context: .
-        dockerfile: Docker/Dockerfile.flask
+        dockerfile: Docker/Dockerfile.flask.local
       depends_on:
         - db
       networks:
