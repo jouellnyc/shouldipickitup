@@ -78,6 +78,7 @@ class MongoCli:
             collection_handle :  pymongo connect object
         """
         try:
+            #client = MongoClient(host="shouldipickitup_db_1", serverSelectionTimeoutMS=2000)
             client = MongoClient(
                     host="mongodb+srv://MONGOUSERNAME:MONGOPASSWORD@MONGOHOST/test?retryWrites=true&w=majority",
                 serverSelectionTimeoutMS=2000,
@@ -261,6 +262,27 @@ class MongoCli:
             if verbose:
                 print("Multiple posts: {0}".format(new_result.inserted_ids))
             return new_result
+
+    def drop_db(self):
+        """
+        Drop all documents (testing/etc.)
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        new_result
+
+        Exceptions
+        ----------
+        Failure/Connection
+        """
+
+        new_result = self.dbh.drop()
+        print(new_result)
+        return new_result
 
 
 if __name__ == "__main__":
