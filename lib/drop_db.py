@@ -19,7 +19,5 @@ if __name__ == "__main__":
     except ConnectionFailure as e:
         print("MongoDB ConnectionFailure: ", e)
         print("Is your IP whitelisted?")
-    except ConnectionFailure as e:
-        print("Timeout",e)
     except Exception as e:
         logging.exception(e)
