@@ -2,18 +2,10 @@
 
 """ websitepuller.py - pull data for *each* item  - Ebay, Lyft or Craiglist
 
-- This script takes in a zip code from Flask/app.py or via cmd line, and then
-determines the right Craiglist URL by qurying 'Zips' or 'AltZips' in MongoDB.
-It then returns the free items (see below) associated with that MongoDB doc.
-
--This script requires the requests BeautifulSoup module and geopy
-
--This file is meant to be imported as a module.
-
--This file contains the following functions:
-
+- This script is a library for lookup on Ebay, CraigList and Lyft
+- This script requires the requests BeautifulSoup module and geopy
+- This file is meant to be imported as a module.
 """
-
 
 import re
 import sys
