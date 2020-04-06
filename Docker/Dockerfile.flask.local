@@ -30,7 +30,7 @@ RUN chown -R nobody:  /shouldipickitup/
 RUN sed -i s"/MONGOCLIENTLINE/client = MongoClient(host=\"shouldipickitup_db_1\", \
 serverSelectionTimeoutMS=2000)${MONGOUSERNAME}/" lib/mongodb.py
 
-COPY Docker/flask-docker-entrypoint.sh /usr/sbin/
+COPY Docker/flask-docker-entrypoint.local /usr/sbin/flask-docker-entrypoint.sh
 RUN chmod 755 /usr/sbin/flask-docker-entrypoint.sh 
 
 USER nobody
