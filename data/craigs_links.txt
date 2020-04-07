@@ -1,3 +1,5 @@
+albuquerque,NM=https://albuquerque.craigslist.org
+akron,OH=https://akroncanton.craigslist.org
 queensvillage,NY=https://newyork.craigslist.org/que/
 brooklyn,NY=https://newyork.craigslist.org/brk/
 newyork,NY=https://newyork.craigslist.org/mnh/
