@@ -19,6 +19,7 @@ https://stackoverflow.com/questions/12551526/cast-flask-form-value-to-int
 https://docs.gunicorn.org/en/stable/settings.html#logger-class
 https://medium.com/@trstringer/logging-flask-and-gunicorn-the-manageable-way-2e6f0b8beb2f
 https://stackoverflow.com/questions/58464052/request-to-flask-application-does-not-get-through-to-docker-container
+https://www.fullstackpython.com/wsgi-servers.html
 
 TBD: - Add js input validation
      - Add cool look ahead form query
