@@ -20,7 +20,7 @@ https://docs.gunicorn.org/en/stable/settings.html#logger-class
 https://medium.com/@trstringer/logging-flask-and-gunicorn-the-manageable-way-2e6f0b8beb2f
 https://stackoverflow.com/questions/58464052/request-to-flask-application-does-not-get-through-to-docker-container
 https://www.fullstackpython.com/wsgi-servers.html
-
+https://www.fullstackpython.com/green-unicorn-gunicorn.html
 """
 
 import logging
