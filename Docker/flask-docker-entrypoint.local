@@ -2,4 +2,4 @@
 cd /shouldipickitup/lib
 ./create_data.py && touch create_data.done
 cd ..
-/usr/local/bin/gunicorn -c gunicorn.conf.py 
+/usr/local/bin/gunicorn should_flask:app  -c /shouldipickitup/external/gunicorn/gunicorn.conf.py 
