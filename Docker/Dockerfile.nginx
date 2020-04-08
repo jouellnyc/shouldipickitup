@@ -14,7 +14,7 @@ RUN set -x \
     #
     #JO network utilities... 
     #
-    && apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates procps telnet curl wget dnsutils  iputils-ping \
+    && apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates procps less telnet curl wget dnsutils  iputils-ping \
     && \
     NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
     found=''; \
