@@ -12,9 +12,9 @@ RUN set -x \
     && adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos "nginx user" --shell /bin/false --uid 101 nginx \
     && apt-get update \
     #
-    #JO 
+    #JO network utilities... 
     #
-    && apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates procps \
+    && apt-get install --no-install-recommends --no-install-suggests -y gnupg1 ca-certificates procps telnet curl wget dnsutils  iputils-ping \
     && \
     NGINX_GPGKEY=573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62; \
     found=''; \
