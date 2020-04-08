@@ -23,7 +23,7 @@ COPY non-app/   /shouldipickitup/non-app/
 COPY templates/ /shouldipickitup/templates/
 COPY data/      /shouldipickitup/data/
 COPY main.py    /shouldipickitup/
-COPY app.py     /shouldipickitup/
+COPY flask.py     /shouldipickitup/
 COPY lib/       /shouldipickitup/lib/
 
 RUN chown -R nobody:  /shouldipickitup/
