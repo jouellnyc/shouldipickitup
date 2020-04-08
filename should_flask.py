@@ -22,6 +22,7 @@ https://stackoverflow.com/questions/58464052/request-to-flask-application-does-n
 https://www.fullstackpython.com/wsgi-servers.html
 https://www.fullstackpython.com/green-unicorn-gunicorn.html
 https://docs.gunicorn.org/en/stable/deploy.html
+https://stackoverflow.com/questions/25737589/gunicorn-doesnt-log-real-ip-from-nginx
 """
 
 import logging
