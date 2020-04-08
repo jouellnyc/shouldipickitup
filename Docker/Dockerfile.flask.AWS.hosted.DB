@@ -3,6 +3,7 @@ FROM python:3.7
 RUN apt-get update  -y && \ 
     apt-get install -y --no-install-recommends vim \
     curl \
+    less \
     net-tools \
     telnet && pip install --upgrade pip
 
