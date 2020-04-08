@@ -1,3 +1,5 @@
 The docker-compose stop command will stop your containers, but it won’t remove them.
 
 The docker-compose down command will stop your containers, but it also removes the stopped containers as well as any networks that were created.
+
+https://docs.docker.com/network/bridge/
