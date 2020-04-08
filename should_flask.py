@@ -45,7 +45,7 @@ app.debug = True
 verbose = True
 
 
-@app.route("/forms/", methods=["POST", "GET"])
+@app.route("/search/", methods=["POST", "GET"])
 def get_data():
     """
     Return a view to Flask with relevant details
