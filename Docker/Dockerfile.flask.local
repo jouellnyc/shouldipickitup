@@ -18,13 +18,14 @@ RUN mkdir /shouldipickitup/templates/  && chown -R nobody:  /shouldipickitup/tem
 RUN mkdir /shouldipickitup/lib/
 RUN mkdir /shouldipickitup/data/
 
-COPY static/    /shouldipickitup/static/
-COPY non-app/   /shouldipickitup/non-app/
-COPY templates/ /shouldipickitup/templates/
-COPY data/      /shouldipickitup/data/
-COPY main.py    /shouldipickitup/
-COPY should_flask.py /shouldipickitup/
-COPY lib/       /shouldipickitup/lib/
+COPY static/          /shouldipickitup/static/
+COPY non-app/         /shouldipickitup/non-app/
+COPY templates/       /shouldipickitup/templates/
+COPY data/            /shouldipickitup/data/
+COPY main.py          /shouldipickitup/
+COPY should_flask.py  /shouldipickitup/
+COPY gunicorn.conf.py /shouldipickitup/
+COPY lib/             /shouldipickitup/lib/
 
 RUN chown -R nobody:  /shouldipickitup/
 RUN sed -i s"/MONGOCLIENTLINE/client = MongoClient(host=\"shouldipickitup_db_1\", \
