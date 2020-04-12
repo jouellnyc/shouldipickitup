@@ -37,7 +37,8 @@ logging.basicConfig(
 
 
 def get_web_data(craigs_list_url):
-    """ Return SF data from local if Mongdb is down/server Timeout.
+    """ Connect to Craigslist and Get Data Free posts
+
     Parameters
     ----------
     craigs_list_url
