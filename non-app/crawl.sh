@@ -8,6 +8,7 @@ while read line; do
     echo == $URL ==
     date
     SLEEP=$((1 + RANDOM % 30))
+    echo "Sleep $SLEEP"
     ../lib/crawler.py $URL index; sleep $SLEEP;
 
 done < $CITIES
