@@ -21,6 +21,7 @@ import logging
 from random import randrange
 
 import mongodb
+import requestwrap
 import websitepuller
 import pickledata
 from pymongo.errors import ConnectionFailure
@@ -36,7 +37,7 @@ logging.basicConfig(
 )
 
 
-def get_web_data(craigs_list_url):
+def get_craigs_list_posts(craigs_list_url):
     """ Connect to Craigslist and Get Data Free posts
 
     Parameters
@@ -65,7 +66,11 @@ def get_web_data(craigs_list_url):
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
 
-
+def get_city_from_first_free_cl_item(craigs_list_url):
+    first_item_soup = get_craigs_list_posts(craigs_list_url)[0]
+    url = first_item_soup.attrs["href"]
+    city = websitepuller.lookup_city_from_cl_url(url)
+    return city
 
 def get_ebay_data(craigs_local_posts, random="yes", howmany=12):
 
@@ -156,7 +161,7 @@ if __name__ == "__main__":
         craigs_list_url = sys.argv[1]
         noindex = sys.argv[2]
         print(craigs_list_url)
-        craig_posts = get_web_data(craigs_list_url)
+        craig_posts = get_craigs_list_posts(craigs_list_url)
         ebay_prices, ebay_links = get_ebay_data(
             craig_posts, random="no", howmany=howmany
         )
