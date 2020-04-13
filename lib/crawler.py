@@ -20,11 +20,11 @@ import time
 import logging
 from random import randrange
 
-#import mongodb
+import mongodb
 import requestwrap
 import websitepuller
 import pickledata
-#from pymongo.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure
 
 
 # "crawler.log"
