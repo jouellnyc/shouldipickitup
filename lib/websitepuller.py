@@ -145,8 +145,13 @@ def lookup_cost_lyft(start_lat, start_lng, end_lat, end_lng):
 
 def lookup_city_from_cl_url(craiglisturl):
     craigs_first_free      =  requestwrap.err_web(craiglisturl)
-    craigs_first_free_soup = BeautifulSoup(craigs_first_free.text, "html.parser")
-    metacity = craigs_first_free_soup.find("meta", attrs={'name':'geo.placename'}).get('content').lower()
-    metacity = "".join(metacity.split())
-    _, metastate = craigs_first_free_soup.find("meta", attrs={'name':'geo.region'}).get('content').split('-')
-    return metacity,metastate
+    craigs_first_free_soup =  BeautifulSoup(craigs_first_free.text, "html.parser")
+    try:
+        metacity = craigs_first_free_soup.find("meta", attrs={'name':'geo.placename'}).get('content').lower()
+        metacity = "".join(metacity.split())
+        _, metastate = craigs_first_free_soup.find("meta", attrs={'name':'geo.region'}).get('content').split('-')
+    except  AttributeError as e: 
+        print(e)
+        return None
+    else: 
+        return metacity,metastate
