@@ -20,11 +20,11 @@ import time
 import logging
 from random import randrange
 
-import mongodb
+#import mongodb
 import requestwrap
 import websitepuller
 import pickledata
-from pymongo.errors import ConnectionFailure
+#from pymongo.errors import ConnectionFailure
 
 
 # "crawler.log"
@@ -70,7 +70,10 @@ def get_city_from_first_free_cl_item(craigs_list_url):
     first_item_soup = get_craigs_list_posts(craigs_list_url)[0]
     url = first_item_soup.attrs["href"]
     city = websitepuller.lookup_city_from_cl_url(url)
-    return city
+    if city is not None:
+        return city
+    else:
+        return None
 
 def get_ebay_data(craigs_local_posts, random="yes", howmany=12):
 
