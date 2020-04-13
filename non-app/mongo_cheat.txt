@@ -56,7 +56,14 @@ zip = '79697'; dbh.find_one({"$or" : [{"Zips" : zip }, {'AltZips' : zip}]})
 MongoDB Enterprise shouldipickitup-shard-0:PRIMARY> db.data.count({"Zips":{$eq:[]}})
 200
 
-db.data.find({"Zips":{$eq:[]}})
+===
 
-MongoDB Enterprise shouldipickitup-shard-0:PRIMARY> db.data.count({"Zips":{$eq:[]}})
+MongoDB Enterprise Shouldipickitup-shard-0:PRIMARY> db.data.count({"Zips":{$eq:[]}})
 34
+MongoDB Enterprise Shouldipickitup-shard-0:PRIMARY> db.data.count({"Zips":{$ne:[]}})
+382
+
+MongoDB Enterprise Shouldipickitup-shard-0:PRIMARY> db.data.count({"EbayLinks":{$eq:null}})
+9
+MongoDB Enterprise Shouldipickitup-shard-0:PRIMARY> db.data.count({"EbayLinks":{$ne:null}})
+407
