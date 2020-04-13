@@ -239,7 +239,6 @@ https://nh.craigslist.org
 https://newhaven.craigslist.org
 https://neworleans.craigslist.org
 https://blacksburg.craigslist.org
-https://newyork.craigslist.org
 https://norfolk.craigslist.org
 https://lakecity.craigslist.org
 https://nd.craigslist.org
