@@ -1,13 +1,13 @@
 #!/bin/bash
 
-CITIES=urls_with_known_cities.txt
+CITIES="../data/craigs_links.txt"
 
 while read line; do
 
-    echo == $line ==
+    URL=$(echo $line | cut -d "=" -f2)
+    echo == $URL ==
     date
     SLEEP=$((1 + RANDOM % 30))
-    ../lib/crawler.py $line index; sleep $SLEEP;
+    ../lib/crawler.py $URL index; sleep $SLEEP;
 
-done < <(head -n 5 $CITIES)
-#done < $CITIES
+done < $CITIES
