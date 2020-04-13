@@ -17,6 +17,7 @@ new_york     = "../data/new_york.txt"
 geo_craigs_url  = "https://geo.craigslist.org/iso/us/"
 geo_craigs_req  = requestwrap.err_web(geo_craigs_url)
 geo_craigs_soup = BeautifulSoup(geo_craigs_req.text, "html.parser")
+
 with open(all_urls,'w') as fh:
     for link in geo_craigs_soup.find_all('a'):
         url  = link.get('href')
@@ -29,19 +30,21 @@ with open(all_urls,'r') as fh:
     with open(craigs_links,'w', buffering=1) as fh2:
         for line in fh:
             citystate, url = line.split('=')
+            url = url.rstrip()
+            print(f"==={citystate} {url}===")
             if ',' not in line:
                 if 'newyorkcity' in citystate:
                     continue
-                url = url.rstrip()
                 try:
-                    c,s = crawler.get_city_from_first_free_cl_item(url)
+                    city,state = crawler.get_city_from_first_free_cl_item(url)
+                    print(f"{city},{state} {url} - LOOKUP")
                 except TypeError as e:
                     print("no data for", url)
                 else:
-                    fh2.write(f"{c},{s}={url}\n")
+                    fh2.write(f"{city},{state}={url}\n")
             else:
-                fh2.write(f"{citystate}={url}")
+                print(f"{citystate},{url} - FROMFILE")
+                fh2.write(f"{citystate}={url}\n")
         with open(new_york,'r') as fh3:
             for line in fh3:
                 fh2.write(line)
-
