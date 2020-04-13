@@ -10,7 +10,7 @@ import crawler
 import requestwrap
 from bs4 import BeautifulSoup
 
-all_urls     = "../non-app/all_urls.txt"
+all_urls     = "../data/all_urls.txt"
 craigs_links = "../data/craigs_links.txt"
 new_york     = "../data/new_york.txt"
 
