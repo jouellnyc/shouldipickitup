@@ -1,0 +1,5 @@
+queensvillage,NY=https://newyork.craigslist.org/que/
+brooklyn,NY=https://newyork.craigslist.org/brk/
+newyork,NY=https://newyork.craigslist.org/mnh/
+bronx,NY=https://newyork.craigslist.org/brx/
+statenisland,NY=https://newyork.craigslist.org/stn/
