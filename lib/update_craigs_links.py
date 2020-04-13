@@ -25,6 +25,8 @@ with open(all_urls,'w') as fh:
         if 'www' not in url  and  'apple.com' not in url and 'google' not  in url and 'forums' not in url:
             fh.write(f"{city}={url}\n")
 
+sys.exit(1)
+
 with open(all_urls,'r') as fh:
     with open(craigs_links,'w', buffering=1) as fh2:
         for line in fh:
