@@ -1,27 +1,45 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
+#Download all craigslist links and 
+#Assign cities by screen scraping or using
+#What Craigslist tell us 
+
+import sys
 import time
 import crawler
+import requestwrap
+from bs4 import BeautifulSoup
 
-file1  = "../non-app/all_urls.txt"
-file2  = "../data/craigs_links2.txt"
+all_urls     = "../non-app/all_urls.txt"
+craigs_links = "../data/craigs_links.txt.inp"
 
-map = []
-with open(file1,'r') as fh:
-    for url in fh:
-        url=url.rstrip()
-        print("===",url)
-        try:
-            c,s = crawler.get_city_from_first_free_cl_item(url)
-        except TypeError as e:
-            print("no data for", url)
-        else:
-            print(c,s)
-            time.sleep(10)
-            print(url,c,s)
-            map.append( (url,c,s) )
+geo_craigs_url  = "https://geo.craigslist.org/iso/us/"
+geo_craigs_req  = requestwrap.err_web(geo_craigs_url)
+geo_craigs_soup = BeautifulSoup(geo_craigs_req.text, "html.parser")
+with open(all_urls,'w') as fh:
+    for link in geo_craigs_soup.find_all('a'):
+        url  = link.get('href')
+        city = link.string
+        city = ''.join(city.split())
+        if 'www' not in url  and  'apple.com' not in url and 'google' not  in url and 'forums' not in url:
+            fh.write(f"{city}={url}\n")
 
-with open(file2,'w') as fh:
-    for each in map:
-        url, c , s = each
-        fh.write(f"{c},{s}={url}\n")
+file_pos = 0
+with open(all_urls,'r') as fh:
+    with open(craigs_links,'w', buffering=1) as fh2:
+	    for line in fh:
+                file_pos += len(line)
+                print(file_pos)
+                citystate, url = line.split('=')
+                if ',' not in line:
+                   if 'newyorkcity' in citystate:
+                       continue
+                   url = url.rstrip()
+                   try:
+                       c,s = crawler.get_city_from_first_free_cl_item(url)
+                   except TypeError as e:
+                       print("no data for", url)
+                   else:
+                       fh2.write(f"{c},{s}={url}\n")
+                else:
+                    fh2.write(f"{citystate}={url}")
