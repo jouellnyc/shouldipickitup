@@ -71,14 +71,14 @@ master_mongo_city_state_zip_data = generate_master_documents_import_to_mongodb(
 craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url)
 
 Once  done, there will be 400+ MongoDB documents for initial load. (There are
-~400 total craiglist urls). ~200 of the 400 are populated with zip code data.
-The other 200 do not have any  data at all (for now).
+~400 total craiglist urls). Most of the 400 are populated with zip code data.
+The other ~30 do not have any data at all (for now). see update_craigs_links.py
 
-However all ZIP CODES map to one of the first 200 urls. So given a given a query
-for any zip code, some data will be returned if the corresponding craigs url has
+However all ZIP CODES map to one of 200 urls. So given a given a query for any
+zip code, some data will be returned if the corresponding craigs url has
 been crawled and indexed.
 
-This is imperfect data, but at least all of the zips in the government file will
+This is 'imperfect' data, but at least all of the zips in the government file will
 have relevant data from somewhere 'somewhat' close. This also means a zip codes
 be considered 'close' to city that is a decent distance away as the crow flies.
 
