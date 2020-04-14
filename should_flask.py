@@ -13,17 +13,6 @@ app.py - Main Flask application file
 
 - It sends all returnables to return flask's render_template
 
-- Credit/Refs:
-https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
-https://stackoverflow.com/questions/12551526/cast-flask-form-value-to-int
-https://docs.gunicorn.org/en/stable/settings.html#logger-class
-https://medium.com/@trstringer/logging-flask-and-gunicorn-the-manageable-way-2e6f0b8beb2f
-https://stackoverflow.com/questions/58464052/request-to-flask-application-does-not-get-through-to-docker-container
-https://www.fullstackpython.com/wsgi-servers.html
-https://www.fullstackpython.com/green-unicorn-gunicorn.html
-https://docs.gunicorn.org/en/stable/deploy.html
-https://stackoverflow.com/questions/25737589/gunicorn-doesnt-log-real-ip-from-nginx
-https://stackoverflow.com/questions/23151425/how-to-run-cloud-init-manually/23152036
 """
 
 import logging

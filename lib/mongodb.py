@@ -29,6 +29,7 @@
 TBD: Reuse the MongoDB handles once per app vs per instance.
 """
 
+import pymongo
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 from pymongo.errors import ConnectionFailure
@@ -247,6 +248,8 @@ class MongoCli:
         Invalid Docs return BulkWriteError
         """
         try:
+            #Create Index now at initial load time...
+            new_result = self.dbh.create_index('craigs_url', unique=True)
             new_result = self.dbh.insert_many(master_mongo_city_state_zip_data)
         except BulkWriteError as bwe:
             print(bwe.details)
