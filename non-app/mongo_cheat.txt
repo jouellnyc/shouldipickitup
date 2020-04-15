@@ -67,3 +67,26 @@ MongoDB Enterprise Shouldipickitup-shard-0:PRIMARY> db.data.count({"EbayLinks":{
 9
 MongoDB Enterprise Shouldipickitup-shard-0:PRIMARY> db.data.count({"EbayLinks":{$ne:null}})
 407
+
+
+> db.data.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "shouldipickitup.data"
+	},
+	{
+		"v" : 2,
+		"unique" : true,
+		"key" : {
+			"craigs_url" : 1
+		},
+		"name" : "craigs_url_1",
+		"ns" : "shouldipickitup.data"
+	}
+]
+>
