@@ -131,6 +131,8 @@ def format_mongodocs(soup_object, ebay_prices, ebay_links, howmany=12):
                     item3 : each_text3, url3: each_link3
 
                     }
+
+                        ... and so on for Urls, Price and EbayLinks
                 }
     """
     mongo_filter = {"craigs_url": craigs_list_url}

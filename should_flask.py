@@ -15,6 +15,7 @@ app.py - Main Flask application file
 
 """
 
+import sys
 import logging
 
 import flask
@@ -24,16 +25,27 @@ from flask import render_template
 
 import main
 
+"""
+
+logging.basicConfig(
+    stream=sys.stdout,
+    level="INFO",
+    format="%(levelname)s %(asctime)s %(module)s   \
+                     %(process)d   %(message)s",
+)
+
 logname = "shouldipickit.app.log"
+
 logging.basicConfig(
     filename=logname,
     level="INFO",
     format="%(levelname)s %(asctime)s %(module)s   \
                      %(process)d   %(message)s",
 )
+"""
 
 app = Flask(__name__)
-app.debug = True 
+app.debug = True
 verbose = True
 
 

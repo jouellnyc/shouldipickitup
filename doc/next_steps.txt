@@ -9,3 +9,6 @@
 - use ebay developer program
 
 - set crawler schedule
+
+- implement watchtower to send gunicorn stdout to aws cloud watch
+https://watchtower.readthedocs.io/en/latest/#example-flask-logging-with-watchtower
