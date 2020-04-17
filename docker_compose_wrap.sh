@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -z $2 ] &&  { echo "$0 local|AWS up|down"; exit 55;  }
+[ -z $2 ] &&  { echo "$0 local|AWS up|down|ps|build"; exit 55;  }
 
 WHAT=$2
 if [ x$WHAT = 'xup' ] ; then
