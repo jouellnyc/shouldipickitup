@@ -25,28 +25,9 @@ from flask import render_template
 
 import main
 
-"""
-
-logging.basicConfig(
-    stream=sys.stdout,
-    level="INFO",
-    format="%(levelname)s %(asctime)s %(module)s   \
-                     %(process)d   %(message)s",
-)
-
-logname = "shouldipickit.app.log"
-
-logging.basicConfig(
-    filename=logname,
-    level="INFO",
-    format="%(levelname)s %(asctime)s %(module)s   \
-                     %(process)d   %(message)s",
-)
-"""
 
 app = Flask(__name__)
 app.debug = True
-verbose = True
 
 
 @app.route("/search/", methods=["POST", "GET"])
@@ -58,29 +39,33 @@ def get_data():
     by casting to 'int'. zip is then queried @mongodb and returns HTML
     Done this way it catches zip='' and if zip is None with explictly checking.
     """
+
     try:
-        post_data = request.form
-        zip = request.form.get("zip")
         try:
+            verbose = False 
+            querystring = request.args
+            logging.info(f"querystring: {querystring}")
+            zip = querystring.get('zip')
             if len(str(zip)) != 5:
                 raise ValueError
             elif zip[0] == 0:
                 int(zip[1:])
             else:
                 int(zip)
-        except (TypeError, ValueError):
-        #Not Numeric/Didn't send "zip="
+        except (TypeError, ValueError): #Not Numeric/Didn't send "zip="
             if verbose:
-                logging.error(f"Invalid POST data: {post_data} : nota5digitzip")
+                logging.error(f"Invalid data: {querystring} : nota5digitzip")
             return render_template("nota5digitzip.html")
     except Exception as e:
-        msg = f"Bug: POST data:{post_data}, Error: {str(e)}"
+        msg = f"Bug: querystring:{querystring}, Error: {str(e)}"
         logging.exception(msg)
         flask.abort(500)
     else:
         zip = str(zip)
         if verbose:
-            logging.info(f"POST data: {post_data}")
+            logger = logging.getLogger(__name__)
+            logger.setLevel(logging.DEBUG)
+            logger.info(f"querystring: {querystring}")
         all_posts, all_links, all_cust, city, state = main.main(zip)
         len_items = len(all_posts)
         return render_template(
