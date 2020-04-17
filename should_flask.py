@@ -28,6 +28,7 @@ import main
 
 app = Flask(__name__)
 
+
 @app.route("/search/", methods=["POST", "GET"])
 def get_data():
     """
@@ -39,7 +40,7 @@ def get_data():
     """
 
     try:
-        verbose = False 
+        verbose = False
         logger = logging.getLogger(__name__)
         if verbose:
             logger.setLevel(logging.DEBUG)
@@ -48,14 +49,14 @@ def get_data():
         try:
             querystring = request.args
             logger.debug(f"querystring: {querystring}")
-            zip = querystring.get('zip')
+            zip = querystring.get("zip")
             if len(str(zip)) != 5:
                 raise ValueError
             elif zip[0] == 0:
                 int(zip[1:])
             else:
                 int(zip)
-        except (TypeError, ValueError):  #Not Numeric/Didn't send "zip="
+        except (TypeError, ValueError):  # Not Numeric/Didn't send "zip="
             logging.error(f"Invalid data: querystring: {querystring} : nota5digitzip")
             return render_template("nota5digitzip.html")
     except Exception as e:

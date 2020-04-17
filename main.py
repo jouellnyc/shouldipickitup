@@ -23,13 +23,15 @@ TBD: If MondoDB is down don't load a file every time ...
 """
 
 import logging
-#logger = logging.getLogger(__name__)
+
+# logger = logging.getLogger(__name__)
 
 import pymongo
 from pymongo.errors import ConnectionFailure
 
 from lib import mongodb
 from lib import pickledata
+
 
 def main(zipcode):
     """Send data to flask template for display after querying MongoDB.
@@ -134,6 +136,7 @@ def fallback_to_pickle():
         msg = "Even the file is erroring!: "
         logger.error(f"{msg} => {str(e)}")
         # Sms/page out
+
 
 if __name__ == "__main__":
 
