@@ -25,4 +25,16 @@ ERROR:root:Invalid data: ImmutableMultiDict([('zip', '1121')]) : nota5digitzip
 172.18.0.4 - - [17/Apr/2020:02:04:15 +0000] "GET /search/?zip=1121 HTTP/1.0" 200 1374 "-" "curl/7.67.0" "-"
 ERROR:root:Invalid data: ImmutableMultiDict([('zip', 'mickeymouse')]) : nota5digitzip
 172.18.0.4 - - [17/Apr/2020:02:04:17 +0000] "GET /search/?zip=mickeymouse HTTP/1.0" 200 1374 "-" "curl/7.67.0" "-"
+
+Expected output:
+./test_cases.sh
+Default
+HTTP/1.1 200 OK
+2 params
+HTTP/1.1 200 OK
+short zip
+HTTP/1.1 200 OK
+text vs int
+HTTP/1.1 200 OK
+
 MULTILINE-COMMENT
