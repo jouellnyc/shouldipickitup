@@ -52,7 +52,7 @@ def get_data():
                 int(zip[1:])
             else:
                 int(zip)
-        except (TypeError, ValueError): #Not Numeric/Didn't send "zip="
+        except (TypeError, ValueError):  #Not Numeric/Didn't send "zip="
             if verbose:
                 logging.error(f"Invalid data: {querystring} : nota5digitzip")
             return render_template("nota5digitzip.html")
