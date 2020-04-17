@@ -1,14 +1,19 @@
 #!/bin/bash
 
-[ -z $1 ] &&  { echo "$0 local|AWS"; exit 55;  }
+#test http on the edges - CAPS are for AWS instances 
+
+[ -z $1 ] &&  { echo "$0 local|DEV|BETA"; exit 55;  }
 
 
 case $1 in
 local)
     URL=http://dev2.shouldipickitup.com
     ;;
-AWS)
+DEV)
     URL=http://dev.shouldipickitup.com
+    ;;
+BETA)
+    URL=http://beta.shouldipickitup.com
     ;;
 esac
 
