@@ -1,17 +1,32 @@
 #!/bin/bash
 
-SLEEP=2
+[ -z $1 ] &&  { echo "$0 local|AWS"; exit 55;  }
+
+
+case $1 in
+local)
+    URL=http://dev2.shouldipickitup.com
+    ;;
+AWS)
+    URL=http://dev.shouldipickitup.com
+    ;;
+esac
+
+echo "== Checking $1 =="
+
+SLEEP=1
+
 echo "Default"
-curl -s -I -X GET http://dev2.shouldipickitup.com/search/?zip=11218 | grep 200
+curl -s -I -X GET "${URL}"/search/?zip=11218 | grep 200
 sleep $SLEEP
 echo "2 params"
-curl -s -I -X GET http://dev2.shouldipickitup.com/search/?zip=11212\&hello=i | grep 200
+curl -s -I -X GET "${URL}"/search/?zip=11212\&hello=i | grep 200
 sleep $SLEEP
 echo "short zip"
-curl -s -I -X GET http://dev2.shouldipickitup.com/search/?zip=1121 | grep 200
+curl -s -I -X GET "${URL}"/search/?zip=1121 | grep 200
 echo "text vs int"
 sleep $SLEEP
-curl -s -I -X GET http://dev2.shouldipickitup.com/search/?zip=mickeymouse | grep 200
+curl -s -I -X GET "${URL}"/search/?zip=mickeymouse | grep 200
 
 
 << 'MULTILINE-COMMENT'
