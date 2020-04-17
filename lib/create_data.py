@@ -193,7 +193,7 @@ def create_mean_zipcode_2_craigs_url_map(craigs_city_links, gov_city_state_zips)
     mean_zip2craigs_url = {}
 
     for citystate, ziplist in gov_city_state_zips.items():
-        citystate = ''.join(citystate.split())
+        citystate = "".join(citystate.split())
         try:
             ziplist = [int(x) for x in ziplist]
             craigs_url = lookup_craigs_url_with_city(citystate, craigs_city_links)
@@ -275,7 +275,7 @@ def generate_master_documents_import_to_mongodb(
     for citystate, ziplist in gov_city_state_zips.items():
 
         try:
-            citystate = ''.join(citystate.split())
+            citystate = "".join(citystate.split())
             url = lookup_craigs_url_with_city(citystate, craigs_city_links)
             master_mongo_city_state_zip_map[url]["CityState"] = citystate
             master_mongo_city_state_zip_map[url]["Zips"] = ziplist
@@ -324,7 +324,7 @@ if __name__ == "__main__":
         print("Connection Failure: ", e)
     except BulkWriteError as e:
         print("BulkWrite Error: ", e)
-    except OperationFailure as e:                 #This includes Bad Authentication
+    except OperationFailure as e:  # This includes Bad Authentication
         print("Unanticipated Mongo Error: ", e)
     except Exception as e:
         logging.exception(f"Unhandled Error: {e}")

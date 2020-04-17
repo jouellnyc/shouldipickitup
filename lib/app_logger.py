@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#no longer implemented
+# no longer implemented
 
 import datetime
 import logging

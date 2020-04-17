@@ -50,7 +50,7 @@ def get_craigs_list_posts(craigs_list_url):
     craigs_local_posts
         beautiful soup_object - list of all free items
     """
-    if 'newyork' in craigs_list_url:
+    if "newyork" in craigs_list_url:
 
         try:
             proto, _, url, suffix, *other = craigs_list_url.split("/")
@@ -58,13 +58,16 @@ def get_craigs_list_posts(craigs_list_url):
             print("New York URL unpacking error?", str(e))
             raise
         else:
-            craigs_local_url = f"{proto}//{url}/d/free-stuff/search/{suffix}/zip" #https://
+            craigs_local_url = (
+                f"{proto}//{url}/d/free-stuff/search/{suffix}/zip"  # https://
+            )
 
     else:
         craigs_local_url = craigs_list_url + "/d/free-stuff/search/zip"
 
     craigs_local_posts = websitepuller.lookup_craigs_posts(craigs_local_url)
     return craigs_local_posts
+
 
 def get_city_from_first_free_cl_item(craigs_list_url):
     first_item_soup = get_craigs_list_posts(craigs_list_url)[0]
@@ -74,6 +77,7 @@ def get_city_from_first_free_cl_item(craigs_list_url):
         return city
     else:
         return None
+
 
 def get_ebay_data(craigs_local_posts, random="yes", howmany=12):
 

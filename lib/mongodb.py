@@ -248,14 +248,14 @@ class MongoCli:
         Invalid Docs return BulkWriteError
         """
         try:
-            #Create Index now at initial load time...
-            new_result = self.dbh.create_index('craigs_url', unique=True)
+            # Create Index now at initial load time...
+            new_result = self.dbh.create_index("craigs_url", unique=True)
             new_result = self.dbh.insert_many(master_mongo_city_state_zip_data)
         except BulkWriteError as bwe:
             print(bwe.details)
             raise
         except Exception as e:
-            #logging.exception(e)
+            # logging.exception(e)
             raise
         else:
             if verbose:
