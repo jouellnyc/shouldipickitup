@@ -10,5 +10,7 @@
 
 - set crawler schedule
 
-- implement watchtower to send gunicorn stdout to aws cloud watch
+
+- send crawler logs to AWS, possibly separating into different buckets using:
 https://watchtower.readthedocs.io/en/latest/#example-flask-logging-with-watchtower
+
