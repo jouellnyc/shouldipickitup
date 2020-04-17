@@ -32,6 +32,9 @@ curl -s -I -X GET "${URL}"/search/?zip=1121 | grep 200
 echo "text vs int"
 sleep $SLEEP
 curl -s -I -X GET "${URL}"/search/?zip=mickeymouse | grep 200
+sleep $SLEEP
+echo "zap no zip"
+curl -s -I -X GET "${URL}"/search/?zap=hello | grep 200
 
 
 << 'MULTILINE-COMMENT'
