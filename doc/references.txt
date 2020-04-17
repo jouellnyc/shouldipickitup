@@ -12,3 +12,13 @@ https://stackoverflow.com/questions/25737589/gunicorn-doesnt-log-real-ip-from-ng
 https://stackoverflow.com/questions/23151425/how-to-run-cloud-init-manually/23152036
 https://stackoverflow.com/questions/36939482/pymongo-create-index-only-if-it-does-not-exist
 https://serverfault.com/questions/847141/how-can-i-get-the-real-remote-ip-at-gunicorn-from-nginx
+#Docker Logging
+https://serverfault.com/questions/599103/make-a-docker-application-write-to-stdout
+https://github.com/moby/moby/issues/19616#issuecomment-174355979
+https://github.com/krallin/tini
+https://stackoverflow.com/questions/55444469/redirecting-script-output-to-docker-logs
+https://github.com/moby/moby/issues/35759
+https://pythonspeed.com/articles/gunicorn-in-docker/
+https://sebest.github.io/post/protips-using-gunicorn-inside-a-docker-image/
+https://medium.com/@yoanis_gil/logging-with-docker-part-1-1-965cb5e17165
+
