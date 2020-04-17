@@ -41,10 +41,15 @@ def get_data():
     """
 
     try:
+        verbose = False 
+        logger = logging.getLogger(__name__)
+        if verbose:
+            logger.setLevel(logging.DEBUG)
+        else:
+            logger.setLevel(logging.INFO)
         try:
-            verbose = False 
             querystring = request.args
-            logging.info(f"querystring: {querystring}")
+            logger.debug(f"querystring: {querystring}")
             zip = querystring.get('zip')
             if len(str(zip)) != 5:
                 raise ValueError
@@ -53,8 +58,7 @@ def get_data():
             else:
                 int(zip)
         except (TypeError, ValueError):  #Not Numeric/Didn't send "zip="
-            if verbose:
-                logging.error(f"Invalid data: {querystring} : nota5digitzip")
+            logging.error(f"Invalid data: querystring: {querystring} : nota5digitzip")
             return render_template("nota5digitzip.html")
     except Exception as e:
         msg = f"Bug: querystring:{querystring}, Error: {str(e)}"
@@ -62,10 +66,6 @@ def get_data():
         flask.abort(500)
     else:
         zip = str(zip)
-        if verbose:
-            logger = logging.getLogger(__name__)
-            logger.setLevel(logging.DEBUG)
-            logger.info(f"querystring: {querystring}")
         all_posts, all_links, all_cust, city, state = main.main(zip)
         len_items = len(all_posts)
         return render_template(
