@@ -11,3 +11,4 @@ https://docs.gunicorn.org/en/stable/deploy.html
 https://stackoverflow.com/questions/25737589/gunicorn-doesnt-log-real-ip-from-nginx
 https://stackoverflow.com/questions/23151425/how-to-run-cloud-init-manually/23152036
 https://stackoverflow.com/questions/36939482/pymongo-create-index-only-if-it-does-not-exist
+https://serverfault.com/questions/847141/how-can-i-get-the-real-remote-ip-at-gunicorn-from-nginx
