@@ -27,8 +27,6 @@ import main
 
 
 app = Flask(__name__)
-app.debug = True
-
 
 @app.route("/search/", methods=["POST", "GET"])
 def get_data():
