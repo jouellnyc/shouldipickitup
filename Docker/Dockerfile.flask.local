@@ -5,7 +5,8 @@ RUN apt-get update  -y && \
     curl \
     net-tools \
     less \
-    telnet && pip install --upgrade pip
+    telnet \
+    net-tools  &&  pip install --upgrade pip
 
 RUN mkdir /shouldipickitup/ 
 WORKDIR /shouldipickitup/

@@ -8,6 +8,8 @@ services:
        - data:/data/db
      networks:
        - shouldinetwork
+     cap_drop:
+       - ALL 
   app:
       build:
         context: .
@@ -16,6 +18,8 @@ services:
         - db
       networks:
         - shouldinetwork
+      cap_drop:
+        - ALL 
   web:
       build:
         context: .
@@ -26,6 +30,8 @@ services:
         - "80:8080"
       networks:
         - shouldinetwork
+      cap_drop:
+        - ALL 
 
 volumes:
   data:
