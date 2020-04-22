@@ -11,6 +11,8 @@ services:
         options:
           awslogs-region: $AWS_REGION
           awslogs-group: flask
+      cap_drop:
+        - ALL 
   web:
       build:
         context: .
@@ -26,6 +28,8 @@ services:
         options:
           awslogs-region: $AWS_REGION
           awslogs-group: nginx
+      cap_drop:
+        - ALL 
 networks:
   shouldinetwork:
     driver: bridge
