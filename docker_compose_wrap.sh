@@ -12,6 +12,6 @@ local)
     docker-compose -f docker-compose.local.yaml $WHAT
     ;;
 AWS)
-    docker-compose -f docker-compose.AWS.hosted.MongoDb.yaml up $WHAT
+    docker-compose -f docker-compose.AWS.hosted.MongoDb.yaml $WHAT
     ;;
 esac
