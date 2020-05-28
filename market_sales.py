@@ -383,13 +383,13 @@ def get_rev(soup_sales_ninc_eps, years_rev_ninc_eps):
     a_href_sales = soup_sales_ninc_eps.find(
         "a", attrs={"data-ref": "ratio_SalesNet1YrGrowth"}
     )
-    """ If we got here the http call succeeded so we will have a valid   
+    """ If we got here the http call succeeded so we will have a valid
     soup object. But if no content found in a soup obj it returns a
-    NoneType. Worst case a_href_sales becomes NoneType, but we don't 
-    kick up an AttributeError here.  
+    NoneType. Worst case a_href_sales becomes NoneType, but we don't
+    kick up an AttributeError here.
     """
     try:
-        """ If the soup object is null we will kick up the AttributeError 
+        """ If the soup object is null we will kick up the AttributeError
         here so we try and group together.
         """
         sales_td_parent = a_href_sales.find_parent()
@@ -655,6 +655,26 @@ def get_pe_ttm(soup_pe_ttm):
         print("No PE TTM data found for " + stock)
         return "NA"
 
+def get_mcap(soup_pe_ttm):
+    """ Get Total Market Cap
+    Create a list of child div tags of the 'hook text'.
+    Note the 'next' item (+2 index b/c of tags vs strings) is market cap.
+
+    <div class="stock-summary-table fc-regular" data-v-fa982d3a>
+    SNIP...
+        <div data-v-fa982d3a> Avg Vol (1m): </div>
+        <div data-v-fa982d3a> 1,980,804 </div>
+        <div data-v-fa982d3a> Market Cap $: </div>
+        <div data-v-fa982d3a> 969.35 Bil </div>
+    SNIP...
+    """
+    wanted_text  = 'Market Cap'
+    hook_text = 'stock-summary-table fc-regular'
+    market_cap = list(soup_pe_ttm.find('div',attrs={"class" : hook_text }).children)
+    for index, div_tag in enumerate(market_cap):
+        if wanted_text in str(market_cap[index]):
+            market_cap_text = market_cap[index+2].text.lstrip()
+            print(f"{stock} Market Cap: {market_cap_text}")
 
 def get_rev_ttm(soup_rev_ttm):
     "Get Trailing TTM for Revenue"
@@ -669,8 +689,6 @@ def get_rev_ttm(soup_rev_ttm):
         print(
             stock + " had " + str(rev_ttm) + " " + str(rev_ttm_denom) + " Revenue TTM"
         )
-        print("")
-
 
 """ Data Checks """
 
@@ -856,6 +874,7 @@ def main():
             r_rev_ttm,
             content_dict,
         ) = get_web_data()
+
         if save_data_locally:
             write_content(content_dict)
         (
@@ -893,8 +912,10 @@ def main():
     roic = get_roic(soup_roic)
     get_ni_ttm(soup_ni_ttm)
     pe_ttm = get_pe_ttm(soup_pe_ttm)
-    # No need to store Revenue TTM as it's never used in a calculation
+    #No need to store Revenue TTM as it's never used in a calculation
     get_rev_ttm(soup_rev_ttm)
+    mcap   = get_mcap(soup_pe_ttm)
+    print("")
     get_links()
     check_rn1(rev_rn1, net_inc_rn1, eps_rn1, fcf_rn1, bvp_rn1, roic, pe_ttm)
     plot_or_not(
