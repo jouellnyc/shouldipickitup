@@ -316,6 +316,8 @@ if __name__ == "__main__":
         master_mongo_city_state_zip_data = generate_master_documents_import_to_mongodb(
             craigs_city_links, gov_city_state_mutlizips_map, mean_zip2craigs_url
         )
+        print(master_mongo_city_state_zip_data)
+        sys.exit()
         mongo_cli = mongodb.MongoCli()
         mongo_cli.init_load_city_state_zip_map(master_mongo_city_state_zip_data)
     except FileNotFoundError as e:
