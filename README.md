@@ -11,6 +11,8 @@ NOTES:
 
 ![ShouldIpickItUp](non-app/version4.png)
 
+## Peek Screen Gif
+![ShouldIpickItUp](peek.gif)
 
 ## High Level Command line Usage example
 
