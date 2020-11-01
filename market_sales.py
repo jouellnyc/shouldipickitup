@@ -66,7 +66,7 @@ popup_browser_plot = True
 url_sales_ninc_eps = (
     "http://www.marketwatch.com/investing/stock/" + stock + "/financials/"
 )
-url_roic = "http://www.marketwatch.com/investing/stock/" + stock + "/profile"
+url_roic = "http://www.marketwatch.com/investing/stock/" + stock + "/company-profile"
 url_fcf = (
     "http://www.marketwatch.com/investing/stock/" + stock + "/financials/cash-flow/"
 )
@@ -610,10 +610,10 @@ def get_bvps(soup_bvps):
 def get_roic(soup_roic):
     """ ROIC """
     pattern = re.compile("Return on Invested Capital")
-    roic_p_tag = soup_roic.find("p", attrs={"class": "column"}, text=pattern)
+    roic_p_tag = soup_roic.find("td", text=pattern)
     try:
         roic_data = roic_p_tag.find_next_sibling(
-            "p", attrs={"class": "data lastcolumn"}
+            "td"
         )
         # ROIC is just one value. Leave as NavString
     except AttributeError as e:
