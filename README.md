@@ -105,8 +105,9 @@ docker-compose  up -d
 ```
 
 ## Architechure
-Nginx will listen on the local hosts port 80
-Flask and Mongodb will be on the same bridged docker network reachable by docker names
+- Nginx will listen on the local host's port 80
+- Flask and Mongodb will listen on port 8000 and 27017 respectively of the Docker Containers only
+- All 3 will be on the same 'bridged' docker network reachable by docker 'names'
 
 ## Requirements
 git/docker/docker-compose
