@@ -1,0 +1,40 @@
+version: "3"
+services:
+  db:
+     build:
+       context: .
+       dockerfile: Docker/Dockerfile.mongod
+     volumes:
+       - data:/data/db
+     networks:
+       - stocknetwork
+     cap_drop:
+       - ALL 
+  app:
+      build:
+        context: .
+        dockerfile: Docker/Dockerfile.flask.local
+      depends_on:
+        - db
+      networks:
+        - stocknetwork
+      cap_drop:
+        - ALL 
+  web:
+      build:
+        context: .
+        dockerfile: Docker/Dockerfile.nginx
+      depends_on:
+        - app 
+      ports: 
+        - "80:8080"
+      networks:
+        - stocknetwork
+      cap_drop:
+        - ALL 
+
+volumes:
+  data:
+networks:
+  stocknetwork:
+    driver: bridge
