@@ -1,6 +1,4 @@
-# shouldipickitup(.com)
-> Given a free listing on Craiglist, should I pick it up?
-
+# shouldipickitup(.com) > Given a free listing on Craiglist, should I pick it up?  
 NOTES:
  - This project is intentionally "in progress".
  - It serves for inspiration for anyone to learn Python, Flask, MongoDB, Devops principles.
@@ -12,7 +10,7 @@ NOTES:
 ![ShouldIpickItUp](non-app/version4.png)
 
 ## Peek Screen Gif
-![ShouldIpickItUp](peek.gif)
+![Peek Screen Gif](peek.gif)
 
 ## High Level Command line Usage example
 
