@@ -31,7 +31,7 @@ COPY external/gunicorn/gunicorn.conf.py /shouldipickitup/external/gunicorn/
 COPY lib/             /shouldipickitup/lib/
 
 RUN chown -R nobody:  /shouldipickitup/
-RUN sed -i s"/MONGOCLIENTLINE/client = MongoClient(host=\"shouldipickitup_db_1\", \
+RUN sed -i s"/MONGOCLIENTLINE/client = MongoClient(host=\"db\", \
 serverSelectionTimeoutMS=2000)${MONGOUSERNAME}/" lib/mongodb.py
 
 COPY Docker/flask-docker-entrypoint.local /usr/sbin/flask-docker-entrypoint.sh

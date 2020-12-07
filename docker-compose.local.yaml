@@ -10,6 +10,7 @@ services:
        - shouldinetwork
      cap_drop:
        - ALL 
+     container_name: db 
   app:
       build:
         context: .
@@ -20,6 +21,7 @@ services:
         - shouldinetwork
       cap_drop:
         - ALL 
+      container_name: app 
   web:
       build:
         context: .
@@ -32,6 +34,7 @@ services:
         - shouldinetwork
       cap_drop:
         - ALL 
+      container_name: web 
 
 volumes:
   data:
