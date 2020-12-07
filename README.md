@@ -9,6 +9,7 @@ NOTES:
 ![Peek Screen Gif](peek.gif)
 
 ## High Level Command line Usage example (Future work)
+
 In [21]: %run craigs_lyft_ebay.py
 "Dish Drying Rack" is Free on Craigslist, is selling for $14.99 on Ebay and is 0.46 miles away from you.
  Using Lyft it will cost between 9.0 and 12.0 dollars to pick up.
@@ -113,4 +114,3 @@ John Ouellette – [@jjouell](https://twitter.com/jjouell) – twitter[1:]@gmail
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
-
