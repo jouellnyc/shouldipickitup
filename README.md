@@ -1,4 +1,6 @@
-# shouldipickitup(.com) > Given a free listing on Craiglist, should I pick it up?  
+# Given a free listing on Craiglist, should I pick it up?  
+www.shouldipickitup.com
+
 NOTES:
  - This project is intentionally "in progress".
  - It serves for inspiration for anyone to learn Python, Flask, MongoDB, Devops principles.
