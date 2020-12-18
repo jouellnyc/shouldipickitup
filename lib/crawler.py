@@ -17,6 +17,7 @@
 import os
 import sys
 import time
+import datetime
 import logging
 from random import randrange
 
@@ -140,7 +141,7 @@ def format_mongodocs(soup_object, ebay_prices, ebay_links, howmany=12):
                 }
     """
     mongo_filter = {"craigs_url": craigs_list_url}
-    mongo_doc = {"$set": {"Items": {}, "Urls": {}, "Prices": {}, "EbayLinks": {}}}
+    mongo_doc = {"$set": {"Items": {}, "Urls": {}, "Prices": {}, "EbayLinks": {}, "DateCrawled" : ''}}
 
     for num, each_item in enumerate(soup_object[0:howmany], start=1):
         each_link = each_item.attrs["href"]
@@ -157,6 +158,8 @@ def format_mongodocs(soup_object, ebay_prices, ebay_links, howmany=12):
     for num, link in enumerate(ebay_links[0:howmany], start=1):
         link_num = f"EbayLink{num}"
         mongo_doc["$set"]["EbayLinks"][link_num] = link
+
+    mongo_doc["$set"]["DateCrawled"] = datetime.datetime.now()
 
     return mongo_doc
 
